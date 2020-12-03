@@ -1,4 +1,4 @@
-package bornetogo.backend;
+package main.java.bornetogo.backend;
 
 import jakarta.json.Json;
 import jakarta.ws.rs.Path;

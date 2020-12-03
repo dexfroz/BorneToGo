@@ -10,7 +10,10 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<myMainClass>bornetogo.backend.FileContent</myMainClass>
+		<!-- Package name starts with 'main.java' for better integration with Eclipse IDE: -->
+		<myMainClass>main.java.bornetogo.backend.FileContent</myMainClass>
+
+		<!-- Targeted java JDK and JRE version: -->
 		<java.version>1.8</java.version>
 
 		<maven.compiler.source>${java.version}</maven.compiler.source>

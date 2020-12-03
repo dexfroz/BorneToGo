@@ -1,4 +1,4 @@
-package bornetogo.backend;
+package main.java.bornetogo.backend;
 
 import java.io.*;
 
