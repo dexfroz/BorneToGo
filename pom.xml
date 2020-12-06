@@ -46,6 +46,8 @@
 				</configuration>
 			</plugin>
 
+			<!-- Only useful for launching the project with maven. -->
+			<!-- Careful! Did not work with versions 1.6 and 3.0. -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -60,21 +62,13 @@
 
 	<dependencies>
 
+		<!-- Provided by Payara Micro. Remove the scope if another server is used. -->
 		<!-- https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-api -->
 		<dependency>
 			<groupId>jakarta.platform</groupId>
 			<artifactId>jakarta.jakartaee-api</artifactId>
 			<version>9.0.0-RC3</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<!-- Only useful for launching the project with maven. -->
-		<!-- Careful! Versions 1.6 and 3.0 make the API break! -->
-		<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
-		<dependency>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>exec-maven-plugin</artifactId>
-			<version>1.2</version>
 		</dependency>
 
 	</dependencies>

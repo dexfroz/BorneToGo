@@ -2,7 +2,7 @@
 
 Backend for the BorneToGo ISEN's project, an app whose purpose is to help finding where to charge electric cars.
 
-For now, is only implemented a REST API enabling GET and POST requests to a java project. It uses the docker image Payara Micro, and Jakarta EE.
+For now, is only implemented an asynchronous REST API, enabling GET and POST requests to a java project. It uses the docker image Payara Micro, and Jakarta EE.
 
 Forked from: <https://github.com/Carath/payara-micro-test>
 
