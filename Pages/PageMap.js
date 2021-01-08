@@ -1,9 +1,6 @@
 // Pages/PageMap.js
 
 import React from 'react'
-<<<<<<< Updated upstream
-import { StyleSheet, View, Text, Image, Button } from 'react-native'
-=======
 import { StyleSheet, View, Dimensions } from 'react-native'
 import MapView, { MAP_TYPES, PROVIDER_DEFAULT } from 'react-native-maps';
 
@@ -14,7 +11,6 @@ const LATITUDE = 43.12;
 const LONGITUDE = 5.94;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
->>>>>>> Stashed changes
 
 class PageMap extends React.Component {
 
@@ -40,14 +36,6 @@ class PageMap extends React.Component {
 
     render() {
         return (
-<<<<<<< Updated upstream
-            <View>
-                <Text>Go To Credits</Text>
-                <Button 
-                title="GoToCredits"
-                onPress={() => this.props.navigation.navigate("Credits")} />
-                </View>
-=======
             <View style={styles.map}>
                 <MapView
                     region={this.state.region}
@@ -63,7 +51,6 @@ class PageMap extends React.Component {
                     />
                 </MapView>
             </View>
->>>>>>> Stashed changes
         );
     }
 }
