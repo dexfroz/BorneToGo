@@ -11,8 +11,8 @@ class PageVoiture extends React.Component {
 
     render() {
         return (
-            
-        )
+            <View></View>
+        );
     }
 }
 

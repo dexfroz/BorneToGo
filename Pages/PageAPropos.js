@@ -11,8 +11,8 @@ class PageAPropos extends React.Component {
 
     render() {
         return (
-            
-        )
+            <View></View>
+        );
     }
 }
 

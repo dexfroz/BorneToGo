@@ -11,8 +11,8 @@ class PageStat extends React.Component {
 
     render() {
         return (
-            
-        )
+            <View></View>
+        );
     }
 }
 
