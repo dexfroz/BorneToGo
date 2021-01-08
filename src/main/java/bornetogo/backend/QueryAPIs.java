@@ -27,25 +27,25 @@ public class QueryAPIs
 
 
 	// For geocoding queries:
-	private static String encodeCoord(Double[] coord)
+	private static String encodeCoord(Coord coord)
 	{
-		return Double.toString(coord[0]) + '+' + Double.toString(coord[1]);
+		return Double.toString(coord.getLatitude()) + '+' + Double.toString(coord.getLongitude());
 	}
 
 
-	// For queryRoute():
-	private static String formatCoordinateList(ArrayList<Double[]> coordinates)
+	// For queryRoute(). Reverse coordinate order!
+	private static String formatCoordinateList(ArrayList<Coord> coordinates)
 	{
 		String answer = "";
-		for (Double[] coord : coordinates) {
-			answer += coord[0].toString() + ',' + coord[1].toString() + ';';
+		for (Coord coord : coordinates) {
+			answer += Double.toString(coord.getLongitude()) + ',' + Double.toString(coord.getLatitude()) + ';';
 		}
 
 		return answer.substring(0, answer.length() - 1);
 	}
 
 
-	public static JsonObject queryRoute(String routeMode, ArrayList<Double[]> coordinates, String options)
+	public static JsonObject queryRoute(String routeMode, ArrayList<Coord> coordinates, String options)
 	{
 		String url = "http://router.project-osrm.org/" + routeMode + "/v1/car/" + formatCoordinateList(coordinates) +
 					 ".json?" + options;
@@ -60,7 +60,7 @@ public class QueryAPIs
 	}
 
 
-	public static JsonObject queryFromCoord(String token, Double[] coord)
+	public static JsonObject queryFromCoord(String token, Coord coord)
 	{
 		return queryGeocoding(token, encodeCoord(coord), GEOCODING_OPTION);
 	}
@@ -102,7 +102,7 @@ public class QueryAPIs
 			String token = args[0];
 
 			String searchedLocation = "Isen Toulon";
-			Double[] target = {48.880931, 2.355323};
+			Coord target = new Coord(48.880931, 2.355323);
 
 			JsonObject json_2 = queryFromLocation(token, searchedLocation);
 			safeJsonPrinting(json_2);
@@ -117,14 +117,14 @@ public class QueryAPIs
 		String routeMode = "route";
 		// String routeMode = "nearest";
 
-		Double[] point_0 = {13.388860, 52.517037};
-		Double[] point_1 = {13.397634, 52.529407};
-		Double[] point_2 = {13.428555, 52.523219};
+		Coord coord_0 = new Coord(52.517037, 13.388860);
+		Coord coord_1 = new Coord(52.529407, 13.397634);
+		Coord coord_2 = new Coord(52.523219, 13.428555);
 
-		ArrayList<Double[]> routeCoordinates = new ArrayList<Double[]>();
-		routeCoordinates.add(point_0);
-		routeCoordinates.add(point_1);
-		routeCoordinates.add(point_2);
+		ArrayList<Coord> routeCoordinates = new ArrayList<Coord>();
+		routeCoordinates.add(coord_0);
+		routeCoordinates.add(coord_1);
+		routeCoordinates.add(coord_2);
 
 		JsonObject json_4 = queryRoute(routeMode, routeCoordinates, ROUTE_QUERY_OPTION);
 		safeJsonPrinting(json_4);
