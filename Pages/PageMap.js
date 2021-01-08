@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { StyleSheet, View, Dimensions } from 'react-native'
-import MapView, { MAP_TYPES, PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { MAP_TYPES, PROVIDER_OSMDROID } from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,7 +31,7 @@ class PageMap extends React.Component {
     }
 
     get mapType() {
-        return this.props.provider === PROVIDER_DEFAULT ? MAP_TYPES.STANDARD : MAP_TYPES.NONE;
+        return this.props.provider === PROVIDER_OSMDROID ? MAP_TYPES.STANDARD : MAP_TYPES.NONE;
     }
 
     render() {
@@ -46,7 +46,7 @@ class PageMap extends React.Component {
                     showsUserLocation
                 >
                     <MapView.UrlTile
-                        urlTemplate={"https://www.openstreetmap.org/#map=16/43.1002/5.8609"}
+                        urlTemplate={"https://www.openstreetmap.org/#map={z}/{x}/{y}"}
                         shouldReplaceMapContent={true}
                     />
                 </MapView>

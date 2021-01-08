@@ -13,17 +13,14 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName ="Home">
-        
-      <Stack.Screen name="Home" component={PageLogo} />
-      <Stack.Screen name="Credits" component={PageAPropos} />
-      <Stack.Screen name="Map" component={PageMap} />
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={PageLogo} />
+        <Stack.Screen name="Credits" component={PageAPropos} />
+        <Stack.Screen name="Map" component={PageMap} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
