@@ -1,10 +1,11 @@
 // Components/PageLogo.js
 
 import React from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, TouchableHighlight, Image } from 'react-native'
 
 class PageLogo extends React.Component {
 
+    
     constructor(props) {
         super(props)
     }
@@ -13,9 +14,11 @@ class PageLogo extends React.Component {
         return (
             <View style={styles.main_container}>
                 <View style={styles.logoBTG}>
-                    <Image
-                        source={require('../Images/logo_borne_to_go.png')}
-                    />
+                    <TouchableHighlight onPress={() => this.props.navigation.navigate('Map')}>
+                        <Image
+                            source={require('../Images/logo_borne_to_go.png')}
+                        />
+                    </TouchableHighlight>
                 </View>
                 <View style={styles.logoISEN}>
                     <Image
