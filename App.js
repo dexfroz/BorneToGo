@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import PageLogo from './Components/PageLogo'
+import PageLogo from './Pages/PageLogo'
 
 export default function App() {
   return (
