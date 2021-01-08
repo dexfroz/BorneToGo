@@ -5,6 +5,9 @@ import java.io.*;
 
 public class FileContent
 {
+	private static final int READING_BUFFER_SIZE = 1024;
+
+
 	// Returns the content of the given file as a String, assuming it is
 	// located in '/src/main/resources/'. Returns null on failure.
 	public static String getFileContent(String filename)
@@ -15,12 +18,12 @@ public class FileContent
 			InputStream inputStream = handler.getClass().getResourceAsStream("/" + filename);
 
 			if (inputStream == null) {
-				System.out.printf("\nFile '%s' not found.\n\n", filename);
+				System.err.printf("\nFile '%s' not found.\n\n", filename);
 				return null;
 			}
 
 			ByteArrayOutputStream result = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[READING_BUFFER_SIZE];
 			int length;
 			while ((length = inputStream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
@@ -31,7 +34,7 @@ public class FileContent
 		}
 		catch (IOException e)
 		{
-			System.out.printf("\nAn error happened while reading the file '%s'.\n\n", filename);
+			System.err.printf("\nAn error happened while reading the file '%s'.\n\n", filename);
 			e.printStackTrace();
 			return null;
 		}

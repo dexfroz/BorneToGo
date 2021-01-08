@@ -2,6 +2,7 @@
 
 # Settings:
 
+# Name must be lowercase:
 CONTAINER_NAME=bornetogo-backend
 
 # Comment this for debugging purpose:

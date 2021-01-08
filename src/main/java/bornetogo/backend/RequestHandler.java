@@ -1,15 +1,8 @@
 package main.java.bornetogo.backend;
 
-import jakarta.json.Json;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
+import jakarta.json.*;
 
 
 // N.B: Do not put a main function here, it can't be run.
@@ -20,7 +13,8 @@ public class RequestHandler
 	@GET
 	public Response helloWorld()
 	{
-		return Response.ok(Json.createObjectBuilder().add("hello", "world").build()).build();
+		JsonObject obj = Json.createObjectBuilder().add("hello", "world").build();
+		return Response.ok(obj).build();
 	}
 
 
