@@ -11,14 +11,17 @@ class PageVoiture extends React.Component {
 
     render() {
         return (
-            <View>
-                </View>
+            <View style = {styles.mainContainer}>
+                <Text>Bonjour voiture</Text>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-
+mainContainer:{
+    flex:1,
+},
 })
 
 export default PageVoiture

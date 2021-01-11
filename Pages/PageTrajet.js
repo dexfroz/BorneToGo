@@ -11,8 +11,8 @@ class PageTrajet extends React.Component {
 
     render() {
         return (
-            <View>
-                </View>
+            <Text>Bonjour Trajet
+                </Text>
         );
     }
 }

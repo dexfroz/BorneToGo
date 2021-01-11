@@ -14,7 +14,7 @@ class PageLogo extends React.Component {
         return (
             <View style={styles.main_container}>
                 <View style={styles.logoBTG}>
-                    <TouchableHighlight onPress={() => this.props.navigation.navigate('Map')}>
+                    <TouchableHighlight onPress={() => this.props.navigation.navigate('BorneToGo')}>
                         <Image
                             source={require('../Images/logo_borne_to_go.png')}
                         />

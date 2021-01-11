@@ -4,8 +4,7 @@ import { StyleSheet, } from 'react-native';
 import PageLogo from './Pages/PageLogo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import PageAPropos from './Pages/PageAPropos';
-import PageMap from './Pages/PageMap';
+import Footer from './Composants/Footer'
 
 
 const Stack = createStackNavigator();
@@ -15,8 +14,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={PageLogo} />
-        <Stack.Screen name="Credits" component={PageAPropos} />
-        <Stack.Screen name="Map" component={PageMap} />
+        <Stack.Screen name="BorneToGo" component={Footer} />
       </Stack.Navigator>
     </NavigationContainer>
   );
