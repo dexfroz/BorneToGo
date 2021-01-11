@@ -11,18 +11,18 @@ class PageAPropos extends React.Component {
 
     render() {
         return (
-            <View style = {styles.mainContainer}>
-                <View style ={styles.textStyle}>
+            <View style={styles.mainContainer}>
+                <View style={styles.textStyle}>
                     <Text> Hello World !</Text>
                 </View>
-                <View style = {styles.footer}>
-                    <View style ={styles.footerTextStyle}>
+                <View style={styles.footer}>
+                    <View style={styles.footerTextStyle}>
                         <Text>© BorneToGo application</Text>
                     </View>
                     <View style={styles.logoISEN}>
                         <Image
                             style={styles.imageLogoISEN}
-                            source={require('../Images/logo_isen.jpg')}
+                            source={require('../Images/logo_isen.png')}
                         />
                     </View>
                 </View>
@@ -33,8 +33,8 @@ class PageAPropos extends React.Component {
 
 const styles = StyleSheet.create({
 
-    mainContainer:{
-        flex:1,
+    mainContainer: {
+        flex: 1,
     },
     textStyle: {
         flex: 1,
@@ -46,11 +46,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     footerTextStyle: {
-        
+
         alignItems: 'flex-start'
     },
     logoISEN: {
-        
+
         alignItems: 'flex-end'
     },
     imageLogoISEN: {

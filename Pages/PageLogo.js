@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, TouchableHighlight, Image } from 'react-native'
 
 class PageLogo extends React.Component {
 
-    
+
     constructor(props) {
         super(props)
     }
@@ -23,7 +23,7 @@ class PageLogo extends React.Component {
                 <View style={styles.logoISEN}>
                     <Image
                         style={styles.imageLogoISEN}
-                        source={require('../Images/logo_isen.jpg')}
+                        source={require('../Images/logo_isen.png')}
                     />
                 </View>
 
