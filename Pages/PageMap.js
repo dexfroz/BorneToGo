@@ -2,15 +2,20 @@
 
 import React from 'react'
 import { StyleSheet, View, Dimensions } from 'react-native'
-import MapView, { MAP_TYPES, PROVIDER_OSMDROID } from 'react-native-maps';
+import MapView, { MAP_TYPES, PROVIDER_OSMDROID, Marker } from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
-const LATITUDE = 43.12;
-const LONGITUDE = 5.94;
+const LATITUDE = 43.12; //43.12
+const LONGITUDE = 5.94; //5.94
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+
+function log(eventName, e) {
+    console.log(eventName, e.nativeEvent);
+}
 
 class PageMap extends React.Component {
 
@@ -22,7 +27,7 @@ class PageMap extends React.Component {
                 longitude: LONGITUDE,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
-            },
+            }
         };
     }
 
@@ -49,6 +54,21 @@ class PageMap extends React.Component {
                         urlTemplate={"https://www.openstreetmap.org/#map={z}/{x}/{y}"}
                         shouldReplaceMapContent={true}
                     />
+                    <MapView.Marker
+                        coordinate={{
+                            latitude: this.state.region.latitude,
+                            longitude: this.state.region.longitude
+                        }}
+                        title={"Vous êtes ici"}
+                        description={"Votre position"}
+                        onSelect={e => log('onSelect', e)}
+                        onDrag={e => log('onDrag', e)}
+                        onDragStart={e => log('onDragStart', e)}
+                        onDragEnd={e => log('onDragEnd', e)}
+                        onPress={e => log('onPress', e)}
+                        draggable
+                    />
+
                 </MapView>
             </View>
         );
