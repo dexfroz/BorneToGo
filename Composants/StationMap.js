@@ -13,13 +13,7 @@ class StationMap extends PureComponent {
         super(props);
     }
 
-    renderBornesDisponibles(item) {
-        var nbTotal = Object.keys(item.bornes).length;
-        var nbDispo = 0;
-        for (const obj of item.bornes) {
-            if (obj.status)
-                nbDispo++;
-        }
+    renderBornesDisponibles(nbTotal, nbDispo) {
         return (
             (nbDispo == 0) ?
                 <Text style={styles.pasdispo}>Pas de bornes disponibles</Text> :
@@ -28,44 +22,72 @@ class StationMap extends PureComponent {
         )
     }
 
+    renderCalloutMarker(marker, nbTotal, nbDispo) {
+        return (
+            <Callout tooltip>
+                <View>
+                    <View style={styles.bulle}>
+                        <Text style={styles.name}>
+                            {marker.adresse}
+                        </Text>
+                        <Text style={styles.description}>
+                            <View style={styles.bornesDispo}>
+                                {this.renderBornesDisponibles(nbTotal, nbDispo)}
+                            </View>
+                        </Text>
+                        <View style={styles.image}>
+                            <Svg width={100} height={100} >
+                                <ImageSvg
+                                    width="100%"
+                                    height="100%"
+                                    preserveAspectRatio="xMidYMid slice"
+                                    href={require('../Images/borne.png')}
+                                />
+                            </Svg>
+                        </View>
+                    </View>
+                    <View style={styles.arrowborder} />
+                    <View style={styles.arrow} />
+                </View>
+            </Callout>
+        )
+    }
+
     render() {
         const { marker } = this.props;
         console.log(marker);
+
+        // On compte le nombre de bornes disponibles pour la station
+        var nbTotal = Object.keys(marker.bornes).length;
+        var nbDispo = 0;
+        for (const obj of marker.bornes) {
+            if (obj.status)
+                nbDispo++;
+        }
+
         return (
-            <Marker
-                coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude
-                }}
-                title={marker.adresse}
-            >
-                <Callout tooltip>
-                    <View>
-                        <View style={styles.bulle}>
-                            <Text style={styles.name}>
-                                {marker.adresse}
-                            </Text>
-                            <Text style={styles.description}>
-                                <View style={styles.bornesDispo}>
-                                    {this.renderBornesDisponibles(marker)}
-                                </View>
-                            </Text>
-                            <View style={styles.image}>
-                                <Svg width={110} height={110} >
-                                    <ImageSvg
-                                        width="100%"
-                                        height="100%"
-                                        preserveAspectRatio="xMidYMid slice"
-                                        href={require('../Images/borne.png')}
-                                    />
-                                </Svg>
-                            </View>
-                        </View>
-                        <View style={styles.arrowborder} />
-                        <View style={styles.arrow} />
-                    </View>
-                </Callout>
-            </Marker >
+            nbDispo > 0 ?
+                <Marker
+                    coordinate={{
+                        latitude: marker.latitude,
+                        longitude: marker.longitude
+                    }}
+                    title={marker.adresse}
+                    pinColor={'green'}
+                >
+                    {this.renderCalloutMarker(marker, nbTotal, nbDispo)}
+                </Marker >
+                :
+                <Marker
+                    coordinate={{
+                        latitude: marker.latitude,
+                        longitude: marker.longitude
+                    }}
+                    title={marker.adresse}
+                    pinColor={'linen'}
+                >
+                    {this.renderCalloutMarker(marker, nbTotal, nbDispo)}
+                </Marker >
         );
     }
 }

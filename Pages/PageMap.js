@@ -46,7 +46,6 @@ const stationsElectriques = [
                 ]
             },
         ],
-        active: null,
     },
     {
         idStation: 2,
@@ -79,7 +78,6 @@ const stationsElectriques = [
                 ]
             },
         ],
-        active: null,
     },
     {
         idStation: 3,
@@ -101,7 +99,6 @@ const stationsElectriques = [
                 ]
             },
         ],
-        active: null,
     },
 ];
 
@@ -119,7 +116,8 @@ class PageMap extends React.Component {
                 longitude: LONGITUDE,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
-            }
+            },
+            active: null,
         };
     }
 
