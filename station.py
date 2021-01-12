@@ -10,18 +10,19 @@ data = json.load(f)
 # Ferme f file
 f.close()
 
-# Initialisation de la liste pour stocker les elements INSERT INTO
+# Initialisation des listes pour stocker les elements INSERT INTO
 stationData = list()
+borneData = list()
 
 for i in data:
     # Un i['UsageTypeID'] bug, donc on le passe
     try:
         stationData.append(
-            "INSERT INTO station (Latitude, Longitude, Adresse, Payement, Horaire) VALUES (\'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(i['UsageTypeID']) + "\', \'24/7\');"
+            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement, Horaire) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(i['UsageTypeID']) + "\', \'24/7\');"
         )
     except:
         stationData.append(
-            "INSERT INTO station (Latitude, Longitude, Adresse, Payement, Horaire) VALUES (\'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(-1) + "\', \'24/7\');"
+            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement, Horaire) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(-1) + "\', \'24/7\');"
         )
 
 print(stationData)
