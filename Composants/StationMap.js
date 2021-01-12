@@ -6,6 +6,7 @@ import { Marker, Callout } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car un bug de react native fait que les images de react-native ne s'affichent pas (sauf dans un <Text></Text> mais cela ajoute des marges et compliquent la mise en forme)
 import BorneMap from '../Composants/BorneMap';
+import { connect } from 'react-redux';
 
 
 class StationMap extends PureComponent {
@@ -14,19 +15,19 @@ class StationMap extends PureComponent {
         super(props);
     }
 
-    renderActiveState(marker) {
-        return (
-            <TouchableWithoutFeedback onPress={() => this.setState({ active: parking.id })} >
-                <View style={[
-                    styles.marker,
-                    styles.shadow,
-                    this.state.active === parking.id ? styles.active : null
-                ]}>
-                    <Text>Test</Text>
-                </View>
-            </TouchableWithoutFeedback>
-        )
-    }
+    // renderActiveState(marker) {
+    //     return (
+    //         <TouchableWithoutFeedback onPress={() => this.setState({ active: parking.id })} >
+    //             <View style={[
+    //                 styles.marker,
+    //                 styles.shadow,
+    //                 this.state.active === parking.id ? styles.active : null
+    //             ]}>
+    //                 <Text>Test</Text>
+    //             </View>
+    //         </TouchableWithoutFeedback>
+    //     )
+    // }
 
     renderBornesDisponibles(nbTotal, nbDispo) {
         return (
@@ -70,7 +71,6 @@ class StationMap extends PureComponent {
 
     render() {
         const { marker } = this.props;
-        //console.log(marker);
 
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(marker.bornes).length;
@@ -80,29 +80,27 @@ class StationMap extends PureComponent {
                 nbDispo++;
         }
 
+        // On regarde si la station est la station active
+        var egalite = false;
+        if (this.props.active == marker.idStation) {
+            egalite = true;
+        }
+        else {
+            egalite = false;
+        }
+
         return (
-            nbDispo > 0 ?
-                <Marker
-                    coordinate={{
-                        latitude: marker.latitude,
-                        longitude: marker.longitude
-                    }}
-                    title={marker.adresse}
-                    pinColor={'green'}
-                >
-                    {this.renderCalloutMarker(marker, nbTotal, nbDispo)}
-                </Marker >
-                :
-                <Marker
-                    coordinate={{
-                        latitude: marker.latitude,
-                        longitude: marker.longitude
-                    }}
-                    title={marker.adresse}
-                    pinColor={'linen'}
-                >
-                    {this.renderCalloutMarker(marker, nbTotal, nbDispo)}
-                </Marker >
+            <Marker
+                coordinate={{
+                    latitude: marker.latitude,
+                    longitude: marker.longitude
+                }}
+                title={marker.adresse}
+                pinColor={egalite ? 'green' : 'linen'}
+                key={`${marker.idStation}-${egalite ? 'active' : 'inactive'}`}
+            >
+                {this.renderCalloutMarker(marker, nbTotal, nbDispo)}
+            </Marker >
         );
     }
 }
@@ -169,4 +167,12 @@ const styles = StyleSheet.create({
     },
 })
 
-export default StationMap
+/* REDUX */
+// Connexion du state global au component PageMap
+const mapStateToProps = (state) => {
+    return {
+        active: state.active
+    }
+}
+
+export default connect(mapStateToProps)(StationMap)

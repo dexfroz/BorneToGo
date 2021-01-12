@@ -122,7 +122,7 @@ class PageMap extends React.Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             },
-            active: null,
+            borneActive: null,
         };
     }
 
@@ -151,9 +151,8 @@ class PageMap extends React.Component {
 
     // Méthode pour modifier la borne active
     changerBorneActive(id) {
-        this.state.active = id
-        console.log('Active ' + this.state.active)
-        const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: this.state.active }
+        this.state.borneActive = id;
+        const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: id }
         this.props.dispatch(action)
     }
 
@@ -203,6 +202,7 @@ class PageMap extends React.Component {
                 data={stationsElectriques}
                 keyExtractor={(item) => `${item.idStation}`}
                 renderItem={({ item }) => this.renderStation(item)}
+                extraData={this.state.borneActive}
             />
         )
     }
