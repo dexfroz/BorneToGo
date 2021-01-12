@@ -8,7 +8,7 @@ function reducerBorneActive(state = initialState, action) {
     switch (action.type) {
         case 'BORNE_ACTIVE_MODIFIEE':
             // On met active à l'id de la station courante 
-            nextState = { active: action.value.idStation }
+            nextState = { active: action.value }
             return nextState || state
         default:
             return state

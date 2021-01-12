@@ -149,11 +149,20 @@ class PageMap extends React.Component {
         return this.props.provider === PROVIDER_OSMDROID ? MAP_TYPES.STANDARD : MAP_TYPES.NONE;
     }
 
+    // Méthode pour modifier la borne active
+    changerBorneActive(id) {
+        this.state.active = id
+        console.log('Active ' + this.state.active)
+        const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: this.state.active }
+        this.props.dispatch(action)
+    }
+
     renderStation(item) {
         return (
             <TouchableWithoutFeedback
                 key={`Station-${item.idStation}`}
-                onPress={() => this.setState({ active: item.idStation })}
+                onPressIn={() => this.changerBorneActive(item.idStation)}
+
             >
                 <View style={styles.station}>
                     <Text style={styles.adresse}>{item.adresse}</Text>
@@ -177,7 +186,7 @@ class PageMap extends React.Component {
                         </View>
                     </View>
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback >
         )
     }
 
@@ -199,7 +208,7 @@ class PageMap extends React.Component {
     }
 
     render() {
-        console.log('active ' + this.state.active)
+        //console.log(this.props)
         return (
             <View style={styles.container}>
                 <MapView
@@ -292,7 +301,22 @@ const styles = StyleSheet.create({
     },
 })
 
-export default connect()(PageMap)
+/* REDUX */
+// Connexion du state global au component PageMap
+const mapStateToProps = (state) => {
+    return {
+        active: state.active
+    }
+}
+
+// Dispatcher
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PageMap)
 
 /* On remplace ScrollView par une FlatList
     <ScrollView

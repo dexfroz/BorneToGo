@@ -70,7 +70,7 @@ class StationMap extends PureComponent {
 
     render() {
         const { marker } = this.props;
-        console.log(marker);
+        //console.log(marker);
 
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(marker.bornes).length;
