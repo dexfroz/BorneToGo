@@ -150,18 +150,24 @@ class PageMap extends React.Component {
     }
 
     // Méthode pour modifier la borne active
-    changerBorneActive(id) {
+    changerStationActive(id) {
         this.state.borneActive = id;
         const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: id }
         this.props.dispatch(action)
     }
 
     renderStation(item) {
+        /* Ne fonctionne pas
+        if (update) {
+            var id = this.props.active - 1;
+            item = stationsElectriques[id];
+        } 
+        */
+
         return (
             <TouchableWithoutFeedback
                 key={`Station-${item.idStation}`}
-                onPressIn={() => this.changerBorneActive(item.idStation)}
-
+                onPressIn={() => this.changerStationActive(item.idStation)}
             >
                 <View style={styles.station}>
                     <Text style={styles.adresse}>{item.adresse}</Text>
@@ -186,10 +192,16 @@ class PageMap extends React.Component {
                     </View>
                 </View>
             </TouchableWithoutFeedback >
+
         )
     }
 
-    renderStations() {
+    renderStations(active) {
+        /* Ne fonctionne pas
+        var update = false;
+        this.state.borneActive != null ? update = (this.state.borneActive == active ? false : true) : update = false;
+        */
+
         return (
             <FlatList
                 horizontal
@@ -202,13 +214,11 @@ class PageMap extends React.Component {
                 data={stationsElectriques}
                 keyExtractor={(item) => `${item.idStation}`}
                 renderItem={({ item }) => this.renderStation(item)}
-                extraData={this.props.active}
             />
         )
     }
 
     render() {
-        //console.log(this.props)
         return (
             <View style={styles.container}>
                 <MapView
@@ -226,11 +236,12 @@ class PageMap extends React.Component {
                     />
 
                     {stationsElectriques.map(item =>
-                        <StationMap key={`Marker-${item.idStation}`} marker={item} />
+                        <StationMap
+                            key={`Marker-${item.idStation}`} marker={item} />
                     )}
 
                 </MapView>
-                {this.renderStations()}
+                {this.renderStations(this.props.active)}
             </View>
         );
     }

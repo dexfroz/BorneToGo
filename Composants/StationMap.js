@@ -5,7 +5,6 @@ import { StyleSheet, View, Text } from 'react-native'
 import { Marker, Callout } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car un bug de react native fait que les images de react-native ne s'affichent pas (sauf dans un <Text></Text> mais cela ajoute des marges et compliquent la mise en forme)
-import BorneMap from '../Composants/BorneMap';
 import { connect } from 'react-redux';
 
 
