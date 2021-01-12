@@ -3,6 +3,7 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Marker, Callout } from 'react-native-maps';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car un bug de react native fait que les images de react-native ne s'affichent pas (sauf dans un <Text></Text> mais cela ajoute des marges et compliquent la mise en forme)
 import BorneMap from '../Composants/BorneMap';
 
@@ -11,6 +12,20 @@ class StationMap extends PureComponent {
 
     constructor(props) {
         super(props);
+    }
+
+    renderActiveState(marker) {
+        return (
+            <TouchableWithoutFeedback onPress={() => this.setState({ active: parking.id })} >
+                <View style={[
+                    styles.marker,
+                    styles.shadow,
+                    this.state.active === parking.id ? styles.active : null
+                ]}>
+                    <Text>Test</Text>
+                </View>
+            </TouchableWithoutFeedback>
+        )
     }
 
     renderBornesDisponibles(nbTotal, nbDispo) {
@@ -151,9 +166,6 @@ const styles = StyleSheet.create({
     image: {
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    active: {
-        borderColor: '#D83C54',
     },
 })
 

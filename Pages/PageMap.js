@@ -148,7 +148,7 @@ class PageMap extends React.Component {
         return (
             <TouchableWithoutFeedback
                 key={`Station-${item.idStation}`}
-                onPress={() => this.setState({ active: item.id })}
+                onPress={() => this.setState({ active: item.idStation })}
             >
                 <View style={styles.station}>
                     <Text style={styles.adresse}>{item.adresse}</Text>
@@ -209,6 +209,7 @@ class PageMap extends React.Component {
         */
 
     render() {
+        console.log('active ' + this.state.active)
         return (
             <View style={styles.container}>
                 <MapView
@@ -236,7 +237,7 @@ class PageMap extends React.Component {
     }
 }
 
-/* Markeur
+/* Marker
                     <MapView.Marker
                         coordinate={{
                             latitude: this.state.region.latitude,
@@ -312,7 +313,10 @@ const styles = StyleSheet.create({
     selection: {
         color: 'white',
         fontWeight: "bold",
-    }
+    },
+    active: {
+        borderColor: '#D83C54',
+    },
 })
 
 export default PageMap
