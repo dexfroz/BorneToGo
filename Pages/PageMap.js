@@ -4,7 +4,7 @@ import React from 'react'
 import { StyleSheet, Text, View, ScrollView, Dimensions, Image, FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { MAP_TYPES, PROVIDER_OSMDROID, Marker } from 'react-native-maps';
-import BorneMap from '../Components/BorneMap';
+import BorneMap from '../Composants/BorneMap';
 
 const { width, height } = Dimensions.get('window');
 
