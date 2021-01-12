@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import { Marker, Callout } from 'react-native-maps';
 
 
 class BorneMap extends PureComponent {
@@ -16,7 +15,10 @@ class BorneMap extends PureComponent {
         console.log(borne);
         return (
             <View>
-                <Text>Borne {borne.idBorne}</Text>
+                {
+                    borne.status ? <Text style={styles.borne}>Borne n° {borne.idBorne} disponible </Text> : <Text style={styles.borne}>Borne n° {borne.idBorne} non disponible</Text>
+                }
+
             </View>
         );
     }
@@ -26,53 +28,12 @@ class BorneMap extends PureComponent {
 
 
 const styles = StyleSheet.create({
-    // Bulle d'information
-    bulle: {
-        flexDirection: 'column',
-        alignSelf: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 6,
-        borderColor: '#ccc',
-        borderWidth: 0.5,
-        padding: 15,
-        width: 200,
-    },
     // Affichage des informations
-    name: {
-        fontSize: 16,
+    borne: {
+        fontSize: 14,
         marginBottom: 5,
         fontWeight: 'bold',
         textAlign: 'center',
-    },
-    description: {
-        fontSize: 14,
-        fontStyle: 'italic',
-        textAlign: 'center',
-        marginBottom: 5,
-    },
-    // Flèche sous la bulle
-    arrow: {
-        backgroundColor: 'transparent',
-        borderColor: 'transparent',
-        borderTopColor: '#fff',
-        borderWidth: 16,
-        alignSelf: 'center',
-        marginTop: -32,
-    },
-    arrowborder: {
-        backgroundColor: 'transparent',
-        borderColor: 'transparent',
-        borderTopColor: '#007a87',
-        borderWidth: 16,
-        alignSelf: 'center',
-        marginTop: -0.5,
-    },
-    image: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    active: {
-        borderColor: '#D83C54',
     },
 })
 

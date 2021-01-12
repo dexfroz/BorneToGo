@@ -92,7 +92,7 @@ const stationsElectriques = [
             {
                 idBorne: 1,
                 puissance: 22.0,
-                status: true,
+                status: false,
                 connecteurs: [
                     {
                         idConnecteur: 1,

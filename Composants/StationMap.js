@@ -13,6 +13,21 @@ class StationMap extends PureComponent {
         super(props);
     }
 
+    renderBornesDisponibles(item) {
+        var nbTotal = Object.keys(item.bornes).length;
+        var nbDispo = 0;
+        for (const obj of item.bornes) {
+            if (obj.status)
+                nbDispo++;
+        }
+        return (
+            (nbDispo == 0) ?
+                <Text style={styles.pasdispo}>Pas de bornes disponibles</Text> :
+                (nbDispo > 1) ? <Text style={styles.dispo}>{nbDispo}/{nbTotal} disponibles</Text> :
+                    <Text style={styles.dispo}>{nbDispo}/{nbTotal} disponible</Text>
+        )
+    }
+
     render() {
         const { marker } = this.props;
         console.log(marker);
@@ -31,9 +46,9 @@ class StationMap extends PureComponent {
                                 {marker.adresse}
                             </Text>
                             <Text style={styles.description}>
-                                {marker.bornes.map(item =>
-                                    <BorneMap key={`borne-${marker.idStation}-${item.idBornes}`} borne={item} />
-                                )}
+                                <View style={styles.bornesDispo}>
+                                    {this.renderBornesDisponibles(marker)}
+                                </View>
                             </Text>
                             <View style={styles.image}>
                                 <Svg width={110} height={110} >
@@ -82,6 +97,17 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         textAlign: 'center',
         marginBottom: 5,
+    },
+    bornesDispo: {
+        justifyContent: 'center',
+    },
+    dispo: {
+        fontSize: 14,
+        color: 'green',
+    },
+    pasdispo: {
+        fontSize: 14,
+        color: 'red',
     },
     // Flèche sous la bulle
     arrow: {
