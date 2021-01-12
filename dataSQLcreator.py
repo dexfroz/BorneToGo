@@ -18,12 +18,12 @@ for i in data:
     # Un i['UsageTypeID'] bug, donc on le passe
     try:
         stationData.append(
-            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement, Horaire) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(i['UsageTypeID']) + "\', \'24/7\');"
+            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(i['UsageTypeID']) + "\');"
         )
     except:
         print("ERROR Station")
         stationData.append(
-            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement, Horaire) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(-1) + "\', \'24/7\');"
+            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(-1) + "\');"
         )
 
 for i in data:
