@@ -1,19 +1,23 @@
 // Pages/PageMap.js
 
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView, Dimensions, Image, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, Image, FlatList } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import MapView, { MAP_TYPES, PROVIDER_OSMDROID, Marker } from 'react-native-maps';
+import MapView, { MAP_TYPES, PROVIDER_OSMDROID } from 'react-native-maps';
 import StationMap from '../Composants/StationMap';
+import { connect } from 'react-redux';
 
+// Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
 
+// Calcul et initialisation des coordonnées de la position initiale de la map
 const ASPECT_RATIO = width / height;
 const LATITUDE = 43.12; //43.12
 const LONGITUDE = 5.94; //5.94
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+// Stations Electriques de test
 const stationsElectriques = [
     {
         idStation: 1,
@@ -102,6 +106,7 @@ const stationsElectriques = [
     },
 ];
 
+// Fonction de log pour tester
 function log(eventName, e) {
     console.log(eventName, e.nativeEvent);
 }
@@ -193,21 +198,6 @@ class PageMap extends React.Component {
         )
     }
 
-
-    /* On remplace ScrollView par une FlatList
-    <ScrollView
-                horizontal
-                style={styles.stations}
-                pagingEnabled // répartie les stations dans des pages de sorte qu'on ne voit qu'une station à la fois
-                scrollEnabled // rend possible le scroll entre les différentes "pages" de station
-                showsHorizontalScrollIndicator={false} // empêche l'apparition d'un scroll horizontal interne quand le nom est trop grand
-                scrollEventThrottle={16} // intervalle de temps en ms, permet de fluidifier le scrolling
-                snapToAlignment="center"
-            >
-                {stationsElectriques.map((item) => this.renderStation(item))}
-            </ScrollView>
-        */
-
     render() {
         console.log('active ' + this.state.active)
         return (
@@ -227,7 +217,7 @@ class PageMap extends React.Component {
                     />
 
                     {stationsElectriques.map(item =>
-                        <StationMap key={`marker-${item.idStation}`} marker={item} />
+                        <StationMap key={`Marker-${item.idStation}`} marker={item} />
                     )}
 
                 </MapView>
@@ -236,23 +226,6 @@ class PageMap extends React.Component {
         );
     }
 }
-
-/* Marker
-                    <MapView.Marker
-                        coordinate={{
-                            latitude: this.state.region.latitude,
-                            longitude: this.state.region.longitude
-                        }}
-                        title={"Vous êtes ici"}
-                        description={"Votre position"}
-                        //onSelect={e => log('onSelect', e)}
-                        //onDrag={e => log('onDrag', e)}
-                        //onDragStart={e => log('onDragStart', e)}
-                        //onDragEnd={e => log('onDragEnd', e)}
-                        //onPress={e => log('onPress', e)}
-                        draggable
-                    />
-*/
 
 const styles = StyleSheet.create({
     // Vue totale de la page
@@ -315,8 +288,39 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     active: {
-        borderColor: '#D83C54',
+        borderColor: '#70B445',
     },
 })
 
-export default PageMap
+export default connect()(PageMap)
+
+/* On remplace ScrollView par une FlatList
+    <ScrollView
+                horizontal
+                style={styles.stations}
+                pagingEnabled // répartie les stations dans des pages de sorte qu'on ne voit qu'une station à la fois
+                scrollEnabled // rend possible le scroll entre les différentes "pages" de station
+                showsHorizontalScrollIndicator={false} // empêche l'apparition d'un scroll horizontal interne quand le nom est trop grand
+                scrollEventThrottle={16} // intervalle de temps en ms, permet de fluidifier le scrolling
+                snapToAlignment="center"
+            >
+                {stationsElectriques.map((item) => this.renderStation(item))}
+            </ScrollView>
+        */
+
+/* Marker
+            <MapView.Marker
+                coordinate={{
+                    latitude: this.state.region.latitude,
+                    longitude: this.state.region.longitude
+                }}
+                title={"Vous êtes ici"}
+                description={"Votre position"}
+                //onSelect={e => log('onSelect', e)}
+                //onDrag={e => log('onDrag', e)}
+                //onDragStart={e => log('onDragStart', e)}
+                //onDragEnd={e => log('onDragEnd', e)}
+                //onPress={e => log('onPress', e)}
+                draggable
+            />
+*/
