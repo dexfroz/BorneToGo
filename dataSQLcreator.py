@@ -35,7 +35,7 @@ for i in data:
         except:
             print("ERROR Borne")
             borneData.append(
-                "INSERT INTO station (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES (\'" + str(j['ID']) + "\', \'" + str(i['ID']) + "\', \'" + str(j['ConnectionTypeID']) + "\', \'" + str(-1) + "\', \'" + str(-1) + "\');"
+                "INSERT INTO borne (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES (\'" + str(j['ID']) + "\', \'" + str(i['ID']) + "\', \'" + str(j['ConnectionTypeID']) + "\', \'" + str(-1) + "\', \'" + str(-1) + "\');"
             )
 
 print(borneData[56])
