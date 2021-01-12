@@ -29,6 +29,17 @@ class StationMap extends PureComponent {
     //     )
     // }
 
+    // Méthode pour modifier la station active
+    changerStationActive(id) {
+        const TIME_FOR_ANIMATION = 0;
+        const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: id }
+        this.props.dispatch(action)
+        setTimeout(() => {
+            this.markerRef.showCallout();
+        }, TIME_FOR_ANIMATION);
+    }
+
+    // Méthode pour afficher les bornes disponibles
     renderBornesDisponibles(nbTotal, nbDispo) {
         return (
             (nbDispo == 0) ?
@@ -38,9 +49,11 @@ class StationMap extends PureComponent {
         )
     }
 
+    // Méthode pour afficher le callout
     renderCalloutMarker(marker, nbTotal, nbDispo) {
         return (
-            <Callout tooltip>
+            <Callout tooltip
+            >
                 <View>
                     <View style={styles.bulle}>
                         <Text style={styles.name}>
@@ -95,11 +108,14 @@ class StationMap extends PureComponent {
                     latitude: marker.latitude,
                     longitude: marker.longitude
                 }}
+                ref={(ref) => this.markerRef = ref}
                 title={marker.adresse}
                 pinColor={egalite ? 'green' : 'linen'}
                 key={`${marker.idStation}-${egalite ? 'active' : 'inactive'}`}
+                onPress={() => this.changerStationActive(marker.idStation)}
+            //onPress={() => this.changerStationActive(marker.idStation)}
             >
-                {this.renderCalloutMarker(marker, nbTotal, nbDispo)}
+                { this.renderCalloutMarker(marker, nbTotal, nbDispo)}
             </Marker >
         );
     }
@@ -175,4 +191,11 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(StationMap)
+// Dispatcher
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StationMap)

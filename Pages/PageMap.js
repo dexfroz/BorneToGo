@@ -202,7 +202,7 @@ class PageMap extends React.Component {
                 data={stationsElectriques}
                 keyExtractor={(item) => `${item.idStation}`}
                 renderItem={({ item }) => this.renderStation(item)}
-                extraData={this.state.borneActive}
+                extraData={this.props.active}
             />
         )
     }
