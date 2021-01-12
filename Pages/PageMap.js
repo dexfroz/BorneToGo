@@ -2,9 +2,9 @@
 
 import React from 'react'
 import { StyleSheet, Text, View, ScrollView, Dimensions, Image, FlatList } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MapView, { MAP_TYPES, PROVIDER_OSMDROID, Marker } from 'react-native-maps';
-import BorneMap from '../Composants/BorneMap';
+import StationMap from '../Composants/StationMap';
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,28 +16,92 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const stationsElectriques = [
     {
-        idStation: 83137,
+        idStation: 1,
         adresse: 'Parking Plages Du Mourillon 83000 TOULON',
         longitude: 5.9522,
         latitude: 43.1073,
         paiement: 'Payant',
-        horaire: '24/24 7/7 jours'
+        horaire: '24/24 7/7 jours',
+        bornes: [
+            {
+                idBorne: 1,
+                puissance: 22.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF-T2',
+                    },
+                ]
+            },
+            {
+                idBorne: 2,
+                puissance: 4.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 2,
+                        type: 'EF',
+                    },
+                ]
+            },
+        ],
+        active: null,
     },
     {
-        idStation: 83139,
+        idStation: 2,
         adresse: 'Avenue F.Lesseps 83000 TOULON',
         longitude: 5.9389,
         latitude: 43.1262,
         paiement: 'Payant',
-        horaire: '24/24 7/7 jours'
+        horaire: '24/24 7/7 jours',
+        bornes: [
+            {
+                idBorne: 1,
+                puissance: 22.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF-T2',
+                    },
+                ]
+            },
+            {
+                idBorne: 2,
+                puissance: 4.0,
+                status: false,
+                connecteurs: [
+                    {
+                        idConnecteur: 2,
+                        type: 'EF',
+                    },
+                ]
+            },
+        ],
+        active: null,
     },
     {
-        idStation: 83138,
+        idStation: 3,
         adresse: 'Place Du Colonel Bonnier 83000 TOULON',
         longitude: 5.9105,
         latitude: 43.1287,
         paiement: 'Payant',
-        horaire: '24/24 7/7 jours'
+        horaire: '24/24 7/7 jours',
+        bornes: [
+            {
+                idBorne: 1,
+                puissance: 22.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF-T2',
+                    },
+                ]
+            },
+        ],
+        active: null,
     },
 ];
 
@@ -84,28 +148,33 @@ class PageMap extends React.Component {
 
     renderStation(item) {
         return (
-            <View key={`Station-${item.idStation}`} style={styles.station}>
-                <Text style={styles.adresse}>{item.adresse}</Text>
-                <View style={styles.stationcorps}>
-                    <Image
-                        style={styles.image}
-                        source={require('../Images/borne.png')}
-                    />
-                    <View style={styles.paiementhoraire}>
-                        <Text style={styles.paiement}>{item.paiement}</Text>
-                        <Text style={styles.horaire}>{item.horaire}</Text>
-                    </View>
-                    <View style={styles.vuebouton}>
-                        <TouchableOpacity
-                            style={styles.bouton}
-                        >
-                            <View>
-                                <Text style={styles.selection}>Sélectionner</Text>
-                            </View>
-                        </TouchableOpacity>
+            <TouchableWithoutFeedback
+                key={`Station-${item.idStation}`}
+                onPress={() => this.setState({ active: item.id })}
+            >
+                <View style={styles.station}>
+                    <Text style={styles.adresse}>{item.adresse}</Text>
+                    <View style={styles.stationcorps}>
+                        <Image
+                            style={styles.image}
+                            source={require('../Images/borne.png')}
+                        />
+                        <View style={styles.paiementhoraire}>
+                            <Text style={styles.paiement}>{item.paiement}</Text>
+                            <Text style={styles.horaire}>{item.horaire}</Text>
+                        </View>
+                        <View style={styles.vuebouton}>
+                            <TouchableOpacity
+                                style={styles.bouton}
+                            >
+                                <View>
+                                    <Text style={styles.selection}>Sélectionner</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         )
     }
 
@@ -159,7 +228,7 @@ class PageMap extends React.Component {
                     />
 
                     {stationsElectriques.map(item =>
-                        <BorneMap key={`marker-${item.idStation}`} marker={item} />
+                        <StationMap key={`marker-${item.idStation}`} marker={item} />
                     )}
 
                 </MapView>

@@ -3,7 +3,6 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Marker, Callout } from 'react-native-maps';
-import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car un bug de react native fait que les images de react-native ne s'affichent pas (sauf dans un <Text></Text> mais cela ajoute des marges et compliquent la mise en forme)
 
 
 class BorneMap extends PureComponent {
@@ -13,39 +12,12 @@ class BorneMap extends PureComponent {
     }
 
     render() {
-        const { marker } = this.props;
-        console.log(marker);
+        const { borne } = this.props;
+        console.log(borne);
         return (
-            <Marker
-                coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude
-                }}
-                title={marker.adresse}
-                description="Description"
-            >
-                <Callout tooltip>
-                    <View>
-                        <View style={styles.bulle}>
-                            <Text style={styles.name}>
-                                {marker.adresse}
-                            </Text>
-                            <View style={styles.image}>
-                                <Svg width={110} height={110} >
-                                    <ImageSvg
-                                        width="100%"
-                                        height="100%"
-                                        preserveAspectRatio="xMidYMid slice"
-                                        href={require('../Images/borne.png')}
-                                    />
-                                </Svg>
-                            </View>
-                        </View>
-                        <View style={styles.arrowborder} />
-                        <View style={styles.arrow} />
-                    </View>
-                </Callout>
-            </Marker >
+            <View>
+                <Text>Borne {borne.idBorne}</Text>
+            </View>
         );
     }
 }
@@ -69,6 +41,7 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 16,
         marginBottom: 5,
+        fontWeight: 'bold',
         textAlign: 'center',
     },
     description: {
@@ -97,7 +70,10 @@ const styles = StyleSheet.create({
     image: {
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    active: {
+        borderColor: '#D83C54',
+    },
 })
 
 export default BorneMap
