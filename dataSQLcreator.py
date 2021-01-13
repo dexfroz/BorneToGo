@@ -13,35 +13,36 @@ def loadJSONfromFile(filename):
 
     return data
 
-"""
-# Initialisation des listes pour stocker les elements INSERT INTO
-stationData = list()
-borneData = list()
+def INSERT_INTO_SQLCreator_borne(data):
+    SQLlistRequete = list()
+    listID = list()
 
-for i in data:
-    # Un i['UsageTypeID'] bug, donc on le passe
-    try:
-        stationData.append(
-            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(i['UsageTypeID']) + "\');"
-        )
-    except:
-        print("ERROR Station")
-        stationData.append(
-            "INSERT INTO station (IDStation, Latitude, Longitude, Adresse, Payement) VALUES (\'" + str(i['ID']) + "\', \'" + str(i['AddressInfo']['Latitude']) + "\', \'" + str(i['AddressInfo']['Longitude']) + "\', \'" + str(i['AddressInfo']['AddressLine1']) + "\', \'" + str(-1) + "\');"
-        )
+    for i in data:
+        for j in i['Connections']:
+            if j['ID'] not in listID:
+                listID.append(j['ID'])
 
-for i in data:
-    for j in i['Connections']:
-        try:
-            borneData.append(
-                "INSERT INTO station (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES (\'" + str(j['ID']) + "\', \'" + str(i['ID']) + "\', \'" + str(j['ConnectionTypeID']) + "\', \'" + str(j['PowerKW']) + "\', \'" + str(j['StatusTypeID']) + "\');"
-            )
-        except:
-            print("ERROR Borne")
-            borneData.append(
-                "INSERT INTO borne (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES (\'" + str(j['ID']) + "\', \'" + str(i['ID']) + "\', \'" + str(j['ConnectionTypeID']) + "\', \'" + str(-1) + "\', \'" + str(-1) + "\');"
-            )
-"""
+                IDBorne = str(j['ID'])
+                IDStation = str(i['ID'])
+                IDConnecteur = str(j['ConnectionTypeID'])
+
+                try:
+                    Puissance = str(j['PowerKW'])
+                except:
+                    Puissance = "-1"
+
+                try:
+                    Status = str(j['StatusTypeID'])
+                except:
+                    Status = "-1"
+
+                requete = "INSERT INTO Borne (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES ('{}','{}','{}','{}','{}');"
+
+                SQLlistRequete.append(
+                    requete.format(IDBorne, IDStation, IDConnecteur, Puissance, Status)
+                )
+
+    return SQLlistRequete
 
 def INSERT_INTO_SQLCreator_station(data):
     # Initialisation de la liste pour stocker les elements INSERT INTO
@@ -95,4 +96,5 @@ def createSQLFilefromlist(data,filename):
 def correctionString(texte):
     return texte.replace("'","\\'")
 
-createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
+#createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
