@@ -52,6 +52,12 @@ public class Car
 	}
 
 
+	public void setCurrentAutonomy(double autonomy)
+	{
+		this.currentAutonomy = Math.max(0, Math.min(autonomy, this.maxAutonomy));
+	}
+
+
 	public String toString()
 	{
 		return "Car: " + model + "\nBattery type: " + batteryType + "\nConnector: " + connector +

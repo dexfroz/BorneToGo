@@ -42,7 +42,7 @@ public class Coord
 	}
 
 
-	public Boolean getStationStatus()
+	public Boolean isStation()
 	{
 		return this.isStation;
 	}
