@@ -1,15 +1,19 @@
 import json
 
-# Ouvre JSON file
-# UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 29815: character maps to <undefined>
-# correction du bug -> encoding="utf-8"
-f = open("data.json","r",encoding="utf-8")
+def loadJSONfromFile(filename):
+    # Ouvre JSON file
+    # UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 29815: character maps to <undefined>
+    # correction du bug -> encoding="utf-8"
+    f = open(filename,"r",encoding="utf-8")
 
-data = json.load(f)
+    data = json.load(f)
 
-# Ferme f file
-f.close()
+    # Ferme f file
+    f.close()
 
+    return data
+
+"""
 # Initialisation des listes pour stocker les elements INSERT INTO
 stationData = list()
 borneData = list()
@@ -37,20 +41,58 @@ for i in data:
             borneData.append(
                 "INSERT INTO borne (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES (\'" + str(j['ID']) + "\', \'" + str(i['ID']) + "\', \'" + str(j['ConnectionTypeID']) + "\', \'" + str(-1) + "\', \'" + str(-1) + "\');"
             )
+"""
 
-print(borneData[56])
+def INSERT_INTO_SQLCreator_station(data):
+    # Initialisation de la liste pour stocker les elements INSERT INTO
+    SQLlistRequete = list()
+    listID = list()
 
-fs = open("station.sql","w",encoding="utf-8")
+    for i in data:
+        
+        if i['ID'] not in listID:
+            listID.append(i['ID'])
 
-# Every element of the list is write on one line
-for i in stationData:
-    fs.write('\n%s' % i)
+            IDStation = str(i['ID'])
+            Latitude = str(i['AddressInfo']['Latitude'])
+            Longitude = str(i['AddressInfo']['Longitude'])
+            Adresse = correctionString(str(i['AddressInfo']['AddressLine1']))
 
-fs.close()
+            try:
+                Ville = correctionString(str(i['AddressInfo']['Town']))
+            except:
+                Ville = "-1"
+            
+            try:
+                Code_Postal = str(i['AddressInfo']['Postcode'])
+            except:
+                Code_Postal = "-1"
 
-fb = open("borne.sql","w",encoding="utf-8")
+            Titre = correctionString(str(i['AddressInfo']['Title']))
 
-for i in borneData:
-    fb.write('\n%s' % i)
+            try:
+                Paiement = str(i['UsageTypeID'])
+            except:
+                Paiement = "-1"
+            
+            requete = "INSERT INTO Station (idStation, Latitude, Longitude, Adresse, Ville, CodePostal, Titre, Paiement) VALUES ('{}','{}','{}','{}','{}','{}','{}','{}');"
 
-fb.close()
+            SQLlistRequete.append(
+                requete.format(IDStation,Latitude,Longitude,Adresse,Ville,Code_Postal,Titre,Paiement)
+            )
+
+    return SQLlistRequete
+
+def createSQLFilefromlist(data,filename):
+    fs = open(filename,"w",encoding="utf-8")
+
+    # Every element of the list is write on one line
+    for i in data:
+        fs.write('\n%s' % i)
+
+    fs.close()
+
+def correctionString(texte):
+    return texte.replace("'","\\'")
+
+createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
