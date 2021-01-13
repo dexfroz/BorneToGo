@@ -285,25 +285,42 @@ class PageMap extends React.Component {
         } 
         */
 
+        console.log(this.props);
         return (
             <TouchableWithoutFeedback
                 key={`Station-${item.idStation}`}
                 onPressIn={() => this.changerStationActive(item.idStation)}
             >
                 <View style={styles.station}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Text style={styles.adresse}>{item.adresse}</Text>
-                    <Text style={styles.adresse}>{item.codepostale} {item.ville}</Text>
-                    <View style={styles.stationcorps}>
+                    <View style={styles.titre_info}>
+                        <Text style={styles.title}>{item.title}</Text>
+                        <View >
+                            <TouchableOpacity
+                                onPress={() => this.props.navigation.navigate('Station', {
+                                    station: item,
+                                })}
+                            >
+                                <View style={styles.vue_bouton_info}>
+                                    <Image
+                                        style={styles.image_info}
+                                        source={require('../Images/info.png')}
+                                    />
+                                    <Text style={styles.info}>Voir Info</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <Text style={styles.adresse}>{item.adresse}{"\n"}{item.codepostale} {item.ville}</Text>
+                    <View style={styles.station_corps}>
                         <Image
                             style={styles.image}
                             source={require('../Images/borne.png')}
                         />
-                        <View style={styles.paiementhoraire}>
+                        <View style={styles.paiement_horaire}>
                             <Text style={styles.paiement}>{item.paiement}</Text>
                             <Text style={styles.horaire}>{item.horaire}</Text>
                         </View>
-                        <View style={styles.vuebouton}>
+                        <View style={styles.vue_bouton}>
                             <TouchableOpacity
                                 style={styles.bouton}
                             >
@@ -391,41 +408,36 @@ const styles = StyleSheet.create({
     },
     // Station individuelle
     station: {
-        flexDirection: 'column',
+        flex: 1,
         backgroundColor: 'white',
-        borderRadius: 6,
+        borderRadius: 10,
         padding: 18,
         marginHorizontal: 24,
-        width: width - (24 * 2)
+        width: width - (24 * 2),
     },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 5,
-        textAlign: 'center',
-    },
+    //Informations : adresse, prix, ouverture
     adresse: {
         fontSize: 14,
         fontStyle: 'italic',
         marginBottom: 5
     },
-    stationcorps: {
-        flex: 1,
+    station_corps: {
         flexDirection: 'row',
-
     },
-    paiementhoraire: {
+    paiement_horaire: {
         flex: 1,
         marginLeft: 15,
     },
     paiement: {
-        fontStyle: 'italic'
+        flex: 1,
+        fontWeight: 'bold',
     },
     image: {
         height: 60,
         width: 60
     },
-    vuebouton: {
+    // Bouton Sélection
+    vue_bouton: {
         justifyContent: 'center',
     },
     bouton: {
@@ -439,8 +451,30 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: "bold",
     },
-    active: {
-        borderColor: '#70B445',
+    // Bouton Info
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    titre_info: {
+        marginHorizontal: 24,
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'space-evenly',
+    },
+    vue_bouton_info: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: 60,
+        height: 50,
+    },
+    info: {
+        fontStyle: 'italic',
+        textAlignVertical: 'center',
+    },
+    image_info: {
+        height: 30,
+        width: 30
     },
 })
 

@@ -26,7 +26,7 @@ class Station extends PureComponent {
 
     renderTitleBornes(nbTotal) {
         return (
-            (nbTotal >= 2) ? <Text style={styles.borne_titre}>Bornes : </Text> : <Text>Borne : </Text>
+            (nbTotal >= 2) ? <Text style={styles.borne_titre}>Bornes : </Text> : <Text style={styles.borne_titre}></Text>
         )
     }
 
