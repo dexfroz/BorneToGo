@@ -36,7 +36,7 @@ def INSERT_INTO_SQLCreator_borne(data):
                 except:
                     Status = "-1"
 
-                requete = "INSERT INTO Borne (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES ('{}','{}','{}','{}','{}');"
+                requete = "INSERT INTO BorneToGo.Borne (idBorne, idStation, idConnecteur, Puissance, Status) VALUES ('{}','{}','{}','{}','{}');"
 
                 SQLlistRequete.append(
                     requete.format(IDBorne, IDStation, IDConnecteur, Puissance, Status)
@@ -76,7 +76,7 @@ def INSERT_INTO_SQLCreator_station(data):
             except:
                 Paiement = "-1"
             
-            requete = "INSERT INTO Station (idStation, Latitude, Longitude, Adresse, Ville, CodePostal, Titre, Paiement) VALUES ('{}','{}','{}','{}','{}','{}','{}','{}');"
+            requete = "INSERT INTO BorneToGo.Station (idStation, Latitude, Longitude, Adresse, Ville, CodePostal, Titre, Paiement) VALUES ('{}','{}','{}','{}','{}','{}','{}','{}');"
 
             SQLlistRequete.append(
                 requete.format(IDStation,Latitude,Longitude,Adresse,Ville,Code_Postal,Titre,Paiement)
@@ -97,4 +97,6 @@ def correctionString(texte):
     return texte.replace("'","\\'")
 
 createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
-#createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
+
+print("fini")
