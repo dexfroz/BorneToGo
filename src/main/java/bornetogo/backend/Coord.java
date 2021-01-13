@@ -6,9 +6,10 @@ import java.io.*;
 public class Coord
 {
 	// In decimal degrees:
-	private double latitude;
-	private double longitude;
-	private String description;
+	protected double latitude;
+	protected double longitude;
+	protected String description;
+	protected Boolean isStation; // default to false
 
 
 	public Coord(double latitude, double longitude)
@@ -16,6 +17,7 @@ public class Coord
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.description = "";
+		this.isStation = false;
 	}
 
 
@@ -24,6 +26,7 @@ public class Coord
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.description = description;
+		this.isStation = false;
 	}
 
 
@@ -39,8 +42,22 @@ public class Coord
 	}
 
 
+	public Boolean getStationStatus()
+	{
+		return this.isStation;
+	}
+
+
 	public String toString()
 	{
-		return "lat: " + Double.toString(this.latitude) + ", long: " + Double.toString(this.longitude);
+		return "Coord of: " + description + "\n" + "Is a station: " + this.isStation +
+			"\nLatitude: " + Double.toString(this.latitude) + ", longitude: " + Double.toString(this.longitude);
+	}
+
+
+	public static void main(String[] args)
+	{
+		Coord coord = new Coord(43.1, 5.9, "Somewhere.");
+		System.out.println(coord.toString());
 	}
 }
