@@ -71,7 +71,7 @@ class Station extends PureComponent {
                         </View>
                     </View>
                 </View>
-                <View>
+                <View style={styles.bornes}>
                     <FlatList
                         nestedScrollEnabled
                         vertical
@@ -143,6 +143,9 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: 'red',
     },
+    bornes: {
+        marginBottom: 270,
+    }
 })
 
 export default Station
