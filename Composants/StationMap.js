@@ -49,14 +49,19 @@ class StationMap extends PureComponent {
     }
 
     // Méthode pour afficher le callout
-    renderCalloutMarker(marker, nbTotal, nbDispo) {
+    renderCalloutMarker(propsnavigation, marker, nbTotal, nbDispo) {
+
         return (
-            <Callout tooltip
+            <Callout
+                tooltip
+                onPress={() => propsnavigation.navigation.navigate('Station', {
+                    station: marker,
+                })}
             >
                 <View>
                     <View style={styles.bulle}>
                         <Text style={styles.name}>
-                            {marker.adresse}
+                            {marker.title}
                         </Text>
                         <Text style={styles.description}>
                             <View style={styles.bornesDispo}>
@@ -82,7 +87,7 @@ class StationMap extends PureComponent {
     }
 
     render() {
-        const { marker } = this.props;
+        const { marker, propsnavigation } = this.props;
 
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(marker.bornes).length;
@@ -112,15 +117,12 @@ class StationMap extends PureComponent {
                 pinColor={egalite ? 'green' : 'linen'}
                 key={`${marker.idStation}-${egalite ? 'active' : 'inactive'}`}
                 onPress={() => this.changerStationActive(marker.idStation)}
-            //onPress={() => this.changerStationActive(marker.idStation)}
             >
-                { this.renderCalloutMarker(marker, nbTotal, nbDispo)}
+                { this.renderCalloutMarker(propsnavigation, marker, nbTotal, nbDispo)}
             </Marker >
         );
     }
 }
-
-/* <Text style={styles.description}>{marker.description}</Text> */
 
 
 const styles = StyleSheet.create({

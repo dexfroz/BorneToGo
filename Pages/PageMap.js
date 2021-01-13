@@ -21,7 +21,10 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const stationsElectriques = [
     {
         idStation: 1,
-        adresse: 'Parking Plages Du Mourillon 83000 TOULON',
+        title: 'Parking des plages du Mourillon',
+        adresse: 'Parking Plages Du Mourillon',
+        codepostale: '83000',
+        ville: 'TOULON',
         longitude: 5.9522,
         latitude: 43.1073,
         paiement: 'Payant',
@@ -36,6 +39,10 @@ const stationsElectriques = [
                         idConnecteur: 1,
                         type: 'EF-T2',
                     },
+                    {
+                        idConnecteur: 2,
+                        type: 'EF',
+                    },
                 ]
             },
             {
@@ -44,7 +51,7 @@ const stationsElectriques = [
                 status: true,
                 connecteurs: [
                     {
-                        idConnecteur: 2,
+                        idConnecteur: 1,
                         type: 'EF',
                     },
                 ]
@@ -53,7 +60,10 @@ const stationsElectriques = [
     },
     {
         idStation: 2,
-        adresse: 'Avenue F.Lesseps 83000 TOULON',
+        title: 'Conseil départemental du Var',
+        adresse: 'Avenue F.Lesseps',
+        codepostale: '83000',
+        ville: 'TOULON',
         longitude: 5.9389,
         latitude: 43.1262,
         paiement: 'Payant',
@@ -68,6 +78,10 @@ const stationsElectriques = [
                         idConnecteur: 1,
                         type: 'EF-T2',
                     },
+                    {
+                        idConnecteur: 2,
+                        type: 'EF',
+                    },
                 ]
             },
             {
@@ -76,7 +90,111 @@ const stationsElectriques = [
                 status: false,
                 connecteurs: [
                     {
+                        idConnecteur: 1,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 3,
+                puissance: 22.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF-T2',
+                    },
+                    {
                         idConnecteur: 2,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 4,
+                puissance: 4.0,
+                status: false,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 5,
+                puissance: 22.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF-T2',
+                    },
+                    {
+                        idConnecteur: 2,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 6,
+                puissance: 4.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 7,
+                puissance: 22.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF-T2',
+                    },
+                    {
+                        idConnecteur: 2,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 8,
+                puissance: 4.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 9,
+                puissance: 22.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
+                        type: 'EF-T2',
+                    },
+                    {
+                        idConnecteur: 2,
+                        type: 'EF',
+                    },
+                ]
+            },
+            {
+                idBorne: 10,
+                puissance: 4.0,
+                status: true,
+                connecteurs: [
+                    {
+                        idConnecteur: 1,
                         type: 'EF',
                     },
                 ]
@@ -85,7 +203,10 @@ const stationsElectriques = [
     },
     {
         idStation: 3,
-        adresse: 'Place Du Colonel Bonnier 83000 TOULON',
+        title: 'La Poste',
+        adresse: 'Place Du Colonel Bonnier',
+        codepostale: '83000',
+        ville: 'TOULON',
         longitude: 5.9105,
         latitude: 43.1287,
         paiement: 'Payant',
@@ -170,7 +291,9 @@ class PageMap extends React.Component {
                 onPressIn={() => this.changerStationActive(item.idStation)}
             >
                 <View style={styles.station}>
+                    <Text style={styles.title}>{item.title}</Text>
                     <Text style={styles.adresse}>{item.adresse}</Text>
+                    <Text style={styles.adresse}>{item.codepostale} {item.ville}</Text>
                     <View style={styles.stationcorps}>
                         <Image
                             style={styles.image}
@@ -196,7 +319,7 @@ class PageMap extends React.Component {
         )
     }
 
-    renderStations(active) {
+    renderStations() {
         /* Ne fonctionne pas
         var update = false;
         this.state.borneActive != null ? update = (this.state.borneActive == active ? false : true) : update = false;
@@ -237,11 +360,14 @@ class PageMap extends React.Component {
 
                     {stationsElectriques.map(item =>
                         <StationMap
-                            key={`Marker-${item.idStation}`} marker={item} />
+                            key={`Marker-${item.idStation}`}
+                            marker={item}
+                            propsnavigation={this.props}
+                        />
                     )}
 
                 </MapView>
-                {this.renderStations(this.props.active)}
+                {this.renderStations()}
             </View>
         );
     }
@@ -272,9 +398,15 @@ const styles = StyleSheet.create({
         marginHorizontal: 24,
         width: width - (24 * 2)
     },
-    adresse: {
+    title: {
         fontSize: 18,
         fontWeight: "bold",
+        marginBottom: 5,
+        textAlign: 'center',
+    },
+    adresse: {
+        fontSize: 14,
+        fontStyle: 'italic',
         marginBottom: 5
     },
     stationcorps: {

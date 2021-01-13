@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, } from 'react-native';
 import PageLogo from './Pages/PageLogo';
+import PageStation from './Pages/PageStation';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Footer from './Composants/Footer';
@@ -18,6 +19,7 @@ export default class App extends React.Component {
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen name="Home" component={PageLogo} />
             <Stack.Screen name="BorneToGo" component={Footer} />
+            <Stack.Screen name="Station" component={PageStation} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

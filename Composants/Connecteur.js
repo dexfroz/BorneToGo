@@ -10,20 +10,12 @@ class Borne extends PureComponent {
         super(props);
     }
 
-    renderConnecteur(nbTotal, station) {
-        return (
-            (nbTotal >= 2) ? <Text style={styles.borne}>Connecteur n° {station.bornes.connecteurs.idConnecteur} : {station.bornes.connecteurs.type}</Text> : <Text style={styles.borne}>Connecteur : {station.bornes.connecteurs.type}</Text>
-        )
-    }
-
     render() {
-        const { station } = this.props;
-        console.log(station);
+        const { station, borne, connecteur, propsnavigation } = this.props;
 
-        var nbTotal = Object.keys(station.bornes.connecteur).length;
         return (
             <View>
-                {this.renderConnecteur(nbTotal, station)}
+                <Text style={styles.borne}>{connecteur.type}</Text>
             </View>
         );
     }
@@ -35,10 +27,16 @@ class Borne extends PureComponent {
 const styles = StyleSheet.create({
     // Affichage des informations
     borne: {
-        fontSize: 14,
+        fontSize: 8,
         marginBottom: 5,
         fontWeight: 'bold',
         textAlign: 'center',
+        textAlignVertical: 'center',
+        color: 'white',
+        backgroundColor: '#70B445',
+        borderRadius: 10,
+        height: 20,
+        width: 40
     },
 })
 
