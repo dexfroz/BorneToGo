@@ -5,9 +5,7 @@ import java.io.*;
 
 public class Station extends Coord
 {
-	// private String name;
-	// private Coord position;
-	// also contains a list of charging points.
+	// TODO: must contain a list of charging points.
 
 
 	public Station(double latitude, double longitude, String description)

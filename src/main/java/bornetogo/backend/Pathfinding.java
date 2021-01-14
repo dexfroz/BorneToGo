@@ -2,7 +2,6 @@ package main.java.bornetogo.backend;
 
 import java.io.*;
 import java.util.*;
-import jakarta.json.*;
 
 
 public class Pathfinding
@@ -12,21 +11,11 @@ public class Pathfinding
 	private static final double rangeMargin = 0.; // in km
 
 
-	// Gives a reasonable upper bound for the length of a route, given the straight line distance:
-	private static double lengthUpperBound(double dist)
+	// Gives a reasonable upper bound for the length of a route between two points:
+	private static double lengthUpperBound(Coord coord_1, Coord coord_2)
 	{
-		return distBoundCoeff * dist;
-		// return dist; // for testing.
-		// factorize lengthUpperBound o distance?
-	}
-
-
-	// Straight line, euclidean distance:
-	public static double distance(Coord coord_1, Coord coord_2) // TODO: adapt this to a spherical geometry!
-	{
-		double deltaLat = coord_1.getLatitude() - coord_2.getLatitude();
-		double deltaLong = coord_1.getLongitude() - coord_2.getLongitude();
-		return Math.sqrt(deltaLat * deltaLat + deltaLong * deltaLong);
+		return distBoundCoeff * Coord.distance(coord_1, coord_2);
+		// return Coord.distance(coord_1, coord_2); // for testing.
 	}
 
 
@@ -34,7 +23,7 @@ public class Pathfinding
 	// and with major axis of length: distance(ref_1, ref_2) + 2. * ellipseMargin
 	private static Boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
-		return distance(ref_1, point) + distance(point, ref_2) <= distance(ref_1, ref_2) + 2. * ellipseMargin;
+		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) + 2. * ellipseMargin;
 	}
 
 
@@ -44,7 +33,7 @@ public class Pathfinding
 		ArrayList<Double> stepLengths = new ArrayList<Double>();
 
 		for (int i = 0; i < userSteps.size() - 1; ++i) {
-			stepLengths.add(distance(userSteps.get(i), userSteps.get(i + 1)));
+			stepLengths.add(Coord.distance(userSteps.get(i), userSteps.get(i + 1)));
 		}
 
 		return stepLengths;
@@ -82,7 +71,7 @@ public class Pathfinding
 	private static void sortByDistance(ArrayList<Coord> coords, Coord refPoint)
 	{
 		Comparator<Coord> customCompare = (Coord c1, Coord c2) ->
-			Double.compare(distance(refPoint, c1), distance(refPoint, c2));
+			Double.compare(Coord.distance(refPoint, c1), Coord.distance(refPoint, c2));
 		Collections.sort(coords, customCompare);
 	}
 
@@ -118,18 +107,16 @@ public class Pathfinding
 			System.out.println("\nLucky one!");
 			car.setCurrentAutonomy(car.getMaxAutonomy()); // tell User!
 		}
-
-		// totalCost += cost(stepLength);
 	}
 
 
 	// Refilling the car. On success, returns the chosen station, which must be the new current step. Else, returns null.
-	private static Coord goRefill(Car car, ArrayList<Station> relevantStations, ArrayList<Coord> path, Coord currentStep)
+	private static Station goRefill(Car car, ArrayList<Station> relevantStations, ArrayList<Coord> path, Coord currentStep)
 	{
 		ArrayList<Station> reachableStations = new ArrayList<Station>();
 
 		for (Station station : relevantStations) {
-			if (lengthReachable(car, lengthUpperBound(distance(currentStep, station)))) {
+			if (lengthReachable(car, lengthUpperBound(currentStep, station))) {
 				reachableStations.add(station);
 			}
 		}
@@ -140,13 +127,14 @@ public class Pathfinding
 
 		Station chosenStation = chooseBestStation(reachableStations);
 		System.out.println("\n-> Refilling at station:\n\n" + chosenStation.toString());
+
+		if (currentStep.isEqual(chosenStation)) {
+			return null;
+		}
+
 		path.add(chosenStation);
 		car.setCurrentAutonomy(car.getMaxAutonomy()); // tell User!
-
 		return chosenStation;
-
-		// totalCost += cost(length_upper_bound(distance(currentStep, chosenStation)));
-		// length too big, use the API request!
 	}
 
 
@@ -180,25 +168,26 @@ public class Pathfinding
 			System.out.println("\nnextStep: " + nextStep.toString());
 
 			if (relevantStations.isEmpty()) {
-				System.err.println("\nPathfinding failure.\n");
-				System.err.println(car.toString());
+				System.out.println("\nCurrent autonomy: " + car.getCurrentAutonomy());
+				System.err.println("\n-> Pathfinding failure.\n");
+				printPath(path);
 				return null;
 			}
 
 			// Potential improvement: only work on the stations for this subpath...
 			sortByDistance((ArrayList<Coord>) ((ArrayList<?>) relevantStations), nextStep); // causes a warning.
 
+			Station safetyNext = chooseSafetyStation(relevantStations);
+
 			double stepLength = stepLengths.get(stepIndex - 1);
 
 			if (currentStep.isStation()) {
-				stepLength = lengthUpperBound(distance(currentStep, nextStep));
+				stepLength = lengthUpperBound(currentStep, nextStep);
 			}
 
-			System.out.println("\nstepLength: " + stepLength);
+			System.out.printf("\nstepLength: %.3f km\n", stepLength);
 
-			Station safetyNext = chooseSafetyStation(relevantStations);
-
-			if (lengthReachable(car, stepLength + lengthUpperBound(distance(nextStep, safetyNext))))
+			if (lengthReachable(car, stepLength + lengthUpperBound(nextStep, safetyNext)))
 			{
 				goNextStep(car, path, stepLength, nextStep);
 
@@ -216,8 +205,9 @@ public class Pathfinding
 				currentStep = goRefill(car, relevantStations, path, currentStep);
 
 				if (currentStep == null) {
-					System.err.println("\nPathfinding failure.\n");
-					System.err.println(car.toString());
+					System.out.println("\nCurrent autonomy: " + car.getCurrentAutonomy());
+					System.err.println("\n-> Pathfinding failure.\n");
+					printPath(path);
 					return null;
 				}
 			}
@@ -226,7 +216,7 @@ public class Pathfinding
 		}
 
 		System.out.println("\nCurrent autonomy: " + car.getCurrentAutonomy());
-		System.out.println("\nDone.\n");
+		System.out.println("\n-> Done.\n");
 		return path;
 	}
 
@@ -238,60 +228,51 @@ public class Pathfinding
 	}
 
 
-	public static void main(String[] args)
+	public static void printPath(ArrayList<Coord> path)
 	{
-		////////////////////////////////////////////////////////////
-		// Sorting test:
-
-		// ArrayList<Station> stations = new ArrayList<Station>();
-		// stations.add(new Station(43.1, 5.9, "station_1"));
-		// stations.add(new Station(42.5, 6.7, "station_2"));
-		// stations.add(new Station(40.3, 7.2, "station_3"));
-
-		// for (Station station : stations) {
-		// 	System.out.println(station + "\n");
-		// }
-
-		// System.out.println("=== Sorting: ===\n");
-
-		// Coord refPoint = new Coord(39.1, 8.5, "the_ref");
-
-		// sortByDistance((ArrayList<Coord>) ((ArrayList<?>) stations), refPoint); // causes a warning, but ok!
-
-		// for (Station station : stations) {
-		// 	System.out.println(station + "\n");
-		// }
-
-		////////////////////////////////////////////////////////////
-		// Pathfinding test:
-
-		Car car = new Car("Tesla cybertruck", "undefined", "undefined", 66, 30);
-
-		ArrayList<Coord> userSteps = new ArrayList<Coord>();
-		userSteps.add(new Coord(0, 0, "A"));
-		userSteps.add(new Coord(10, 0, "B"));
-		userSteps.add(new Coord(60, 0, "C"));
-		userSteps.add(new Coord(80, 0, "D"));
-		userSteps.add(new Coord(120, 0, "E"));
-
-		ArrayList<Station> allStations = new ArrayList<Station>();
-		for (int i = 0; i < 50; ++i) {
-			allStations.add(new Station(9 * i, 0, "X"));
-		}
-
-		ArrayList<Coord> path = pathfinding(car, userSteps, allStations);
-
 		if (path == null) {
 			System.err.println("null path");
 		}
 
 		else {
+			System.out.println("Found path:\n");
 			for (Coord coord : path) {
 				System.out.println(coord.toString() + "\n");
 			}
 		}
+	}
 
-		////////////////////////////////////////////////////////////
+
+	public static void main(String[] args)
+	{
+		Car car = new Car("Tesla cybertruck", "undefined", "undefined", 200, 50);
+
+		ArrayList<Coord> userSteps = new ArrayList<Coord>();
+		userSteps.add(new Coord(43.124228, 5.928, "Toulon"));
+		userSteps.add(new Coord(43.296482, 5.36978, "Marseille"));
+		userSteps.add(new Coord(45.76404, 4.83566, "Lyon"));
+		userSteps.add(new Coord(47.34083, 5.05015, "Dijon"));
+		userSteps.add(new Coord(48.85661, 2.3499, "Paris"));
+
+		ArrayList<Station> allStations = new ArrayList<Station>();
+		allStations.add(new Station(43.18196, 5.70365, "Station Saint Cyr-sur-Mer"));
+		allStations.add(new Station(43.52916, 5.43638, "Station Aix-en-Provence"));
+		allStations.add(new Station(43.96512, 4.81899, "Station Avignon"));
+		allStations.add(new Station(44.54774, 4.78249, "Station Montélimar"));
+		allStations.add(new Station(44.95311, 4.90094, "Station Valence"));
+		allStations.add(new Station(45.36394, 4.83675, "Station Roussillon"));
+		allStations.add(new Station(46.29772, 4.84272, "Station Mâcon"));
+		allStations.add(new Station(47.04845, 4.81543, "Station Beaune"));
+		allStations.add(new Station(47.58339, 5.20597, "Station Selongey"));
+		allStations.add(new Station(47.86140, 5.34153, "Station Langres"));
+		allStations.add(new Station(48.31764, 4.12017, "Station Troyes"));
+		allStations.add(new Station(48.19592, 3.28644, "Station Sens"));
+		allStations.add(new Station(48.37708, 3.00335, "Station Montereau"));
+		allStations.add(new Station(48.53482, 2.66751, "Station Melun"));
+		// Should be enough, for a max autonomy of 200 km.
+
+		ArrayList<Coord> path = pathfinding(car, userSteps, allStations);
+		printPath(path);
 	}
 }
 
