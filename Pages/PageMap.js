@@ -285,7 +285,6 @@ class PageMap extends React.Component {
         } 
         */
 
-        console.log(this.props);
         return (
             <TouchableWithoutFeedback
                 key={`Station-${item.idStation}`}

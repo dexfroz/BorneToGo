@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text, Image, Dimensions, FlatList } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler';
 import Borne from './Borne';
 
 // Dimensions de l'écran
@@ -81,14 +80,9 @@ class Station extends PureComponent {
                     />
                 </View>
             </View>
-
-
-
         );
     }
 }
-
-/* <Text style={styles.description}>{marker.description}</Text> */
 
 
 const styles = StyleSheet.create({

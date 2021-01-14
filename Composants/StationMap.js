@@ -14,20 +14,6 @@ class StationMap extends PureComponent {
         super(props);
     }
 
-    // renderActiveState(marker) {
-    //     return (
-    //         <TouchableWithoutFeedback onPress={() => this.setState({ active: parking.id })} >
-    //             <View style={[
-    //                 styles.marker,
-    //                 styles.shadow,
-    //                 this.state.active === parking.id ? styles.active : null
-    //             ]}>
-    //                 <Text>Test</Text>
-    //             </View>
-    //         </TouchableWithoutFeedback>
-    //     )
-    // }
-
     // Méthode pour modifier la station active
     changerStationActive(id) {
         const TIME_FOR_ANIMATION = 0;

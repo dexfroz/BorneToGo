@@ -13,12 +13,13 @@ import PageAPropos from '../Pages/PageAPropos';
 import PageTrajet from '../Pages/PageTrajet'
 import PageVoiture from '../Pages/PageVoiture'
 import PageMap from '../Pages/PageMap';
+import PageMapResultat from '../Pages/PageMapResultat';
 
 const Tab = createBottomTabNavigator();
 
-class Footer extends React.Component{
+class Footer extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
@@ -29,40 +30,49 @@ class Footer extends React.Component{
         return (
             <View style={styles.footer}>
                 <Tab.Navigator>
-                    <Tab.Screen 
-                        name="Voiture" 
+                    <Tab.Screen
+                        name="Voiture"
                         component={PageVoiture}
                         options={{
-                            tabBarIcon: ({color, size}) => (
-                                <FontAwesome name="car" size={size} color={color} /> 
+                            tabBarIcon: ({ color, size }) => (
+                                <FontAwesome name="car" size={size} color={color} />
                             ),
-                        }} 
+                        }}
                     />
-                    <Tab.Screen 
-                        name="Map" 
-                        component={PageMap} 
+                    <Tab.Screen
+                        name="Map"
+                        component={PageMap}
                         options={{
-                            tabBarLabel:"Borne",
-                            tabBarIcon: ({color, size}) => (
+                            tabBarLabel: "Borne",
+                            tabBarIcon: ({ color, size }) => (
                                 <Feather name="battery-charging" size={size} color={color} />
                             ),
                         }}
                     />
-                    <Tab.Screen 
-                        name="Itinéraire" 
-                        component={PageTrajet} 
+                    <Tab.Screen
+                        name="Itinéraire"
+                        component={PageTrajet}
                         options={{
-                            tabBarIcon: ({color, size}) => (
+                            tabBarIcon: ({ color, size }) => (
                                 <AntDesign name="enviromento" size={size} color={color} />
                             ),
                         }}
                     />
-                    <Tab.Screen 
-                        name="A propos" 
-                        component={PageAPropos} 
+                    <Tab.Screen
+                        name="A propos"
+                        component={PageAPropos}
                         options={{
-                            tabBarIcon: ({color, size}) => (
+                            tabBarIcon: ({ color, size }) => (
                                 <MaterialCommunityIcons name="human-greeting" size={size} color={color} />
+                            ),
+                        }}
+                    />
+                    <Tab.Screen
+                        name="Resultat"
+                        component={PageMapResultat}
+                        options={{
+                            tabBarIcon: ({ color, size }) => (
+                                <MaterialCommunityIcons name="tree" size={size} color={color} />
                             ),
                         }}
                     />
