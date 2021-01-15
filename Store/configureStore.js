@@ -1,4 +1,10 @@
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
 import reducerBorneActive from './Reducers/activeBorneReducer'
+import {reducer as formReducer} from 'redux-form'
 
-export default createStore(reducerBorneActive)
+const rootReducer = combineReducers({
+    form: formReducer,
+    borneActive: reducerBorneActive,
+});
+
+export default createStore(rootReducer)

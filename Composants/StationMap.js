@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
 // Connexion du state global au component PageMap
 const mapStateToProps = (state) => {
     return {
-        active: state.active
+        active: state.borneActive.active
     }
 }
 
