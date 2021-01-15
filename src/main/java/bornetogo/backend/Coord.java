@@ -1,6 +1,7 @@
 package main.java.bornetogo.backend;
 
 import java.io.*;
+import jakarta.json.*;
 
 
 public class Coord
@@ -56,10 +57,22 @@ public class Coord
 	}
 
 
+	public String getDescription()
+	{
+		return this.description;
+	}
+
+
 	public String toString()
 	{
-		return "Coord of: " + description + "\n" + "Is a station: " + this.isStation +
+		return "Coord of: " + this.description + "\nIs a station: " + this.isStation +
 			"\nLatitude: " + Double.toString(this.latitude) + ", longitude: " + Double.toString(this.longitude);
+	}
+
+
+	public void print()
+	{
+		System.out.println(this.toString());
 	}
 
 
@@ -80,6 +93,15 @@ public class Coord
 		double c = Math.cos(coord_1.latRadian) * Math.cos(coord_2.latRadian);
 		double h = a * a + c * b * b; // 0 <= h <= 1
 		return MEAN_EARTH_DIAMETER * Math.asin(Math.sqrt(h));
+	}
+
+
+	// Long-lat convention!
+	public static Coord getFromJsonArray(JsonArray coordJson, String description)
+	{
+		double longitude = coordJson.getJsonNumber​(0).doubleValue();
+		double latitude = coordJson.getJsonNumber​(1).doubleValue();
+		return new Coord(latitude, longitude, description);
 	}
 
 

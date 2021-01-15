@@ -220,20 +220,6 @@ public class Pathfinding
 	}
 
 
-	// Computes the duration of the given full path:
-	public static double pathDuration(ArrayList<Coord> fullPath)
-	{
-		return 0; // TODO.
-	}
-
-
-	// Computes the cost of the given full path:
-	public static double pathCost(ArrayList<Coord> fullPath)
-	{
-		return 0; // TODO.
-	}
-
-
 	public static void printPath(ArrayList<Coord> path)
 	{
 		if (path == null) {

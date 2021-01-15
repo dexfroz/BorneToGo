@@ -1,33 +1,35 @@
 {
 	"type": "output",
-	"status": "ok",
-	"waypoints": [
-		{
-			"location": [
-				52.517033,
-				13.388798
-			],
-			"name": "Friedrichstraße",
-			"isStation": false
-		},
-		{
-			"location": [
-				52.529432,
-				13.397631
-			],
-			"name": "a station",
-			"isStation": true
-		},
-		{
-			"location": [
-				52.523239,
-				13.428554
-			],
-			"name": "Platz der Vereinten Nationen",
-			"isStation": false
-		}
-	],
-	"routes": [
+	"status": "Ok",
+	"routes":
+	{
+		"waypoints": [
+			{
+				"location": [
+					52.517033,
+					13.388798
+				],
+				"name": "Friedrichstraße",
+				"isStation": false
+			},
+			{
+				"location": [
+					52.529432,
+					13.397631
+				],
+				"name": "a station",
+				"isStation": true
+			},
+			{
+				"location": [
+					52.523239,
+					13.428554
+				],
+				"name": "Platz der Vereinten Nationen",
+				"isStation": false
+			}
+		],
+		"fullPath":
 		{
 			"length": 4830.9,
 			"duration": 623.7,
@@ -68,5 +70,5 @@
 				]
 			}
 		}
-	]
+	}
 }

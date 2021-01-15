@@ -1,6 +1,7 @@
 package main.java.bornetogo.backend;
 
 import java.io.*;
+import jakarta.json.*;
 
 
 public class Car
@@ -60,8 +61,20 @@ public class Car
 
 	public String toString()
 	{
-		return "Car: " + model + "\nBattery type: " + batteryType + "\nConnector: " + connector +
-			"\nMax autonomy: " + maxAutonomy + " km\nCurrent autonomy: " + currentAutonomy + " km";
+		return "Car: " + this.model + "\nBattery type: " + this.batteryType + "\nConnector: " + this.connector +
+			"\nMax autonomy: " + this.maxAutonomy + " km\nCurrent autonomy: " + this.currentAutonomy + " km";
+	}
+
+
+	public void print()
+	{
+		System.out.println(this.toString());
+	}
+
+
+	public static Car getFromJson(JsonObject json)
+	{
+		return null;
 	}
 
 

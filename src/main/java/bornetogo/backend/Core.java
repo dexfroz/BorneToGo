@@ -7,9 +7,11 @@ import jakarta.json.*;
 
 public class Core
 {
-	public static Car getCarFromJson(JsonObject json)
+	public static void safeJsonPrinting(JsonObject jsonObject)
 	{
-		return null;
+		if (jsonObject != null) { // necessary check!
+			System.out.println("\n" + jsonObject.toString() + "\n");
+		}
 	}
 
 
@@ -25,29 +27,85 @@ public class Core
 	}
 
 
-	public static ArrayList<Double> getStepLengthsFromJson(JsonObject json)
+	public static JsonObject buildAnswer(ArrayList<Route> routes)
 	{
-		return null;
-	}
+		// routesArray:
 
+		JsonArrayBuilder routesBuilder = Json.createArrayBuilder();
 
-	public static ArrayList<Coord> getPathFromJson(JsonObject json)
-	{
-		return null;
-	}
+		for (Route route : routes)
+		{
+			// waypoints:
 
+			JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
 
-	public static JsonObject buildAnswer(ArrayList<Coord> fullPath, double duration, double cost)
-	{
-		return null;
-	}
+			for (Coord coord : route.getWaypoints()) {
+				// {
+				// 	"location": [
+				// 		52.517033,
+				// 		13.388798
+				// 	],
+				// 	"name": "Friedrichstraße",
+				// 	"isStation": false
+				// },
 
+				// waypointsBuilder.add(coord.toJson()); // full info
+			}
 
-	public static void safeJsonPrinting(JsonObject jsonObject)
-	{
-		if (jsonObject != null) { // necessary check!
-			System.out.println("\n" + jsonObject.toString() + "\n");
+			JsonArray waypointsArray = waypointsBuilder.build();
+
+			// legs:
+
+			JsonArrayBuilder legsBuilder = Json.createArrayBuilder();
+				// add legs
+			JsonArray legsArray = legsBuilder.build();
+
+			// coordinates:
+
+			JsonArrayBuilder coordsBuilder = Json.createArrayBuilder();
+				// add coords // light info!
+			JsonArray coordsArray = coordsBuilder.build();
+
+			// geometry:
+
+			JsonObject geometry = Json.createObjectBuilder()
+				.add("coordinates", coordsArray)
+				.build();
+
+			// fullPathJson:
+
+			JsonObject fullPathJson = Json.createObjectBuilder()
+				.add("length", 4830.9)
+				.add("duration", 623.7)
+				.add("cost", 44.50)
+				.add("autonomyLeft", 65.8)
+				.add("stats", "not_done")
+				.add("legs", legsArray)
+				.add("geometry", geometry)
+				.build();
+
+			// routeJson:
+
+			JsonObject routeJson = Json.createObjectBuilder()
+				.add("waypoints", waypointsArray)
+				.add("fullPath", fullPathJson)
+				.build();
+
+			routesBuilder.add(routeJson);
 		}
+
+		JsonArray routesArray = routesBuilder.build();
+
+		// answer:
+
+		JsonObject answer = Json.createObjectBuilder()
+			.add("type", "output")
+			.add("status", "ok")
+			.add("convention", "lat-long")
+			.add("routes", routesArray)
+			.build();
+
+		return answer;
 	}
 
 
@@ -58,7 +116,7 @@ public class Core
 			return null;
 		}
 
-		Car car = getCarFromJson(input);
+		Car car = Car.getFromJson(input);
 		ArrayList<Coord> userSteps = getUserStepsFromJson(input);
 		ArrayList<Station> stations = getStationsFromJson(input);
 
@@ -67,49 +125,59 @@ public class Core
 			return null;
 		}
 
-		// Request 1 - replacing mockStepLengths():
-		JsonObject stepLengthsJson = QueryAPIs.queryRoute("route", userSteps);
-		// safeJsonPrinting(stepLengthsJson);
+		// Query 1 - replacing mockStepLengths():
+		JsonObject firstQuery = QueryAPIs.queryRoute("route", userSteps); // no need of all coordinates here!
+		// safeJsonPrinting(firstQuery);
 
-		if (stepLengthsJson == null) {
+		if (firstQuery == null) {
 			System.err.println("\nError in the first route request.\n");
 			return null;
 		}
 
-		ArrayList<Double> stepLengths = getStepLengthsFromJson(stepLengthsJson);
+		Route firstDraw = Route.getFromJson(firstQuery);
 
-		if (stepLengths == null) {
-			System.err.println("\nError while parsing 'stepLengthsJson'.\n");
+		if (firstDraw == null) {
+			System.err.println("\nError while parsing 'firstQuery'.\n");
 			return null;
 		}
 
-		ArrayList<Coord> path = Pathfinding.pathfinding(car, userSteps, stations, stepLengths);
+		ArrayList<Double> legLengths = firstDraw.getLegsLengths();
+
+		if (legLengths == null) {
+			System.err.println("\nCould not get the legs length.\n");
+			return null;
+		}
+
+		ArrayList<Coord> path = Pathfinding.pathfinding(car, userSteps, stations, legLengths);
 
 		if (path == null) {
 			System.err.println("\nPathfinding failed.\n");
 			return null;
 		}
 
-		// Request 2 - getting the full path:
-		JsonObject fullPathJson = QueryAPIs.queryRoute("route", userSteps);
-		// safeJsonPrinting(fullPathJson);
+		// Query 2 - for getting the full path:
+		JsonObject secondQuery = QueryAPIs.queryRoute("route", userSteps);
+		// safeJsonPrinting(secondQuery);
 
-		if (fullPathJson == null) {
+		if (secondQuery == null) {
 			System.err.println("\nError in the second route request.\n");
 			return null;
 		}
 
-		ArrayList<Coord> fullPath = getPathFromJson(fullPathJson);
+		Route foundRoute = Route.getFromJson(secondQuery);
 
-		if (fullPath == null) {
-			System.err.println("\nError while parsing 'fullPathJson'.\n");
+		if (foundRoute == null) {
+			System.err.println("\nIncorrect found route.\n");
 			return null;
 		}
 
-		double duration = Pathfinding.pathDuration(fullPath);
-		double cost = Pathfinding.pathCost(fullPath);
+		foundRoute.updateCurrentAutonomy(car);
+		foundRoute.computeDuration();
+		foundRoute.computeCost();
 
-		return buildAnswer(fullPath, duration, cost);
+		ArrayList<Route> routes = new ArrayList<Route>();
+		routes.add(foundRoute); // only 1 route for now.
+		return buildAnswer(routes);
 	}
 
 
@@ -121,3 +189,18 @@ public class Core
 		safeJsonPrinting(output);
 	}
 }
+
+// TODO:
+// get json in car, from input
+// support inputs either in addresses, or GPS coord...
+// chosen convention in json!
+// JsonOutput.java useless...
+// taux recharge
+// requ nombre routes
+// safeJsonPrinting() location?
+// geocoding part?
+// unformated_output to rename.
+// input and output files to update
+// description -> name + address
+// in waypoints: "data": {}
+// filter user steps?
