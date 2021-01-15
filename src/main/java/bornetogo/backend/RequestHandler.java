@@ -45,7 +45,7 @@ public class RequestHandler
 		String filename = "some_text_file.txt";
 		// String filename = "not_existing_file.txt";
 
-		String content = FileContent.getFileContent(filename);
+		String content = FileContent.read(filename);
 		String answer = "File content: " + content; // all '\n' are ignored!
 
 		// Equivalent to 404 / 200:

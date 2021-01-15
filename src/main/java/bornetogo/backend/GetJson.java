@@ -90,7 +90,7 @@ public class GetJson
 
 	public static void main(String[] args)
 	{
-		String jsonString = FileContent.getFileContent("some_json.json");
+		String jsonString = FileContent.read("some_json.json");
 		JsonObject json = jsonFromString(jsonString);
 		System.out.println("\n" + json.toString() + "\n");
 	}

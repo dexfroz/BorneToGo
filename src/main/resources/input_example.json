@@ -1,0 +1,48 @@
+{
+	"type": "input",
+	"useCase": "trip",
+	"optimOption": "default",
+	"carModel": "Tesla cybertruck",
+	"batteryType": "",
+	"connector": "",
+	"maxAutonomy": 200,
+	"currentAutonomy": 50,
+	"subscription": "",
+	"userSteps": [
+		{
+			"location": [
+				43.124228,
+				5.928
+			],
+			"name": "Toulon"
+		},
+		{
+			"location": [
+				43.296482,
+				5.36978
+			],
+			"name": "Marseille"
+		},
+		{
+			"location": [
+				45.76404,
+				4.83566
+			],
+			"name": "Lyon"
+		},
+		{
+			"location": [
+				47.34083,
+				5.05015
+			],
+			"name": "Dijon"
+		},
+		{
+			"location": [
+				48.85661,
+				2.3499
+			],
+			"name": "Paris"
+		}
+	]
+}

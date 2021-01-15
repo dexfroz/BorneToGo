@@ -9,8 +9,8 @@ public class FileContent
 
 
 	// Returns the content of the given file as a String, assuming it is
-	// located in '/src/main/resources/'. Returns null on failure.
-	public static String getFileContent(String filename)
+	// located in 'src/main/resources/'. Returns null on failure.
+	public static String read(String filename)
 	{
 		try // getResourceAsStream() method used in order to have a unified
 		{   // framework between 'local' testing, and usage in the REST API.
@@ -41,6 +41,26 @@ public class FileContent
 	}
 
 
+	// Write the given string in 'src/main/resources/'.
+	public static void write(String data, String filename)
+	{
+		String filePath = "src/main/resources/" + filename;
+
+		try
+		{
+			FileWriter writer = new FileWriter(filePath);
+			BufferedWriter buffered_writer = new BufferedWriter(writer); // buffered for performance.
+			buffered_writer.write(data);
+			buffered_writer.close();
+			writer.close();
+		}
+
+		catch (Exception e) {
+			System.err.println("\nCould not write the file: " + filePath + "\n");
+		}
+	}
+
+
 	public static void main(String[] args)
 	{
 		System.out.println("\nHello world!\n");
@@ -52,7 +72,7 @@ public class FileContent
 		String filename = "some_text_file.txt";
 		// String filename = "not_existing_file.txt";
 
-		String content = getFileContent(filename);
+		String content = read(filename);
 		System.out.println("\nFile content: " + content);
 	}
 }

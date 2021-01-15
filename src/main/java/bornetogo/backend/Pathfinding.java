@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Pathfinding
 {
-	private static final double distBoundCoeff = 1.5; // unit less
+	private static final double distBoundCoeff = 1.5; // unitless
 	private static final double ellipseMargin = 20.; // in km
 	private static final double rangeMargin = 0.; // in km
 
@@ -19,24 +19,24 @@ public class Pathfinding
 	}
 
 
+	// For testing only, the real version must query the route API.
+	private static ArrayList<Double> mockStepLengths(ArrayList<Coord> userSteps)
+	{
+		ArrayList<Double> stepLengths = new ArrayList<Double>();
+
+		for (int i = 0; i < userSteps.size() - 1; ++i) {
+			stepLengths.add(lengthUpperBound(userSteps.get(i), userSteps.get(i + 1)));
+		}
+
+		return stepLengths;
+	}
+
+
 	// Checks if the given point is inside the ellipse of focus 'ref_1' and 'ref_2',
 	// and with major axis of length: distance(ref_1, ref_2) + 2. * ellipseMargin
 	private static Boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
 		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) + 2. * ellipseMargin;
-	}
-
-
-	// For testing, the real version must query the route API.
-	private static ArrayList<Double> getStepLengths(ArrayList<Coord> userSteps)
-	{
-		ArrayList<Double> stepLengths = new ArrayList<Double>();
-
-		for (int i = 0; i < userSteps.size() - 1; ++i) {
-			stepLengths.add(Coord.distance(userSteps.get(i), userSteps.get(i + 1)));
-		}
-
-		return stepLengths;
 	}
 
 
@@ -105,7 +105,7 @@ public class Pathfinding
 
 		if (nextStep.isStation()) {
 			System.out.println("\nLucky one!");
-			car.setCurrentAutonomy(car.getMaxAutonomy()); // tell User!
+			car.setCurrentAutonomy(car.getMaxAutonomy()); // tell the User!
 		}
 	}
 
@@ -133,20 +133,19 @@ public class Pathfinding
 		}
 
 		path.add(chosenStation);
-		car.setCurrentAutonomy(car.getMaxAutonomy()); // tell User!
+		car.setCurrentAutonomy(car.getMaxAutonomy()); // tell the User!
 		return chosenStation;
 	}
 
 
 	// Returns null on failure.
-	public static ArrayList<Coord> pathfinding(Car car, ArrayList<Coord> userSteps, ArrayList<Station> allStations)
+	public static ArrayList<Coord> pathfinding(Car car, ArrayList<Coord> userSteps,
+		ArrayList<Station> allStations, ArrayList<Double> stepLengths)
 	{
 		if (userSteps.size() < 2) {
 			System.err.println("\nUnsupported use case, as of now.");
 			return null;
 		}
-
-		ArrayList<Double> stepLengths = getStepLengths(userSteps); // mocks API queries.
 
 		if (stepLengths.size() != userSteps.size() - 1) {
 			System.err.println("\nAn error happend while querying the route API.");
@@ -163,12 +162,12 @@ public class Pathfinding
 
 		while (true)
 		{
-			System.out.println("--------------------------------------------------");
+			System.out.println("------------------------------------------");
 			System.out.println("currentStep: " + currentStep.toString());
 			System.out.println("\nnextStep: " + nextStep.toString());
 
 			if (relevantStations.isEmpty()) {
-				System.out.println("\nCurrent autonomy: " + car.getCurrentAutonomy());
+				System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
 				System.err.println("\n-> Pathfinding failure.\n");
 				printPath(path);
 				return null;
@@ -205,26 +204,33 @@ public class Pathfinding
 				currentStep = goRefill(car, relevantStations, path, currentStep);
 
 				if (currentStep == null) {
-					System.out.println("\nCurrent autonomy: " + car.getCurrentAutonomy());
+					System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
 					System.err.println("\n-> Pathfinding failure.\n");
 					printPath(path);
 					return null;
 				}
 			}
 
-			System.out.println("\nCurrent autonomy: " + car.getCurrentAutonomy());
+			System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
 		}
 
-		System.out.println("\nCurrent autonomy: " + car.getCurrentAutonomy());
+		System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
 		System.out.println("\n-> Done.\n");
 		return path;
 	}
 
 
-	// Computes the cost in time and money of the given path:
-	public static double pathCost(ArrayList<Coord> path)
+	// Computes the duration of the given full path:
+	public static double pathDuration(ArrayList<Coord> fullPath)
 	{
-		return 0;
+		return 0; // TODO.
+	}
+
+
+	// Computes the cost of the given full path:
+	public static double pathCost(ArrayList<Coord> fullPath)
+	{
+		return 0; // TODO.
 	}
 
 
@@ -271,11 +277,8 @@ public class Pathfinding
 		allStations.add(new Station(48.53482, 2.66751, "Station Melun"));
 		// Should be enough, for a max autonomy of 200 km.
 
-		ArrayList<Coord> path = pathfinding(car, userSteps, allStations);
+		ArrayList<Double> stepLengths = mockStepLengths(userSteps); // mocks API queries.
+		ArrayList<Coord> path = pathfinding(car, userSteps, allStations, stepLengths);
 		printPath(path);
 	}
 }
-
-// // Finds the fastest route between coordinates in the supplied order:
-// JsonObject json = QueryAPIs.queryRoute("route", routeCoordinates);
-// safeJsonPrinting(json);
