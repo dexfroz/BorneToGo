@@ -138,7 +138,10 @@ class PageMap extends React.Component {
                             ...this.state.itineraire,
                             this.state.arrivee, // optional
                         ]}
-                        strokeWidth={4}
+                        strokeWidth={6}
+                        strokeColor={'teal'}
+                        tappable={true}
+                        onPress={e => log('Polyline pressé', e)}
                     />
 
                 </MapView>

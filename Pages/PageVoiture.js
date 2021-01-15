@@ -1,10 +1,10 @@
 // Pages/PageVoiture.js
 
 import React from 'react'
-import { StyleSheet, View, Text, Dimensions} from 'react-native'
-import {Picker} from '@react-native-community/picker'
+import { StyleSheet, View, Text, Dimensions } from 'react-native'
+import { Picker } from '@react-native-community/picker'
 import { FontAwesome } from '@expo/vector-icons'
-import  Voiture from '../Composants/Voiture'
+import Voiture from '../Composants/Voiture'
 import CarForm from '../Store/Forms/CarForm'
 
 const { width, height } = Dimensions.get('window');
@@ -41,9 +41,6 @@ class PageVoiture extends React.Component {
         this.state.modeleSelected = modelesVoituresCree[0].props.value;
         //console.log('modeleSelected : ' + this.state.modeleSelected + ' ' + modelesVoituresCree.length+' car(s) found');
     }
-
-
-
 
     renderVoitureChoisie(modeleChoisi) {
         //console.log('Modèle sélectionné : ');
@@ -82,7 +79,10 @@ class PageVoiture extends React.Component {
                 </View>
                 <View style={styles.describeCarContainer}>
                     <Text>Ou décrivez votre modèle de voiture :</Text>
-                    <CarForm onSubmit = {(values) => {console.log("Formulaire envoyé"); console.log(values)}} />
+                    <View style={styles.form}>
+                        <CarForm onSubmit={(values) => { console.log("Formulaire envoyé"); console.log(values) }} />
+                    </View>
+
                 </View>
             </View>
         );
@@ -117,6 +117,13 @@ const styles = StyleSheet.create({
     voitureInfos: {
         flex: 1
     },
+    form: {
+        backgroundColor: 'white',
+        paddingVertical: 20,
+        paddingHorizontal: 60,
+        margin: 10,
+        borderRadius: 10
+    }
 })
 
 export default PageVoiture
