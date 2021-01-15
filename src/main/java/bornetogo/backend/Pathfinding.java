@@ -240,27 +240,27 @@ public class Pathfinding
 		Car car = new Car("Tesla cybertruck", "undefined", "undefined", 200, 50);
 
 		ArrayList<Coord> userSteps = new ArrayList<Coord>();
-		userSteps.add(new Coord(43.124228, 5.928, "Toulon"));
-		userSteps.add(new Coord(43.296482, 5.36978, "Marseille"));
-		userSteps.add(new Coord(45.76404, 4.83566, "Lyon"));
-		userSteps.add(new Coord(47.34083, 5.05015, "Dijon"));
-		userSteps.add(new Coord(48.85661, 2.3499, "Paris"));
+		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
+		userSteps.add(new Coord(43.296482, 5.36978, "Marseille", ""));
+		userSteps.add(new Coord(45.76404, 4.83566, "Lyon", ""));
+		userSteps.add(new Coord(47.34083, 5.05015, "Dijon", ""));
+		userSteps.add(new Coord(48.85661, 2.3499, "Paris", ""));
 
 		ArrayList<Station> allStations = new ArrayList<Station>();
-		allStations.add(new Station(43.18196, 5.70365, "Station Saint Cyr-sur-Mer"));
-		allStations.add(new Station(43.52916, 5.43638, "Station Aix-en-Provence"));
-		allStations.add(new Station(43.96512, 4.81899, "Station Avignon"));
-		allStations.add(new Station(44.54774, 4.78249, "Station Montélimar"));
-		allStations.add(new Station(44.95311, 4.90094, "Station Valence"));
-		allStations.add(new Station(45.36394, 4.83675, "Station Roussillon"));
-		allStations.add(new Station(46.29772, 4.84272, "Station Mâcon"));
-		allStations.add(new Station(47.04845, 4.81543, "Station Beaune"));
-		allStations.add(new Station(47.58339, 5.20597, "Station Selongey"));
-		allStations.add(new Station(47.86140, 5.34153, "Station Langres"));
-		allStations.add(new Station(48.31764, 4.12017, "Station Troyes"));
-		allStations.add(new Station(48.19592, 3.28644, "Station Sens"));
-		allStations.add(new Station(48.37708, 3.00335, "Station Montereau"));
-		allStations.add(new Station(48.53482, 2.66751, "Station Melun"));
+		allStations.add(new Station(43.18196, 5.70365, "Station", "Saint Cyr-sur-Mer"));
+		allStations.add(new Station(43.52916, 5.43638, "Station", "Aix-en-Provence"));
+		allStations.add(new Station(43.96512, 4.81899, "Station", "Avignon"));
+		allStations.add(new Station(44.54774, 4.78249, "Station", "Montélimar"));
+		allStations.add(new Station(44.95311, 4.90094, "Station", "Valence"));
+		allStations.add(new Station(45.36394, 4.83675, "Station", "Roussillon"));
+		allStations.add(new Station(46.29772, 4.84272, "Station", "Mâcon"));
+		allStations.add(new Station(47.04845, 4.81543, "Station", "Beaune"));
+		allStations.add(new Station(47.58339, 5.20597, "Station", "Selongey"));
+		allStations.add(new Station(47.86140, 5.34153, "Station", "Langres"));
+		allStations.add(new Station(48.31764, 4.12017, "Station", "Troyes"));
+		allStations.add(new Station(48.19592, 3.28644, "Station", "Sens"));
+		allStations.add(new Station(48.37708, 3.00335, "Station", "Montereau"));
+		allStations.add(new Station(48.53482, 2.66751, "Station", "Melun"));
 		// Should be enough, for a max autonomy of 200 km.
 
 		ArrayList<Double> stepLengths = mockStepLengths(userSteps); // mocks API queries.

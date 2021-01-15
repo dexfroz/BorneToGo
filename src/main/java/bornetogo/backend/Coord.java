@@ -19,23 +19,25 @@ public class Coord
 	private double longRadian;
 
 	protected Boolean isStation; // default to false
-	protected String description;
+	protected String name;
+	protected String address;
 
 
-	public Coord(double latitude, double longitude, String description)
+	public Coord(double latitude, double longitude, String name, String address)
 	{
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.latRadian = DEG_TO_RAD * this.latitude;
 		this.longRadian = DEG_TO_RAD * this.longitude;
 		this.isStation = false;
-		this.description = description;
+		this.name = name;
+		this.address = address;
 	}
 
 
 	public Coord(double latitude, double longitude)
 	{
-		this(latitude, longitude, "");
+		this(latitude, longitude, "", "");
 	}
 
 
@@ -57,15 +59,21 @@ public class Coord
 	}
 
 
-	public String getDescription()
+	public String getName()
 	{
-		return this.description;
+		return this.name;
+	}
+
+
+	public String getAddress()
+	{
+		return this.address;
 	}
 
 
 	public String toString()
 	{
-		return "Coord of: " + this.description + "\nIs a station: " + this.isStation +
+		return "Coord:\nName: " + this.name + "\nAddress: " + this.address + "\nIs a station: " + this.isStation +
 			"\nLatitude: " + Double.toString(this.latitude) + ", longitude: " + Double.toString(this.longitude);
 	}
 
@@ -97,20 +105,52 @@ public class Coord
 
 
 	// Long-lat convention!
-	public static Coord getFromJsonArray(JsonArray coordJson, String description)
+	public static Coord getFromJsonArray(JsonArray coordJson, String name)
 	{
 		double longitude = coordJson.getJsonNumber​(0).doubleValue();
 		double latitude = coordJson.getJsonNumber​(1).doubleValue();
-		return new Coord(latitude, longitude, description);
+		return new Coord(latitude, longitude, name, "");
+	}
+
+
+	public JsonObject getJsonData()
+	{
+		return Json.createObjectBuilder().build(); // empty object.
+	}
+
+
+	public JsonArray toJsonSmall()
+	{
+		JsonArrayBuilder builder = Json.createArrayBuilder();
+		builder.add(this.latitude);
+		builder.add(this.longitude);
+		return (JsonArray) builder.build();
+	}
+
+
+	public JsonObject toJsonFull()
+	{
+		JsonArrayBuilder builder = Json.createArrayBuilder();
+		builder.add(this.latitude);
+		builder.add(this.longitude);
+		JsonArray coordArray = builder.build();
+
+		return Json.createObjectBuilder()
+			.add("location", coordArray)
+			.add("isStation", this.isStation)
+			.add("name", this.name)
+			.add("address", this.address)
+			.add("data", this.getJsonData())
+			.build();
 	}
 
 
 	public static void main(String[] args)
 	{
-		Coord coordMarseille = new Coord(43.296482, 5.36978, "Marseille");
+		Coord coordMarseille = new Coord(43.296482, 5.36978, "Marseille", "");
 		System.out.println("\n" + coordMarseille.toString());
 
-		Coord coordToulon = new Coord(43.124228, 5.928, "Toulon");
+		Coord coordToulon = new Coord(43.124228, 5.928, "Toulon", "");
 		System.out.println("\n" + coordToulon.toString());
 
 		double dist = distance(coordMarseille, coordToulon);

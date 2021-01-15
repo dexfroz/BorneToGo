@@ -151,7 +151,6 @@ public class Route
 				JsonArray coordJson = waypoint.getJsonArray("location");
 				Coord coord = Coord.getFromJsonArray(coordJson, name);
 				route.waypoints.add(coord);
-				// coord.print();
 			}
 
 			for (int i = 0; i < routesArray.size(); ++i)
@@ -180,7 +179,6 @@ public class Route
 					JsonArray coordJson = coordsArray.getJsonArray(j);
 					Coord coord = Coord.getFromJsonArray(coordJson, "");
 					route.fullPath.add(coord);
-					// coord.print();
 				}
 
 				route.length = routeJson.getJsonNumber​("distance").doubleValue() / 1000.; // in km
@@ -202,11 +200,11 @@ public class Route
 	public static void main(String[] args)
 	{
 		ArrayList<Coord> userSteps = new ArrayList<Coord>();
-		userSteps.add(new Coord(43.124228, 5.928, "Toulon"));
-		userSteps.add(new Coord(43.296482, 5.36978, "Marseille"));
-		userSteps.add(new Coord(45.76404, 4.83566, "Lyon"));
-		userSteps.add(new Coord(47.34083, 5.05015, "Dijon"));
-		userSteps.add(new Coord(48.85661, 2.3499, "Paris"));
+		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
+		userSteps.add(new Coord(43.296482, 5.36978, "Marseille", ""));
+		userSteps.add(new Coord(45.76404, 4.83566, "Lyon", ""));
+		userSteps.add(new Coord(47.34083, 5.05015, "Dijon", ""));
+		userSteps.add(new Coord(48.85661, 2.3499, "Paris", ""));
 
 		JsonObject routeQuery = QueryAPIs.queryRoute("route", userSteps);
 		// safeJsonPrinting(routeQuery);
@@ -224,10 +222,5 @@ public class Route
 		}
 
 		route.print();
-
-		ArrayList<Route> routes = new ArrayList<Route>();
-		routes.add(route);
-		JsonObject json = Core.buildAnswer(routes);
-		Core.safeJsonPrinting(json);
 	}
 }

@@ -174,9 +174,9 @@ public class QueryAPIs
 		// Finding a route data from a list of coordinates:
 
 		ArrayList<Coord> routeCoordinates = new ArrayList<Coord>();
-		routeCoordinates.add(new Coord(43.124228, 5.928, "Toulon"));
-		routeCoordinates.add(new Station(43.18196, 5.70365, "Station Saint Cyr-sur-Mer"));
-		routeCoordinates.add(new Coord(43.296482, 5.36978, "Marseille"));
+		routeCoordinates.add(new Coord(43.124228, 5.928, "Toulon", ""));
+		routeCoordinates.add(new Station(43.18196, 5.70365, "La station de Gégé", "Saint Cyr-sur-Mer"));
+		routeCoordinates.add(new Coord(43.296482, 5.36978, "Marseille", ""));
 
 		// The trip plugin solves the Traveling Salesman Problem using a greedy heuristic:
 		JsonObject json_1 = queryRoute("trip", routeCoordinates);
@@ -187,7 +187,7 @@ public class QueryAPIs
 		Core.safeJsonPrinting(json_2);
 
 		ArrayList<Coord> onlyOneCoord = new ArrayList<Coord>();
-		onlyOneCoord.add(new Coord(47.34083, 5.05015, "Dijon"));
+		onlyOneCoord.add(new Coord(47.34083, 5.05015, "Dijon", ""));
 
 		// Snaps a coordinate to the street network and returns the nearest match:
 		JsonObject json_3 = queryRoute("nearest", onlyOneCoord);
@@ -206,7 +206,7 @@ public class QueryAPIs
 			Core.safeJsonPrinting(json_4);
 
 			ArrayList<Coord> searchedCoords = new ArrayList<Coord>();
-			searchedCoords.add(new Coord(48.85661, 2.3499, "Paris"));
+			searchedCoords.add(new Coord(48.85661, 2.3499, "Paris", ""));
 			JsonObject json_5 = queryFromCoord(service, apiKey, searchedCoords);
 			Core.safeJsonPrinting(json_5);
 		}

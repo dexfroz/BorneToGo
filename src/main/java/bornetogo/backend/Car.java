@@ -78,6 +78,18 @@ public class Car
 	}
 
 
+	public JsonObject toJson()
+	{
+		return Json.createObjectBuilder()
+			.add("model", this.model)
+			.add("batteryType", this.batteryType)
+			.add("connector", this.connector)
+			.add("maxAutonomy", this.maxAutonomy)
+			.add("currentAutonomy", this.currentAutonomy)
+			.build();
+	}
+
+
 	public static void main(String[] args)
 	{
 		Car car = new Car("Tesla cybertruck", "undefined", "undefined", 66, 30);
