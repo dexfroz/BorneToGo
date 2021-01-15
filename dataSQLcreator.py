@@ -84,6 +84,81 @@ def INSERT_INTO_SQLCreator_station(data):
 
     return SQLlistRequete
 
+def INSERT_INTO_SQLCreator_connecteur(data):
+    SQLlistRequete = list()
+    listID = list()
+
+    for i in data['ConnectionTypes']:
+        if i['ID'] not in listID:
+            IDConnecteur = i['ID']
+            Titre = i['Title']
+            Name = i['FormalName']
+
+            requete = "INSERT INTO BorneToGo.Connecteur (idConnecteur, Titre, Name) VALUES ('{}','{}','{}');"
+
+            SQLlistRequete.append(
+                requete.format(IDConnecteur,Titre,Name)
+            )
+
+    return SQLlistRequete
+
+def INSERT_INTO_SQLCreator_courant(data):
+    SQLlistRequete = list()
+    listID = list()
+
+    for i in data['CurrentTypes']:
+        if i['ID'] not in listID:
+            IDConnecteur = i['ID']
+            Titre = i['Title']
+            Description = i['Description']
+
+            requete = "INSERT INTO BorneToGo.Courant (idCourant, Titre, Description) VALUES ('{}','{}','{}');"
+
+            SQLlistRequete.append(
+                requete.format(IDConnecteur,Titre,Description)
+            )
+
+    return SQLlistRequete
+
+def INSERT_INTO_SQLCreator_status(data):
+    SQLlistRequete = list()
+    listID = list()
+
+    for i in data['StatusTypes']:
+        if i['ID'] not in listID:
+            IDConnecteur = i['ID']
+            Titre = i['Title']
+            IsOperational = i['IsOperational']
+            IsUserSelectable = i['IsUserSelectable']
+
+            requete = "INSERT INTO BorneToGo.Status (idStatus, Titre, IsOperational, IsUserSelectable) VALUES ('{}','{}','{}','{}');"
+
+            SQLlistRequete.append(
+                requete.format(IDConnecteur,Titre,IsOperational,IsUserSelectable)
+            )
+
+    return SQLlistRequete
+
+def INSERT_INTO_SQLCreator_paiement(data):
+    SQLlistRequete = list()
+    listID = list()
+
+    for i in data['UsageTypes']:
+        if i['ID'] not in listID:
+            IDConnecteur = i['ID']
+            Titre = i['Title']
+            IsPayAtLocation = i['IsPayAtLocation']
+            IsMembershipRequired = i['IsMembershipRequired']
+            IsAccessKeyRequired = i['IsAccessKeyRequired']
+
+            requete = "INSERT INTO BorneToGo.Paiement (idPaiement, Titre, IsPayAtLocation, IsMembershipRequired, IsAccessKeyRequired) VALUES ('{}','{}','{}','{}');"
+
+            SQLlistRequete.append(
+                requete.format(IDConnecteur,Titre,IsPayAtLocation,IsMembershipRequired,IsAccessKeyRequired)
+            )
+
+    return SQLlistRequete
+
 def createSQLFilefromlist(data,filename):
     fs = open(filename,"w",encoding="utf-8")
 
@@ -96,7 +171,10 @@ def createSQLFilefromlist(data,filename):
 def correctionString(texte):
     return texte.replace("'","\\'")
 
-createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
-createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
+#createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
+#createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
 
-print("fini")
+#createSQLFilefromlist(INSERT_INTO_SQLCreator_connecteur(loadJSONfromFile("dataReference.json")),"connecteur.sql")
+#createSQLFilefromlist(INSERT_INTO_SQLCreator_courant(loadJSONfromFile("dataReference.json")),"courant.sql")
+#createSQLFilefromlist(INSERT_INTO_SQLCreator_status(loadJSONfromFile("dataReference.json")),"status.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_paiement(loadJSONfromFile("dataReference.json")),"paiement.sql")
