@@ -175,7 +175,7 @@ public class QueryAPIs
 
 		ArrayList<Coord> routeCoordinates = new ArrayList<Coord>();
 		routeCoordinates.add(new Coord(43.124228, 5.928, "Toulon", ""));
-		routeCoordinates.add(new Station(43.18196, 5.70365, "La station de Gégé", "Saint Cyr-sur-Mer"));
+		routeCoordinates.add(new Station(43.183331, 5.71667, "La station de Gégé", "Saint Cyr-sur-Mer"));
 		routeCoordinates.add(new Coord(43.296482, 5.36978, "Marseille", ""));
 
 		// The trip plugin solves the Traveling Salesman Problem using a greedy heuristic:

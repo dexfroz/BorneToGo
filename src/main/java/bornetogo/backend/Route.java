@@ -200,11 +200,10 @@ public class Route
 	public static void main(String[] args)
 	{
 		ArrayList<Coord> userSteps = new ArrayList<Coord>();
+
 		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
-		userSteps.add(new Coord(43.296482, 5.36978, "Marseille", ""));
-		userSteps.add(new Coord(45.76404, 4.83566, "Lyon", ""));
-		userSteps.add(new Coord(47.34083, 5.05015, "Dijon", ""));
-		userSteps.add(new Coord(48.85661, 2.3499, "Paris", ""));
+		userSteps.add(new Coord(43.183331, 5.71667, "La station de Gégé", "Saint Cyr-sur-Mer"));
+		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
 
 		JsonObject routeQuery = QueryAPIs.queryRoute("route", userSteps);
 		// safeJsonPrinting(routeQuery);
@@ -222,5 +221,11 @@ public class Route
 		}
 
 		route.print();
+
+		// // This is quite long to print:
+		// ArrayList<Route> routes = new ArrayList<Route>();
+		// routes.add(route);
+		// JsonObject json = Output.buildAnswer(routes);
+		// Core.safeJsonPrinting(json);
 	}
 }

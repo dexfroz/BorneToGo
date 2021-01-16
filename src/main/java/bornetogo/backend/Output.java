@@ -84,7 +84,7 @@ public class Output
 
 		JsonObject answer = Json.createObjectBuilder()
 			.add("type", "output")
-			.add("status", "ok")
+			.add("status", "Ok")
 			.add("convention", "lat-long")
 			.add("routes", routesArray)
 			.build();

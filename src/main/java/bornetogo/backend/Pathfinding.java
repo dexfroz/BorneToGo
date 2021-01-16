@@ -247,7 +247,7 @@ public class Pathfinding
 		userSteps.add(new Coord(48.85661, 2.3499, "Paris", ""));
 
 		ArrayList<Station> allStations = new ArrayList<Station>();
-		allStations.add(new Station(43.18196, 5.70365, "Station", "Saint Cyr-sur-Mer"));
+		allStations.add(new Station(43.183331, 5.71667, "Station", "Saint Cyr-sur-Mer"));
 		allStations.add(new Station(43.52916, 5.43638, "Station", "Aix-en-Provence"));
 		allStations.add(new Station(43.96512, 4.81899, "Station", "Avignon"));
 		allStations.add(new Station(44.54774, 4.78249, "Station", "Montélimar"));

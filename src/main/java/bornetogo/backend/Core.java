@@ -28,7 +28,7 @@ public class Core
 			return null;
 		}
 
-		ArrayList<Station> stations = DatabaseConnector.getStations(); // TODO: must be kept loaded!
+		ArrayList<Station> stations = DatabaseConnector.getStations(); // already loaded in memory!
 		Car car = Car.getFromJson(input);
 		ArrayList<Coord> userSteps = getUserStepsFromJson(input);
 
@@ -47,6 +47,7 @@ public class Core
 		}
 
 		Route firstDraw = Route.getFromJson(firstQuery);
+		firstQuery = null;
 
 		if (firstDraw == null) {
 			System.err.println("\nError while parsing 'firstQuery'.\n");
@@ -54,6 +55,7 @@ public class Core
 		}
 
 		ArrayList<Double> legLengths = firstDraw.getLegsLengths();
+		firstDraw = null;
 
 		if (legLengths == null) {
 			System.err.println("\nCould not get the legs length.\n");
@@ -77,6 +79,7 @@ public class Core
 		}
 
 		Route foundRoute = Route.getFromJson(secondQuery);
+		secondQuery = null;
 
 		if (foundRoute == null) {
 			System.err.println("\nIncorrect found route.\n");
@@ -111,7 +114,8 @@ public class Core
 // geocoding part?
 // input and output files to update!
 // filter user steps?
-// reset to null values in core?
 // warnings?
 // update readme
 
+// BUG: Route.getFromJson() causes to lose the isStation value (for stations)...
+// Also, names may be changed for Coord and Stations.
