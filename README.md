@@ -2,9 +2,7 @@
 
 Backend for the BorneToGo ISEN's project, an app whose purpose is to help finding where to charge electric cars.
 
-For now, is only implemented an asynchronous REST API, enabling GET and POST requests to a java project. It uses the docker image Payara Micro, and Jakarta EE.
-
-Forked from: <https://github.com/Carath/payara-micro-test>
+Concretely, given an user request of either recharging his electric car, or planing a trip, the backend must find the route of lower duration and cost, and return the result to the frontend, for it to be shown to the user. Said backend is provided with an asynchronous REST API. It uses the docker image Payara Micro, and Jakarta EE.
 
 
 ## Installation (Linux)
@@ -55,3 +53,26 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 - Dockerfile
 - target/bornetogo-backend-1.0-SNAPSHOT.war
 - start_backend.sh in which the 'build phase' has been removed.
+
+
+## TODO:
+
+- Load from the MySQL database cars, stations, connectors, batteries...
+- Update the output file with stations data, in the field: "data": {}
+- Support all use case in the pathfinding, use the input fields "useCase" and "optimOption".
+- Compute both cost and route duration.
+- Support incomplete input locations, i.e locations only defined by name or address, with a batch geocoding query in getUserStepsFromJson().
+- Filter user steps before the pathfinding: remove following duplicates.
+- Add the feature of returning several routes in the answer.
+- Open the app to POST requests.
+
+
+## Possible optimizations:
+
+- Tune the options in API queries (route and geocoding), for smaller answers.
+- Circumvent (at least in part) the steps JsonObject -> Route -> JsonObject at the end, specifically on the 'geometry' field (changing of convention)...
+
+
+## Known bugs:
+
+- Route.getFromJson() causes to lose the isStation value (for stations)... Also, names may be changed for Coord and Stations.

@@ -86,14 +86,14 @@ public class Route
 	}
 
 
-	// Computes the duration of the given route, in sec:
+	// Computes the duration of the given route, including the refilling time, in sec:
 	public void computeDuration()
 	{
 		return; // TODO.
 	}
 
 
-	// Computes the cost of the given route:
+	// Computes the cost of the given route, in euros:
 	public void computeCost()
 	{
 		return; // TODO.

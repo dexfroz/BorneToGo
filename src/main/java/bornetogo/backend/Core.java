@@ -179,22 +179,3 @@ public class Core
 		// safeJsonPrinting(output); // big output!
 	}
 }
-
-// TODO:
-// get json in car, from input
-// support inputs either in addresses, or GPS coord...
-// chosen convention in json (input + output)
-// taux recharge
-// request: routes number option
-// geocoding part in getUserStepsFromJson()
-// input and output files to update!
-// filter user steps?
-// warnings?
-// update readme
-// Use:
-// 	"useCase": "trip",
-// 	"optimOption": "default",
-
-// BUG: Route.getFromJson() causes to lose the isStation value (for stations)...
-// Also, names may be changed for Coord and Stations.
-

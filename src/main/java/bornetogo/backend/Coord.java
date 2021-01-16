@@ -154,9 +154,9 @@ public class Coord
 	{
 		return Json.createObjectBuilder()
 			.add("location", this.toJsonSmall(format))
-			.add("isStation", this.isStation)
 			.add("name", this.name)
 			.add("address", this.address)
+			.add("isStation", this.isStation)
 			.add("data", this.getJsonData())
 			.build();
 	}

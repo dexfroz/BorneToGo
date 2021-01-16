@@ -10,9 +10,9 @@
 						43.124167,
 						5.928138
 					],
-					"isStation": false,
 					"name": "Rue Docteur Carence",
 					"address": "Toulon",
+					"isStation": false,
 					"data": {}
 				},
 				{
@@ -20,9 +20,9 @@
 						43.183601,
 						5.71649
 					],
-					"isStation": true,
 					"name": "La station de Gégé",
 					"address": "Chemin des Poissoniers, Saint Cyr-sur-Mer",
+					"isStation": true,
 					"data": {}
 				},
 				{
@@ -30,9 +30,9 @@
 						43.124167,
 						5.928138
 					],
-					"isStation": false,
 					"name": "Rue Docteur Carence",
 					"address": "Marseille",
+					"isStation": false,
 					"data": {}
 				}
 			],
