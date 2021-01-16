@@ -41,7 +41,16 @@ public class DatabaseConnector
 
 	private static ArrayList<Station> loadStations()
 	{
-		return null; // TODO!
+		// TODO!
+
+		return Station.mockStations();
+	}
+
+
+	// Must fetch the car battery type and connector from its model:
+	public static void fetchData(Car car)
+	{
+		return; // TODO!
 	}
 
 

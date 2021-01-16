@@ -142,16 +142,17 @@ public class Route
 			}
 
 			JsonArray waypointsArray = json.getJsonArray("waypoints");
-			JsonArray routesArray = json.getJsonArray("routes");
 
 			for (int i = 0; i < waypointsArray.size(); ++i)
 			{
 				JsonObject waypoint = waypointsArray.getJsonObject(i);
 				String name = waypoint.getString("name");
 				JsonArray coordJson = waypoint.getJsonArray("location");
-				Coord coord = Coord.getFromJsonArray(coordJson, name);
+				Coord coord = Coord.getFromJsonArray(coordJson, name, "", Coord.Format.LONG_LAT);
 				route.waypoints.add(coord);
 			}
+
+			JsonArray routesArray = json.getJsonArray("routes");
 
 			for (int i = 0; i < routesArray.size(); ++i)
 			{
@@ -177,7 +178,7 @@ public class Route
 				for (int j = 0; j < coordsArray.size(); ++j)
 				{
 					JsonArray coordJson = coordsArray.getJsonArray(j);
-					Coord coord = Coord.getFromJsonArray(coordJson, "");
+					Coord coord = Coord.getFromJsonArray(coordJson, "", "", Coord.Format.LONG_LAT);
 					route.fullPath.add(coord);
 				}
 

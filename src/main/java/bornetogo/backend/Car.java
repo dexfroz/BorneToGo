@@ -13,13 +13,15 @@ public class Car
 	private double currentAutonomy; // in km
 
 
-	public Car(String model, String batteryType, String connector, double maxAutonomy, double currentAutonomy)
+	public Car(String model, double maxAutonomy, double currentAutonomy, String subscription)
 	{
 		this.model = model;
 		this.batteryType = batteryType;
 		this.connector = connector;
 		this.maxAutonomy = maxAutonomy;
 		this.currentAutonomy = currentAutonomy;
+
+		DatabaseConnector.fetchData(this);
 	}
 
 
@@ -72,9 +74,26 @@ public class Car
 	}
 
 
+	// Returns null on failure.
 	public static Car getFromJson(JsonObject json)
 	{
-		return null;
+		try
+		{
+			String model = json.getString("carModel");
+			double maxAutonomy = json.getJsonNumber​("maxAutonomy").doubleValue(); // in km
+			double currentAutonomy = json.getJsonNumber​("currentAutonomy").doubleValue(); // in km
+			String subscription = json.getString("subscription");
+			// Not known by the User:
+			// String batteryType = json.getString("batteryType");
+			// String connector = json.getString("connector");
+
+			return new Car(model, maxAutonomy, currentAutonomy, subscription);
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nError while parsing a json: could not extract a car.\n");
+			return null;
+		}
 	}
 
 
@@ -92,7 +111,7 @@ public class Car
 
 	public static void main(String[] args)
 	{
-		Car car = new Car("Tesla cybertruck", "undefined", "undefined", 66, 30);
+		Car car = new Car("Tesla cybertruck", 66, 30, "None");
 		System.out.println(car.toString());
 	}
 }

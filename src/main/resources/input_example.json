@@ -4,8 +4,6 @@
 	"useCase": "trip",
 	"optimOption": "default",
 	"carModel": "Tesla cybertruck",
-	"batteryType": "",
-	"connector": "",
 	"maxAutonomy": 200,
 	"currentAutonomy": 50,
 	"subscription": "",

@@ -6,6 +6,11 @@ import jakarta.json.*;
 
 public class Coord
 {
+	enum Format {
+		LAT_LONG,
+		LONG_LAT
+	}
+
 	private static final double DEG_TO_RAD = Math.PI / 180.;
 	private static final double MEAN_EARTH_DIAMETER = 12742.0016; // in km
 	private static final double EPSILON = 0.000001; // max error: 11 cm
@@ -105,38 +110,50 @@ public class Coord
 
 
 	// Long-lat convention!
-	public static Coord getFromJsonArray(JsonArray coordJson, String name)
+	public static Coord getFromJsonArray(JsonArray coordJson, String name, String address, Format format)
 	{
-		double longitude = coordJson.getJsonNumber​(0).doubleValue();
-		double latitude = coordJson.getJsonNumber​(1).doubleValue();
-		return new Coord(latitude, longitude, name, "");
+		double latitude = 0., longitude = 0.;
+
+		if (format == Format.LAT_LONG) {
+			latitude = coordJson.getJsonNumber​(0).doubleValue();
+			longitude = coordJson.getJsonNumber​(1).doubleValue();
+		}
+		else { // Format.LONG_LAT
+			latitude = coordJson.getJsonNumber​(1).doubleValue();
+			longitude = coordJson.getJsonNumber​(0).doubleValue();
+		}
+
+		return new Coord(latitude, longitude, name, address);
 	}
 
 
 	public JsonObject getJsonData()
 	{
-		return Json.createObjectBuilder().build(); // empty object.
+		return Json.createObjectBuilder().build(); // empty object by default.
 	}
 
 
-	public JsonArray toJsonSmall()
+	public JsonArray toJsonSmall(Format format)
 	{
 		JsonArrayBuilder builder = Json.createArrayBuilder();
-		builder.add(this.latitude);
-		builder.add(this.longitude);
+
+		if (format == Format.LAT_LONG) {
+			builder.add(this.latitude);
+			builder.add(this.longitude);
+		}
+		else { // Format.LONG_LAT
+			builder.add(this.longitude);
+			builder.add(this.latitude);
+		}
+
 		return (JsonArray) builder.build();
 	}
 
 
-	public JsonObject toJsonFull()
+	public JsonObject toJsonFull(Format format)
 	{
-		JsonArrayBuilder builder = Json.createArrayBuilder();
-		builder.add(this.latitude);
-		builder.add(this.longitude);
-		JsonArray coordArray = builder.build();
-
 		return Json.createObjectBuilder()
-			.add("location", coordArray)
+			.add("location", this.toJsonSmall(format))
 			.add("isStation", this.isStation)
 			.add("name", this.name)
 			.add("address", this.address)

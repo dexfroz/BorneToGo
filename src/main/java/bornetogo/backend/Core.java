@@ -15,14 +15,63 @@ public class Core
 	}
 
 
-	public static ArrayList<Coord> getUserStepsFromJson(JsonObject json)
+	public static void benchmark(long startTime, long endTime, String comment)
 	{
-		return null;
+		double elapsedTime = (endTime - startTime) / 1e9;
+		System.out.printf("- Duration for '%s':\n-> %.3f s.\n\n", comment, elapsedTime);
+	}
+
+
+	// Returns null on failure:
+	private static ArrayList<Coord> getUserStepsFromJson(JsonObject json)
+	{
+		try
+		{
+			ArrayList<Coord> userSteps = new ArrayList<Coord>();
+
+			JsonArray stepsArray = json.getJsonArray("userSteps");
+
+			for (int i = 0; i < stepsArray.size(); ++i)
+			{
+				JsonObject step = stepsArray.getJsonObject(i);
+				String name = step.getString("name");
+				String address = step.getString("address");
+				JsonArray coordJson = step.getJsonArray("location");
+
+				try {
+					Coord coord = Coord.getFromJsonArray(coordJson, name, address, Coord.Format.LAT_LONG);
+					userSteps.add(coord);
+				}
+				catch (Exception e)
+				{
+					if (name.equals("") || address.equals("")) {
+						System.err.println("\nTotally empty location in input json!\n");
+						return null;
+					}
+					else
+					{
+						System.err.println("\nTODO: batch geocoding request!\n");
+						// TODO: send BATCH requests to the geocoding API, to retrieve the location
+						// coordinates from the name and addresse.
+						return null;
+					}
+				}
+			}
+
+			return userSteps;
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nError while parsing a json: could not extract user steps.\n");
+			return null;
+		}
 	}
 
 
 	public static JsonObject core(JsonObject input)
 	{
+		long time_0 = System.nanoTime();
+
 		if (input == null) {
 			System.err.println("\nCould not process a null input.\n");
 			return null;
@@ -32,10 +81,12 @@ public class Core
 		Car car = Car.getFromJson(input);
 		ArrayList<Coord> userSteps = getUserStepsFromJson(input);
 
-		if (car == null || userSteps == null || stations == null) {
+		if (stations == null || car == null || userSteps == null) {
 			System.err.println("\nError while parsing the input json.\n");
 			return null;
 		}
+
+		long time_1 = System.nanoTime();
 
 		// Query 1 - replacing mockStepLengths():
 		JsonObject firstQuery = QueryAPIs.queryRoute("route", userSteps); // no need of all coordinates here!
@@ -45,6 +96,8 @@ public class Core
 			System.err.println("\nError in the first route request.\n");
 			return null;
 		}
+
+		long time_2 = System.nanoTime();
 
 		Route firstDraw = Route.getFromJson(firstQuery);
 		firstQuery = null;
@@ -62,12 +115,16 @@ public class Core
 			return null;
 		}
 
-		ArrayList<Coord> path = Pathfinding.pathfinding(car, userSteps, stations, legLengths);
+		long time_3 = System.nanoTime();
+
+		ArrayList<Coord> path = Pathfinding.find(car, userSteps, stations, legLengths);
 
 		if (path == null) {
 			System.err.println("\nPathfinding failed.\n");
 			return null;
 		}
+
+		long time_4 = System.nanoTime();
 
 		// Query 2 - for getting the full path:
 		JsonObject secondQuery = QueryAPIs.queryRoute("route", path);
@@ -77,6 +134,8 @@ public class Core
 			System.err.println("\nError in the second route request.\n");
 			return null;
 		}
+
+		long time_5 = System.nanoTime();
 
 		Route foundRoute = Route.getFromJson(secondQuery);
 		secondQuery = null;
@@ -92,7 +151,23 @@ public class Core
 
 		ArrayList<Route> routes = new ArrayList<Route>();
 		routes.add(foundRoute); // only 1 route for now.
-		return Output.buildAnswer(routes);
+
+		long time_6 = System.nanoTime();
+
+		JsonObject answer = Output.buildAnswer(routes);
+
+		long time_7 = System.nanoTime();
+
+		// Benchmarking results:
+		benchmark(time_0, time_1, "DatabaseConnector.getStations(), Car.getFromJson(), getUserStepsFromJson()");
+		benchmark(time_1, time_2, "QueryAPIs.queryRoute()");
+		benchmark(time_2, time_3, "Route.getFromJson(), getLegsLengths()");
+		benchmark(time_3, time_4, "Pathfinding.find()");
+		benchmark(time_4, time_5, "QueryAPIs.queryRoute()");
+		benchmark(time_5, time_6, "Route.getFromJson()");
+		benchmark(time_6, time_7, "Output.buildAnswer()");
+
+		return answer;
 	}
 
 
@@ -101,7 +176,7 @@ public class Core
 		String inputString = FileContent.read("input_example.json");
 		JsonObject input = GetJson.jsonFromString(inputString);
 		JsonObject output = core(input);
-		safeJsonPrinting(output);
+		// safeJsonPrinting(output); // big output!
 	}
 }
 
@@ -111,11 +186,15 @@ public class Core
 // chosen convention in json (input + output)
 // taux recharge
 // request: routes number option
-// geocoding part?
+// geocoding part in getUserStepsFromJson()
 // input and output files to update!
 // filter user steps?
 // warnings?
 // update readme
+// Use:
+// 	"useCase": "trip",
+// 	"optimOption": "default",
 
 // BUG: Route.getFromJson() causes to lose the isStation value (for stations)...
 // Also, names may be changed for Coord and Stations.
+

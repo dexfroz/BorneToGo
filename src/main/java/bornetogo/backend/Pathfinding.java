@@ -139,7 +139,7 @@ public class Pathfinding
 
 
 	// Returns null on failure.
-	public static ArrayList<Coord> pathfinding(Car car, ArrayList<Coord> userSteps,
+	public static ArrayList<Coord> find(Car car, ArrayList<Coord> userSteps,
 		ArrayList<Station> allStations, ArrayList<Double> stepLengths)
 	{
 		if (userSteps.size() < 2) {
@@ -148,11 +148,17 @@ public class Pathfinding
 		}
 
 		if (stepLengths.size() != userSteps.size() - 1) {
-			System.err.println("\nAn error happend while querying the route API.");
+			System.err.println("\nIncoherent list sizes, could not start the pathfinding.");
 			return null;
 		}
 
 		ArrayList<Station> relevantStations = getRelevantStations(car, userSteps, allStations);
+
+		if (relevantStations.isEmpty()) {
+			System.err.printf("\nNo relevant station for the given car:\n\n" + car.toString() + "\n");
+			System.err.println("\n-> Pathfinding failure.\n");
+			return null;
+		}
 
 		Coord currentStep = userSteps.get(0), nextStep = userSteps.get(1);
 		int stepIndex = 1;
@@ -165,13 +171,6 @@ public class Pathfinding
 			System.out.println("------------------------------------------");
 			System.out.println("currentStep: " + currentStep.toString());
 			System.out.println("\nnextStep: " + nextStep.toString());
-
-			if (relevantStations.isEmpty()) {
-				System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
-				System.err.println("\n-> Pathfinding failure.\n");
-				printPath(path);
-				return null;
-			}
 
 			// Potential improvement: only work on the stations for this subpath...
 			sortByDistance((ArrayList<Coord>) ((ArrayList<?>) relevantStations), nextStep); // causes a warning.
@@ -204,7 +203,8 @@ public class Pathfinding
 				currentStep = goRefill(car, relevantStations, path, currentStep);
 
 				if (currentStep == null) {
-					System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
+					System.err.println("\nNo station close enough for refilling.\n");
+					System.err.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
 					System.err.println("\n-> Pathfinding failure.\n");
 					printPath(path);
 					return null;
@@ -237,7 +237,7 @@ public class Pathfinding
 
 	public static void main(String[] args)
 	{
-		Car car = new Car("Tesla cybertruck", "undefined", "undefined", 200, 50);
+		Car car = new Car("Tesla cybertruck", 200, 50, "None");
 
 		ArrayList<Coord> userSteps = new ArrayList<Coord>();
 		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
@@ -246,25 +246,11 @@ public class Pathfinding
 		userSteps.add(new Coord(47.34083, 5.05015, "Dijon", ""));
 		userSteps.add(new Coord(48.85661, 2.3499, "Paris", ""));
 
-		ArrayList<Station> allStations = new ArrayList<Station>();
-		allStations.add(new Station(43.183331, 5.71667, "Station", "Saint Cyr-sur-Mer"));
-		allStations.add(new Station(43.52916, 5.43638, "Station", "Aix-en-Provence"));
-		allStations.add(new Station(43.96512, 4.81899, "Station", "Avignon"));
-		allStations.add(new Station(44.54774, 4.78249, "Station", "Montélimar"));
-		allStations.add(new Station(44.95311, 4.90094, "Station", "Valence"));
-		allStations.add(new Station(45.36394, 4.83675, "Station", "Roussillon"));
-		allStations.add(new Station(46.29772, 4.84272, "Station", "Mâcon"));
-		allStations.add(new Station(47.04845, 4.81543, "Station", "Beaune"));
-		allStations.add(new Station(47.58339, 5.20597, "Station", "Selongey"));
-		allStations.add(new Station(47.86140, 5.34153, "Station", "Langres"));
-		allStations.add(new Station(48.31764, 4.12017, "Station", "Troyes"));
-		allStations.add(new Station(48.19592, 3.28644, "Station", "Sens"));
-		allStations.add(new Station(48.37708, 3.00335, "Station", "Montereau"));
-		allStations.add(new Station(48.53482, 2.66751, "Station", "Melun"));
-		// Should be enough, for a max autonomy of 200 km.
+		ArrayList<Station> allStations = Station.mockStations();
+		// There should be enough mock stations, for a max autonomy of 200 km.
 
 		ArrayList<Double> stepLengths = mockStepLengths(userSteps); // mocks API queries.
-		ArrayList<Coord> path = pathfinding(car, userSteps, allStations, stepLengths);
+		ArrayList<Coord> path = find(car, userSteps, allStations, stepLengths);
 		printPath(path);
 	}
 }

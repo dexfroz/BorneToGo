@@ -19,7 +19,7 @@ public class Output
 			JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
 
 			for (Coord coord : route.getWaypoints()) {
-				waypointsBuilder.add(coord.toJsonFull()); // full info
+				waypointsBuilder.add(coord.toJsonFull(Coord.Format.LAT_LONG));
 			}
 
 			JsonArray waypointsArray = waypointsBuilder.build();
@@ -45,7 +45,7 @@ public class Output
 			JsonArrayBuilder coordsBuilder = Json.createArrayBuilder();
 
 			for (Coord coord : route.getFullPath()) {
-				coordsBuilder.add(coord.toJsonSmall());
+				coordsBuilder.add(coord.toJsonSmall(Coord.Format.LAT_LONG));
 			}
 
 			JsonArray coordsArray = coordsBuilder.build();
