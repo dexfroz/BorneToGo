@@ -28,7 +28,6 @@ public class Core
 		try
 		{
 			ArrayList<Coord> userSteps = new ArrayList<Coord>();
-
 			JsonArray stepsArray = json.getJsonArray("userSteps");
 
 			for (int i = 0; i < stepsArray.size(); ++i)
@@ -99,7 +98,7 @@ public class Core
 
 		long time_2 = System.nanoTime();
 
-		Route firstDraw = Route.getFromJson(firstQuery);
+		Route firstDraw = Route.getFromJson(firstQuery, null);
 		firstQuery = null;
 
 		if (firstDraw == null) {
@@ -107,17 +106,18 @@ public class Core
 			return null;
 		}
 
+		ArrayList<Coord> waypoints = firstDraw.getWaypoints();
 		ArrayList<Double> legLengths = firstDraw.getLegsLengths();
-		firstDraw = null;
 
-		if (legLengths == null) {
-			System.err.println("\nCould not get the legs length.\n");
+		if (waypoints == null || legLengths == null) {
+			System.err.println("\nCould not retrieve 'firstDraw' data.\n");
 			return null;
 		}
 
 		long time_3 = System.nanoTime();
 
-		ArrayList<Coord> path = Pathfinding.find(car, userSteps, stations, legLengths);
+		ArrayList<Coord> path = Pathfinding.find(stations, car, waypoints, legLengths);
+		firstDraw = null;
 
 		if (path == null) {
 			System.err.println("\nPathfinding failed.\n");
@@ -137,7 +137,7 @@ public class Core
 
 		long time_5 = System.nanoTime();
 
-		Route foundRoute = Route.getFromJson(secondQuery);
+		Route foundRoute = Route.getFromJson(secondQuery, path);
 		secondQuery = null;
 
 		if (foundRoute == null) {

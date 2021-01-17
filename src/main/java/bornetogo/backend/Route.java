@@ -67,7 +67,9 @@ public class Route
 
 	public void updateCurrentAutonomy(Car car)
 	{
-		this.autonomyLeft = car.getCurrentAutonomy();
+		// Car not modified by the pathfinding anymore. TODO: use the fullPath!
+		// deprecated: this.autonomyLeft = car.getCurrentAutonomy();
+		// Still add protections like in: this.currentAutonomy = Math.max(0, Math.min(autonomy, this.maxAutonomy));
 	}
 
 
@@ -124,8 +126,40 @@ public class Route
 	}
 
 
-	// Returns null on failure.
-	public static Route getFromJson(JsonObject json)
+	// Will complete the received waypoints with previous metadata, and replace Coords with
+	// Stations where needed. Note that received name and coordinates will be kept over the input ones!
+	// Returns 'true' on success, 'false' else.
+	private Boolean completedWaypoints(ArrayList<Coord> path)
+	{
+		if (path == null) { // do nothing.
+			return true;
+		}
+
+		if (this.waypoints.size() != path.size()) {
+			System.err.println("\nDifferent sizes of waypoints!\n");
+			return false;
+		}
+
+		for (int i = 0; i < path.size(); ++i)
+		{
+			Coord coord = path.get(i);
+			if (coord.isStation()) {
+				this.waypoints.set(i, new Station(this.waypoints.get(i)));
+			}
+
+			Coord waypoint = this.waypoints.get(i);
+			if (waypoint.getName().equals("")) {
+				waypoint.setName(coord.getName());
+			}
+			waypoint.setAddress(coord.getAddress()); // a received waypoint have no address.
+		}
+
+		return true;
+	}
+
+
+	// Returns null on failure. Uses 'path' to complete waypoints.
+	public static Route getFromJson(JsonObject json, ArrayList<Coord> path)
 	{
 		try
 		{
@@ -146,10 +180,10 @@ public class Route
 			for (int i = 0; i < waypointsArray.size(); ++i)
 			{
 				JsonObject waypoint = waypointsArray.getJsonObject(i);
-				String name = waypoint.getString("name");
+				String foundName = waypoint.getString("name");
 				JsonArray coordJson = waypoint.getJsonArray("location");
-				Coord coord = Coord.getFromJsonArray(coordJson, name, "", Coord.Format.LONG_LAT);
-				route.waypoints.add(coord);
+				Coord foundCoord = Coord.getFromJsonArray(coordJson, foundName, "", Coord.Format.LONG_LAT);
+				route.waypoints.add(foundCoord);
 			}
 
 			JsonArray routesArray = json.getJsonArray("routes");
@@ -157,7 +191,7 @@ public class Route
 			for (int i = 0; i < routesArray.size(); ++i)
 			{
 				if (i > 0) {
-					System.err.println("\nThis json contains several routes!\n");
+					System.err.println("\nThis json contains several routes. Not supported!\n");
 					break;
 				}
 
@@ -188,6 +222,10 @@ public class Route
 				// cost and autonomyLeft are left to default values.
 			}
 
+			if (route.completedWaypoints(path) == false) {
+				return null;
+			}
+
 			return route;
 		}
 		catch (Exception e) {
@@ -200,13 +238,12 @@ public class Route
 
 	public static void main(String[] args)
 	{
-		ArrayList<Coord> userSteps = new ArrayList<Coord>();
+		ArrayList<Coord> path = new ArrayList<Coord>();
+		path.add(new Coord(43.124228, 5.928, "Chez Patrick", "Toulon"));
+		path.add(new Station(43.183331, 5.71667, "La station de Gégé", "Saint Cyr-sur-Mer"));
+		path.add(new Coord(43.296482, 5.36978, "Chez Xavier", "Marseille"));
 
-		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
-		userSteps.add(new Coord(43.183331, 5.71667, "La station de Gégé", "Saint Cyr-sur-Mer"));
-		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
-
-		JsonObject routeQuery = QueryAPIs.queryRoute("route", userSteps);
+		JsonObject routeQuery = QueryAPIs.queryRoute("route", path);
 		// safeJsonPrinting(routeQuery);
 
 		if (routeQuery == null) {
@@ -214,7 +251,7 @@ public class Route
 			return;
 		}
 
-		Route route = Route.getFromJson(routeQuery);
+		Route route = Route.getFromJson(routeQuery, path);
 
 		if (route == null) {
 			System.err.println("\nError while parsing 'routeQuery'.\n");

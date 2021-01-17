@@ -7,36 +7,35 @@ import java.util.*;
 public class Pathfinding
 {
 	private static final double distBoundCoeff = 1.5; // unitless
-	private static final double ellipseMargin = 20.; // in km
-	private static final double rangeMargin = 0.; // in km
+	private static final double ellipseRatio = 1.2; // unitless, must be > 1.
+	private static final double rangeMargin = 10.; // in km
 
 
 	// Gives a reasonable upper bound for the length of a route between two points:
 	private static double lengthUpperBound(Coord coord_1, Coord coord_2)
 	{
 		return distBoundCoeff * Coord.distance(coord_1, coord_2);
-		// return Coord.distance(coord_1, coord_2); // for testing.
 	}
 
 
 	// For testing only, the real version must query the route API.
-	private static ArrayList<Double> mockStepLengths(ArrayList<Coord> userSteps)
+	private static ArrayList<Double> mockStepLengths(ArrayList<Coord> waypoints)
 	{
-		ArrayList<Double> stepLengths = new ArrayList<Double>();
+		ArrayList<Double> legLengths = new ArrayList<Double>();
 
-		for (int i = 0; i < userSteps.size() - 1; ++i) {
-			stepLengths.add(lengthUpperBound(userSteps.get(i), userSteps.get(i + 1)));
+		for (int i = 0; i < waypoints.size() - 1; ++i) {
+			legLengths.add(lengthUpperBound(waypoints.get(i), waypoints.get(i + 1)));
 		}
 
-		return stepLengths;
+		return legLengths;
 	}
 
 
 	// Checks if the given point is inside the ellipse of focus 'ref_1' and 'ref_2',
-	// and with major axis of length: distance(ref_1, ref_2) + 2. * ellipseMargin
+	// and with major axis of length: distance(ref_1, ref_2) * ellipseRatio
 	private static Boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
-		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) + 2. * ellipseMargin;
+		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * ellipseRatio;
 	}
 
 
@@ -48,14 +47,14 @@ public class Pathfinding
 
 
 	// Potential improvement: return a list of list of Coord, one for each subpath.
-	private static ArrayList<Station> getRelevantStations(Car car, ArrayList<Coord> userSteps, ArrayList<Station> allStations)
+	private static ArrayList<Station> getRelevantStations(ArrayList<Station> allStations, Car car, ArrayList<Coord> waypoints)
 	{
 		ArrayList<Station> relevantStations = new ArrayList<Station>();
 
 		for (Station station : allStations) {
 			if (station.hasCompatibleChargingPoint(car)) {
-				for (int i = 0; i < userSteps.size() - 1; ++i) {
-					if (isInEllipse(userSteps.get(i), userSteps.get(i + 1), station)) {
+				for (int i = 0; i < waypoints.size() - 1; ++i) {
+					if (isInEllipse(waypoints.get(i), waypoints.get(i + 1), station)) {
 						relevantStations.add(station);
 						break;
 					}
@@ -97,13 +96,13 @@ public class Pathfinding
 
 
 	// Used when it has been deemed safe to go to the next step:
-	private static void goNextStep(Car car, ArrayList<Coord> path, double stepLength, Coord nextStep)
+	private static void goNextStep(Car car, ArrayList<Coord> path, double legLength, Coord nextStep)
 	{
 		System.out.println("\n-> Going to step:\n\n" + nextStep.toString());
 		path.add(nextStep);
-		car.setCurrentAutonomy(car.getCurrentAutonomy() - stepLength);
+		car.setCurrentAutonomy(car.getCurrentAutonomy() - legLength);
 
-		if (nextStep.isStation()) {
+		if (nextStep.isStation()) { // This cannot be used for now, waypoints should be scrutinized first...
 			System.out.println("\nLucky one!");
 			car.setCurrentAutonomy(car.getMaxAutonomy()); // tell the User!
 		}
@@ -128,7 +127,8 @@ public class Pathfinding
 		Station chosenStation = chooseBestStation(reachableStations);
 		System.out.println("\n-> Refilling at station:\n\n" + chosenStation.toString());
 
-		if (currentStep.isEqual(chosenStation)) {
+		// Preventing an infinite loop, when the station has already been visited!
+		if (currentStep.isAtSameSpot(chosenStation) && car.getCurrentAutonomy() == car.getMaxAutonomy()) {
 			return null;
 		}
 
@@ -138,21 +138,23 @@ public class Pathfinding
 	}
 
 
-	// Returns null on failure.
-	public static ArrayList<Coord> find(Car car, ArrayList<Coord> userSteps,
-		ArrayList<Station> allStations, ArrayList<Double> stepLengths)
+	// Returns null on failure. The car is not modified, indeed autonomy computations are only estimates here.
+	public static ArrayList<Coord> find(ArrayList<Station> allStations, Car userCar,
+		ArrayList<Coord> waypoints, ArrayList<Double> legLengths)
 	{
-		if (userSteps.size() < 2) {
+		Car car = userCar.copy();
+
+		if (waypoints.size() < 2) {
 			System.err.println("\nUnsupported use case, as of now.");
 			return null;
 		}
 
-		if (stepLengths.size() != userSteps.size() - 1) {
+		if (legLengths.size() != waypoints.size() - 1) {
 			System.err.println("\nIncoherent list sizes, could not start the pathfinding.");
 			return null;
 		}
 
-		ArrayList<Station> relevantStations = getRelevantStations(car, userSteps, allStations);
+		ArrayList<Station> relevantStations = getRelevantStations(allStations, car, waypoints);
 
 		if (relevantStations.isEmpty()) {
 			System.err.printf("\nNo relevant station for the given car:\n\n" + car.toString() + "\n");
@@ -160,7 +162,7 @@ public class Pathfinding
 			return null;
 		}
 
-		Coord currentStep = userSteps.get(0), nextStep = userSteps.get(1);
+		Coord currentStep = waypoints.get(0), nextStep = waypoints.get(1);
 		int stepIndex = 1;
 
 		ArrayList<Coord> path = new ArrayList<Coord>();
@@ -177,24 +179,24 @@ public class Pathfinding
 
 			Station safetyNext = chooseSafetyStation(relevantStations);
 
-			double stepLength = stepLengths.get(stepIndex - 1);
+			double legLength = legLengths.get(stepIndex - 1);
 
 			if (currentStep.isStation()) {
-				stepLength = lengthUpperBound(currentStep, nextStep);
+				legLength = lengthUpperBound(currentStep, nextStep);
 			}
 
-			System.out.printf("\nstepLength: %.3f km\n", stepLength);
+			System.out.printf("\nlegLength: %.3f km\n", legLength);
 
-			if (lengthReachable(car, stepLength + lengthUpperBound(nextStep, safetyNext)))
+			if (lengthReachable(car, legLength + lengthUpperBound(nextStep, safetyNext)))
 			{
-				goNextStep(car, path, stepLength, nextStep);
+				goNextStep(car, path, legLength, nextStep);
 
-				if (stepIndex + 1 == userSteps.size()) { // done.
+				if (stepIndex + 1 == waypoints.size()) { // done.
 					break;
 				}
 
 				currentStep = nextStep;
-				nextStep = userSteps.get(stepIndex + 1);
+				nextStep = waypoints.get(stepIndex + 1);
 				++stepIndex;
 			}
 
@@ -204,17 +206,17 @@ public class Pathfinding
 
 				if (currentStep == null) {
 					System.err.println("\nNo station close enough for refilling.\n");
-					System.err.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
+					System.err.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
 					System.err.println("\n-> Pathfinding failure.\n");
 					printPath(path);
 					return null;
 				}
 			}
 
-			System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
+			System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
 		}
 
-		System.out.printf("\nCurrent autonomy: %.3f km.\n", car.getCurrentAutonomy());
+		System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
 		System.out.println("\n-> Done.\n");
 		return path;
 	}
@@ -237,20 +239,21 @@ public class Pathfinding
 
 	public static void main(String[] args)
 	{
-		Car car = new Car("Tesla cybertruck", 200, 50, "None");
-
-		ArrayList<Coord> userSteps = new ArrayList<Coord>();
-		userSteps.add(new Coord(43.124228, 5.928, "Toulon", ""));
-		userSteps.add(new Coord(43.296482, 5.36978, "Marseille", ""));
-		userSteps.add(new Coord(45.76404, 4.83566, "Lyon", ""));
-		userSteps.add(new Coord(47.34083, 5.05015, "Dijon", ""));
-		userSteps.add(new Coord(48.85661, 2.3499, "Paris", ""));
-
 		ArrayList<Station> allStations = Station.mockStations();
 		// There should be enough mock stations, for a max autonomy of 200 km.
 
-		ArrayList<Double> stepLengths = mockStepLengths(userSteps); // mocks API queries.
-		ArrayList<Coord> path = find(car, userSteps, allStations, stepLengths);
+		Car car = new Car("Tesla cybertruck", 200, 50, "None");
+
+		ArrayList<Coord> waypoints = new ArrayList<Coord>();
+		waypoints.add(new Coord(43.124228, 5.928, "Toulon", ""));
+		waypoints.add(new Coord(43.296482, 5.36978, "Marseille", ""));
+		waypoints.add(new Coord(45.76404, 4.83566, "Lyon", ""));
+		waypoints.add(new Coord(47.34083, 5.05015, "Dijon", ""));
+		waypoints.add(new Coord(48.85661, 2.3499, "Paris", ""));
+
+		ArrayList<Double> legLengths = mockStepLengths(waypoints); // mocks API queries.
+
+		ArrayList<Coord> path = find(allStations, car, waypoints, legLengths);
 		printPath(path);
 	}
 }

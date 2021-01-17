@@ -7,39 +7,35 @@ import jakarta.json.*;
 public class Car
 {
 	private String model;
-	private String batteryType;
-	private String connector;
 	private double maxAutonomy; // in km
 	private double currentAutonomy; // in km
+	private String batteryType;
+	private String connector;
+	private String subscription;
 
 
 	public Car(String model, double maxAutonomy, double currentAutonomy, String subscription)
 	{
 		this.model = model;
-		this.batteryType = batteryType;
-		this.connector = connector;
 		this.maxAutonomy = maxAutonomy;
 		this.currentAutonomy = currentAutonomy;
+		this.batteryType = "";
+		this.connector = "";
+		this.subscription = "";
 
 		DatabaseConnector.fetchData(this);
+	}
+
+
+	public Car copy()
+	{
+		return new Car(this.model, this.maxAutonomy, this.currentAutonomy, this.subscription);
 	}
 
 
 	public String getModel()
 	{
 		return this.model;
-	}
-
-
-	public String getBatteryType()
-	{
-		return this.batteryType;
-	}
-
-
-	public String getStationStatus()
-	{
-		return this.connector;
 	}
 
 
@@ -55,6 +51,24 @@ public class Car
 	}
 
 
+	public String getBatteryType()
+	{
+		return this.batteryType;
+	}
+
+
+	public String getConnector()
+	{
+		return this.connector;
+	}
+
+
+	public String getSubscription()
+	{
+		return this.subscription;
+	}
+
+
 	public void setCurrentAutonomy(double autonomy)
 	{
 		this.currentAutonomy = Math.max(0, Math.min(autonomy, this.maxAutonomy));
@@ -63,8 +77,9 @@ public class Car
 
 	public String toString()
 	{
-		return "Car: " + this.model + "\nBattery type: " + this.batteryType + "\nConnector: " + this.connector +
-			"\nMax autonomy: " + this.maxAutonomy + " km\nCurrent autonomy: " + this.currentAutonomy + " km";
+		return "Car: " + this.model + "\nMax autonomy: " + this.maxAutonomy + " km\nCurrent autonomy: " +
+			this.currentAutonomy + " km\nBattery type: " + this.batteryType + "\nConnector: " + this.connector +
+			"\nSubscription: " + this.subscription;
 	}
 
 
@@ -101,10 +116,11 @@ public class Car
 	{
 		return Json.createObjectBuilder()
 			.add("model", this.model)
-			.add("batteryType", this.batteryType)
-			.add("connector", this.connector)
 			.add("maxAutonomy", this.maxAutonomy)
 			.add("currentAutonomy", this.currentAutonomy)
+			.add("batteryType", this.batteryType)
+			.add("connector", this.connector)
+			.add("subscription", this.subscription)
 			.build();
 	}
 

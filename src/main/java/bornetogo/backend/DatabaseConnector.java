@@ -13,10 +13,9 @@ public class DatabaseConnector
 
 	public static ArrayList<Car> getCars()
 	{
-		// if (cars == null) {
-		// 	System.err.println("\nStatic resource 'cars' could not be loaded.\n");
-		// 	throw new RuntimeException();
-		// }
+		if (cars == null) {
+			System.err.println("\nStatic resource 'cars' could not be loaded.\n");
+		}
 
 		return cars;
 	}
@@ -24,10 +23,9 @@ public class DatabaseConnector
 
 	public static ArrayList<Station> getStations()
 	{
-		// if (stations == null) {
-		// 	System.err.println("\nStatic resource 'stations' could not be loaded.\n");
-		// 	throw new RuntimeException();
-		// }
+		if (stations == null) {
+			System.err.println("\nStatic resource 'stations' could not be loaded.\n");
+		}
 
 		return stations;
 	}
@@ -43,7 +41,9 @@ public class DatabaseConnector
 	{
 		// TODO!
 
+		// For testing:
 		return Station.mockStations();
+		// return Station.bigMockStations();
 	}
 
 

@@ -81,6 +81,8 @@ public class QueryAPIs
 			String options = "&thumbMaps=false&includeNearestIntersection=true&includeRoadMetadata=true&maxResults=1";
 			String url = "http://www.mapquestapi.com/geocoding/v1/batch?key=" + apiKey +
 						 "&outFormat=json" + requestbatch + options;
+
+			System.out.println("\nGeocoding query:\n\n-> " + url + "\n");
 			return GetJson.jsonFromUrl(url);
 		}
 
@@ -152,6 +154,8 @@ public class QueryAPIs
 
 		String url = "http://router.project-osrm.org/" + routeMode + "/v1/car/" +
 					 formatCoordinateList(coordinates) + ".json?" + options;
+
+		System.out.println("\nRoute query:\n\n-> " + url + "\n");
 		return GetJson.jsonFromUrl(url);
 	}
 

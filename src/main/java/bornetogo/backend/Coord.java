@@ -13,7 +13,7 @@ public class Coord
 
 	private static final double DEG_TO_RAD = Math.PI / 180.;
 	private static final double MEAN_EARTH_DIAMETER = 12742.0016; // in km
-	private static final double EPSILON = 0.000001; // max error: 11 cm
+	private static final double EPSILON = 0.0001; // max error: 11.11 m
 
 	// In decimal degrees:
 	protected double latitude;
@@ -23,7 +23,7 @@ public class Coord
 	private double latRadian;
 	private double longRadian;
 
-	protected Boolean isStation; // default to false
+	protected Boolean isStation; // only Stations have this true. Do _not_ add a setter to modify it!
 	protected String name;
 	protected String address;
 
@@ -76,6 +76,18 @@ public class Coord
 	}
 
 
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+
+	public void setAddress(String address)
+	{
+		this.address = address;
+	}
+
+
 	public String toString()
 	{
 		return "Coord:\nName: " + this.name + "\nAddress: " + this.address + "\nIs a station: " + this.isStation +
@@ -89,9 +101,9 @@ public class Coord
 	}
 
 
-	// Not overriding the equals() method, for it should be followed
-	// by overriding the hashCode() method too!
-	public Boolean isEqual(Coord coord)
+	// Not overriding the equals() method, for it should be followed by overriding
+	// the hashCode() method too! This compares only the Coords position.
+	public Boolean isAtSameSpot(Coord coord)
 	{
 		return Math.abs(this.longitude - coord.longitude) < EPSILON &&
 			Math.abs(this.latitude - coord.latitude) < EPSILON;

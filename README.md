@@ -59,20 +59,17 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 
 - Load from the MySQL database cars, stations, connectors, batteries...
 - Update the output file with stations data, in the field: "data": {}
-- Support all use case in the pathfinding, use the input fields "useCase" and "optimOption".
+- Support all use cases in the pathfinding, use the input fields "useCase" and "optimOption".
 - Compute both cost and route duration.
-- Support incomplete input locations, i.e locations only defined by name or address, with a batch geocoding query in getUserStepsFromJson().
-- Filter user steps before the pathfinding: remove following duplicates.
+- Support incomplete input locations, i.e locations only defined by name or address, with a batch geocoding query in getUserStepsFromJson(). Get all available data.
+- Filter user steps before the pathfinding: remove following duplicates (unless asking for a refill with start = end).
 - Add the feature of returning several routes in the answer.
 - Open the app to POST requests.
+- Provide detailed explanations on the workings of the backend, especially the pathfinding part.
 
 
 ## Possible optimizations:
 
 - Tune the options in API queries (route and geocoding), for smaller answers.
 - Circumvent (at least in part) the steps JsonObject -> Route -> JsonObject at the end, specifically on the 'geometry' field (changing of convention)...
-
-
-## Known bugs:
-
-- Route.getFromJson() causes to lose the isStation value (for stations)... Also, names may be changed for Coord and Stations.
+- Bypass many distance computations in the pathfinding, by using various tricks, like precomputation or factorization. Note: for now this is overkill, since said pathfinding doesn't take more than 0.1 second to run.

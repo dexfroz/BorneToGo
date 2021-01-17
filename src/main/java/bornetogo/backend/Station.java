@@ -10,9 +10,16 @@ public class Station extends Coord
 	// TODO: must contain a list of charging points, and other stats.
 
 
-	public Station(double latitude, double longitude, String description, String address)
+	public Station(double latitude, double longitude, String name, String address)
 	{
-		super(latitude, longitude, description, address);
+		super(latitude, longitude, name, address);
+		this.isStation = true;
+	}
+
+
+	public Station(Coord coord)
+	{
+		super(coord.latitude, coord.longitude, coord.name, coord.address);
 		this.isStation = true;
 	}
 
@@ -50,6 +57,28 @@ public class Station extends Coord
 		allStations.add(new Station(48.19592, 3.28644, "Station", "Sens"));
 		allStations.add(new Station(48.37708, 3.00335, "Station", "Montereau"));
 		allStations.add(new Station(48.53482, 2.66751, "Station", "Melun"));
+		return allStations;
+	}
+
+
+	// For load testing only:
+	public static ArrayList<Station> bigMockStations()
+	{
+		Random r = new Random();
+
+		int stationNumber = 10000;
+		double latMin = 43., latMax = 50.;
+		double longMin = -0.5, longMax = 8.;
+
+		ArrayList<Station> allStations = new ArrayList<Station>();
+
+		for (int i = 0; i < stationNumber; ++i)
+		{
+			double randomLat = latMin + (latMax - latMin) * r.nextDouble();
+			double randomLong = longMin + (longMax - longMin) * r.nextDouble();
+			allStations.add(new Station(randomLat, randomLong, String.valueOf(i), ""));
+		}
+
 		return allStations;
 	}
 
