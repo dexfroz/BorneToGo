@@ -1,12 +1,11 @@
 // Pages/PageMap.js
 
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions, Image, FlatList } from 'react-native'
+import { StyleSheet, View, Text, FlatList, Dimensions, Image } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MapView, { MAP_TYPES, PROVIDER_OSMDROID, Geojson } from 'react-native-maps';
-import StationMap from '../Composants/StationMap';
-import { connect } from 'react-redux';
 import MarkerItineraire from '../Composants/MarkerItineraire';
+import ItineraireMap from '../Composants/ItineraireMap';
 
 // Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
@@ -371,34 +370,6 @@ const test2 = [
     }
 ];
 
-function calculCouleurItinéraire(id) {
-    var color;
-    switch (id) {
-        case 1:
-            color = 'green';
-            break;
-        case 2:
-            color = 'mediumseagreen';
-            break;
-        case 3:
-            color = 'teal';
-            break;
-        case 4:
-            color = 'darkseagreen';
-            break;
-        case 5:
-            color = 'yellowgreen';
-            break;
-        case 6:
-            color = 'forestgreen';
-            break;
-        default:
-            color = 'red';
-    }
-
-    return color;
-}
-
 // Fonction de log pour tester
 function log(eventName, e) {
     console.log(eventName, e.nativeEvent);
@@ -484,6 +455,42 @@ function identification(element, id) {
     return info_element;
 }
 
+function formaterDistance(distance) {
+    let kmetres = Math.floor(distance / 1000);
+    distance %= 1000;
+    let metres = Math.trunc(distance);
+
+    var new_distance = "";
+    if (kmetres < 1) {
+        new_distance = metres.toString() + " m";
+    }
+    else {
+        new_distance = kmetres.toString() + " km";
+    }
+    return new_distance;
+}
+
+function formateDuree(duree) {
+    let heures = Math.floor(duree / 3600);
+    duree %= 3600;
+    let minutes = Math.floor(duree / 60);
+    let secondes = duree % 60;
+
+    if (secondes > 30) {
+        minutes++;
+    }
+
+    var new_duree = "";
+    if (heures < 1) {
+        new_duree = minutes.toString() + " min";
+    }
+    else {
+        new_duree = heures.toString() + " h " + minutes.toString() + " min";
+    }
+
+    return new_duree;
+}
+
 class PageMap extends React.Component {
     constructor(props) {
         super(props);
@@ -495,6 +502,8 @@ class PageMap extends React.Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             },
+            idItineraireCourant: 0,
+            itineraires: getItineraires(test2),
         };
     }
 
@@ -503,28 +512,126 @@ class PageMap extends React.Component {
         return this.props.provider === PROVIDER_OSMDROID ? MAP_TYPES.STANDARD : MAP_TYPES.NONE;
     }
 
-    render() {
-        var itineraires = getItineraires(test2);
-        console.log("Itinéraire routes", itineraires[0].routes[0].geometry.coordinates);
+    changerItineraireActif(id, itineraires) {
+        this.state.idItineraireCourant = id - 1;
+        this.setState({ state: this.state });
+    }
+
+    renderItineraire(item) {
         // Récupération des informations pour : 
         // DEPART
+        var depart = this.state.itineraires[this.state.idItineraireCourant].waypoints[0];
+
         // ARRIVEE
-        // ETAPES ET STATIONS
-        // Ajout des identifiants
-        /*var i = test2.waypoints.length;
-        var depart = identification(test2.waypoints.shift(), 0);
-        var arrivee = identification(test2.waypoints.pop(), i);
-        i = 0;
-        var etape = test2.waypoints.map(function (waypoint) {
-            i++;
-            var info = identification(waypoint, i);
-            return info;
-        });*/
+        var arrivee = this.state.itineraires[this.state.idItineraireCourant].waypoints[this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1];
+
+        // STATIONS et ETAPES
+        var stations = [];
+        var etapes = [];
+        for (var i = 1; i < this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1; i++) {
+            if (this.state.itineraires[this.state.idItineraireCourant].waypoints[i].isStation) {
+                stations.push(this.state.itineraires[this.state.idItineraireCourant].waypoints[i]);
+            }
+            else {
+                etapes.push(this.state.itineraires[this.state.idItineraireCourant].waypoints[i]);
+            }
+        }
+
+        // DUREE
+        var duree = this.state.itineraires[this.state.idItineraireCourant].routes[0].duration;
+
+        duree = formateDuree(duree);
+
+        // DISTANCE
+        var distance = this.state.itineraires[this.state.idItineraireCourant].routes[0].distance;
+
+        distance = formaterDistance(distance);
 
         // console.log("DEPART", depart);
         // console.log("ARRIVEE", arrivee);
-        // console.log("ETAPES", etape);
+        // console.log("ETAPES", etapes);
+        // console.log("STATIONS", stations);
 
+        return (
+            <TouchableWithoutFeedback
+                key={`Itineraire-${item.idItineraire}`}
+                onPressIn={() => this.changerItineraireActif(item.idItineraire)}
+            >
+                <View style={styles.itineraire}>
+                    <View style={styles.informations}>
+                        <View>
+                            <Text style={styles.title}>Itinéraire n° {item.idItineraire}</Text>
+                        </View>
+                        <View style={styles.info1}>
+                            <View>
+                                <Image
+                                    style={styles.image}
+                                    source={require('../Images/itineraire.png')}
+                                />
+                            </View>
+                            <View style={styles.depart_arrivee}>
+                                <Text>{depart.name}</Text>
+                                <Text>{arrivee.name}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.info2}>
+                            <Text>{duree}</Text>
+                            <Text>{distance}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.boutons}>
+                        <View>
+                            <TouchableOpacity
+                                key={`Bouton Info`}
+                            //onPress={ }
+                            >
+                                <View style={styles.bouton_info}>
+                                    <Image
+                                        style={styles.image_bouton}
+                                        source={require('../Images/info.png')}
+                                    />
+                                    <Text style={styles.voir_info}>Voir Info</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                key={`Bouton Statistique`}
+                            //onPress={ }
+                            >
+                                <View style={styles.bouton_stat}>
+                                    <Image
+                                        style={styles.image_bouton}
+                                        source={require('../Images/stat.png')}
+                                    />
+                                    <Text style={styles.voir_stat}>Voir Stat</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </TouchableWithoutFeedback >
+        )
+    }
+
+    renderItineraires() {
+        return (
+            <FlatList
+                horizontal
+                style={styles.itineraires}
+                pagingEnabled
+                scrollEnabled
+                showsHorizontalScrollIndicator={false}
+                scrollEventThrottle={16}
+                snapToAlignment="center"
+                data={this.state.itineraires}
+                keyExtractor={(item) => `${item.idItineraire}`}
+                renderItem={({ item }) => this.renderItineraire(item)}
+            />
+        )
+    }
+
+    render() {
         return (
             <View style={styles.container}>
                 <MapView
@@ -541,31 +648,13 @@ class PageMap extends React.Component {
                         shouldReplaceMapContent={true}
                         zIndex={-3}
                     />
-
-                    <MapView.Polyline
-                        coordinates={[
-                            //...itineraire
-                        ]}
-                        strokeWidth={6}
-                        strokeColor={'teal'}
-                        tappable={true}
-                        onPress={e => log('Polyline pressé', e)}
+                    <ItineraireMap
+                        key={`Itinéraire-${this.state.itineraires[this.state.idItineraireCourant].idItineraire}`}
+                        itineraire={this.state.itineraires[this.state.idItineraireCourant]}
+                        propsnavigation={this.props}
                     />
-
-                    {itineraires.map(item =>
-                        <MapView.Polyline
-                            coordinates={[
-                                ...item.routes[0].geometry.coordinates
-                            ]}
-                            key={`Itinéraire-${item.idItineraire}`}
-                            strokeWidth={6}
-                            strokeColor={calculCouleurItinéraire(item.idItineraire)}
-                            tappable={true}
-                            onPress={(e) => log('Polyline pressé : ', e)}
-                        />
-                    )}
-
                 </MapView>
+                {this.renderItineraires()}
             </View>
         );
     }
@@ -580,6 +669,78 @@ const styles = StyleSheet.create({
     map: {
         flex: 1
     },
+    // Scroll des itinéraires
+    itineraires: {
+        position: 'absolute',
+        right: 0,
+        left: 0,
+        bottom: 24,
+    },
+    // Itinéraire individuel
+    itineraire: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 18,
+        marginHorizontal: 24,
+        width: width - (24 * 2),
+    },
+    // Informations affichées sur l'itinéraire
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
+    image_bouton: {
+        height: 30,
+        width: 30
+    },
+    image: {
+        height: 60,
+        width: 60
+    },
+    informations: {
+        flex: 1,
+    },
+    info1: {
+        flexDirection: 'row',
+    },
+    depart_arrivee: {
+        flex: 1,
+        justifyContent: 'space-evenly',
+        marginLeft: 10,
+    },
+    info2: {
+        marginTop: 10,
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-evenly'
+    },
+    boutons: {
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+    },
+    bouton_info: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: 60,
+        height: 50,
+    },
+    voir_info: {
+        fontStyle: 'italic',
+        textAlignVertical: 'center',
+    },
+    bouton_stat: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: 60,
+        height: 50,
+    },
+    voir_stat: {
+        fontStyle: 'italic',
+        textAlignVertical: 'center',
+    },
 })
 
 export default PageMap
@@ -589,6 +750,14 @@ export default PageMap
                         <MarkerItineraire
                             key={`Marker-${item.label}-${item.latitude}-${item.longitude}`}
                             marker={item}
+                            propsnavigation={this.props}
+                        />
+                    )}
+
+                    {itineraires.map(item =>
+                        <ItineraireMap
+                            key={`Itinéraire-${item.idItineraire}`}
+                            itineraire={item}
                             propsnavigation={this.props}
                         />
                     )}

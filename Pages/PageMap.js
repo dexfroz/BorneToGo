@@ -494,20 +494,6 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageMap)
 
-/* On remplace ScrollView par une FlatList
-    <ScrollView
-                horizontal
-                style={styles.stations}
-                pagingEnabled // répartie les stations dans des pages de sorte qu'on ne voit qu'une station à la fois
-                scrollEnabled // rend possible le scroll entre les différentes "pages" de station
-                showsHorizontalScrollIndicator={false} // empêche l'apparition d'un scroll horizontal interne quand le nom est trop grand
-                scrollEventThrottle={16} // intervalle de temps en ms, permet de fluidifier le scrolling
-                snapToAlignment="center"
-            >
-                {stationsElectriques.map((item) => this.renderStation(item))}
-            </ScrollView>
-        */
-
 /* Marker
             <MapView.Marker
                 coordinate={{
