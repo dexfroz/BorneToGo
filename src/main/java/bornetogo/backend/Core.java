@@ -98,7 +98,7 @@ public class Core
 
 		long time_2 = System.nanoTime();
 
-		Route firstDraw = Route.getFromJson(firstQuery, null);
+		Route firstDraw = Route.getFromJson(firstQuery, car, null);
 		firstQuery = null;
 
 		if (firstDraw == null) {
@@ -106,17 +106,9 @@ public class Core
 			return null;
 		}
 
-		ArrayList<Coord> waypoints = firstDraw.getWaypoints();
-		ArrayList<Double> legLengths = firstDraw.getLegsLengths();
-
-		if (waypoints == null || legLengths == null) {
-			System.err.println("\nCould not retrieve 'firstDraw' data.\n");
-			return null;
-		}
-
 		long time_3 = System.nanoTime();
 
-		ArrayList<Coord> path = Pathfinding.find(stations, car, waypoints, legLengths);
+		ArrayList<Coord> path = Pathfinding.find(stations, car, firstDraw.getWaypoints(), firstDraw.getLegsLengths());
 		firstDraw = null;
 
 		if (path == null) {
@@ -137,17 +129,13 @@ public class Core
 
 		long time_5 = System.nanoTime();
 
-		Route foundRoute = Route.getFromJson(secondQuery, path);
+		Route foundRoute = Route.getFromJson(secondQuery, car, path);
 		secondQuery = null;
 
 		if (foundRoute == null) {
 			System.err.println("\nIncorrect found route.\n");
 			return null;
 		}
-
-		foundRoute.updateCurrentAutonomy(car);
-		foundRoute.computeDuration();
-		foundRoute.computeCost();
 
 		ArrayList<Route> routes = new ArrayList<Route>();
 		routes.add(foundRoute); // only 1 route for now.
@@ -161,7 +149,7 @@ public class Core
 		// Benchmarking results:
 		benchmark(time_0, time_1, "DatabaseConnector.getStations(), Car.getFromJson(), getUserStepsFromJson()");
 		benchmark(time_1, time_2, "QueryAPIs.queryRoute()");
-		benchmark(time_2, time_3, "Route.getFromJson(), getLegsLengths()");
+		benchmark(time_2, time_3, "Route.getFromJson()");
 		benchmark(time_3, time_4, "Pathfinding.find()");
 		benchmark(time_4, time_5, "QueryAPIs.queryRoute()");
 		benchmark(time_5, time_6, "Route.getFromJson()");

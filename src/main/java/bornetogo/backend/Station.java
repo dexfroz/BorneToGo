@@ -28,7 +28,7 @@ public class Station extends Coord
 	public JsonObject getJsonData()
 	{
 		return Json.createObjectBuilder()
-			// .add("things", 0)
+			// .add("things", 0) // add this station data...
 			.build();
 	}
 
@@ -36,6 +36,20 @@ public class Station extends Coord
 	public Boolean hasCompatibleChargingPoint(Car car)
 	{
 		return true; // TODO, using the car and list of charging points.
+	}
+
+
+	// In seconds.
+	public double getChargingDuration(Car car)
+	{
+		return 0.; // TODO
+	}
+
+
+	// In euros.
+	public double getChargingCost(Car car)
+	{
+		return 0.; // TODO
 	}
 
 

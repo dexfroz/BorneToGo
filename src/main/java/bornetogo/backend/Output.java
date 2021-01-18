@@ -28,11 +28,11 @@ public class Output
 
 			JsonArrayBuilder legsBuilder = Json.createArrayBuilder();
 
-			for (Double[] leg : route.getLegs())
+			for (int i = 0; i < route.getLegsLengths().size(); ++i)
 			{
 				JsonObject legJson = Json.createObjectBuilder()
-					.add("length", leg[0])
-					.add("duration", leg[1])
+					.add("length", route.getLegsLengths().get(i))
+					.add("duration", route.getLegsDurations().get(i))
 					.build();
 
 				legsBuilder.add(legJson);

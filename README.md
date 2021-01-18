@@ -58,13 +58,13 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 ## TODO:
 
 - Load from the MySQL database cars, stations, connectors, batteries...
-- Update the output file with stations data, in the field: "data": {}
+- Get both cost and duration of a recharging.
 - Support all use cases in the pathfinding, use the input fields "useCase" and "optimOption".
-- Compute both cost and route duration.
 - Support incomplete input locations, i.e locations only defined by name or address, with a batch geocoding query in getUserStepsFromJson(). Get all available data.
+- Open the app to POST requests.
+- Update the output file with stations data, in the field: "data": {}
 - Filter user steps before the pathfinding: remove following duplicates (unless asking for a refill with start = end).
 - Add the feature of returning several routes in the answer.
-- Open the app to POST requests.
 - Provide detailed explanations on the workings of the backend, especially the pathfinding part.
 
 

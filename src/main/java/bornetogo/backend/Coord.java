@@ -90,8 +90,8 @@ public class Coord
 
 	public String toString()
 	{
-		return "Coord:\nName: " + this.name + "\nAddress: " + this.address + "\nIs a station: " + this.isStation +
-			"\nLatitude: " + Double.toString(this.latitude) + ", longitude: " + Double.toString(this.longitude);
+		return "Coord:\nName: " + this.name + "\nAddress: " + this.address + "\nIs a station: " +
+			this.isStation + "\nLatitude: " + this.latitude + ", longitude: " + this.longitude;
 	}
 
 
