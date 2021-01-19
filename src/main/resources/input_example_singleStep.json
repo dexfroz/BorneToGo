@@ -1,0 +1,20 @@
+{
+	"type": "input",
+	"convention": "lat-long",
+	"useCase": "trip",
+	"optimOption": "default",
+	"carModel": "Tesla cybertruck",
+	"maxAutonomy": 200,
+	"currentAutonomy": 50,
+	"subscription": "",
+	"userSteps": [
+		{
+			"location": [
+				43.124228,
+				5.928
+			],
+			"name": "Toulon",
+			"address": ""
+		}
+	]
+}

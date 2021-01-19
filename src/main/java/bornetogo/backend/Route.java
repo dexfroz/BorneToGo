@@ -174,7 +174,7 @@ public class Route
 
 			String status = json.getString("code");
 
-			if (!status.equals("Ok")) {
+			if (! status.equals("Ok")) {
 				System.err.println("\nWrong status found in routes json.\n");
 				return null;
 			}
@@ -224,6 +224,9 @@ public class Route
 				route.duration = routeJson.getJsonNumber​("duration").doubleValue(); // in sec
 				route.stats = "";
 				// cost and autonomyLeft are left to default values.
+
+				// N.B: filling 'fullPath' is useless when path = null...
+				// If so, it could be set as a 0 sized list (just not null).
 			}
 
 			if (path != null)

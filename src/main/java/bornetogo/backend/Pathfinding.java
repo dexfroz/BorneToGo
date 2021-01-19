@@ -6,9 +6,10 @@ import java.util.*;
 
 public class Pathfinding
 {
-	private static final double distBoundCoeff = 1.5; // unitless
+	private static final double distBoundCoeff = 1.5; // unitless.
 	private static final double ellipseRatio = 1.2; // unitless, must be > 1.
 	private static final double rangeMargin = 10.; // in km
+	private static final int minimalSafetyStationsNumber = 1; // Must be > 0.
 
 
 	// Gives a reasonable upper bound for the length of a route between two points:
@@ -18,16 +19,17 @@ public class Pathfinding
 	}
 
 
-	// For testing only, the real version must query the route API.
-	private static ArrayList<Double> mockStepLengths(ArrayList<Coord> waypoints)
+	// Gives an estimation of the legs lengths, instead of querying the route API.
+	// Used for testing, or when Core.enableFirstQuery is set to false.
+	private static ArrayList<Double> mockLegsLengths(ArrayList<Coord> waypoints)
 	{
-		ArrayList<Double> legLengths = new ArrayList<Double>();
+		ArrayList<Double> legsLengths = new ArrayList<Double>();
 
 		for (int i = 0; i < waypoints.size() - 1; ++i) {
-			legLengths.add(lengthUpperBound(waypoints.get(i), waypoints.get(i + 1)));
+			legsLengths.add(lengthUpperBound(waypoints.get(i), waypoints.get(i + 1)));
 		}
 
-		return legLengths;
+		return legsLengths;
 	}
 
 
@@ -46,23 +48,37 @@ public class Pathfinding
 	}
 
 
-	// Potential improvement: return a list of list of Coord, one for each subpath.
-	private static ArrayList<Station> getRelevantStations(ArrayList<Station> allStations, Car car, ArrayList<Coord> waypoints)
+	// Returns a list of stations having a charging point compatible with the user car:
+	private static ArrayList<Station> getRelevantStations(ArrayList<Station> allStations, Car car)
 	{
 		ArrayList<Station> relevantStations = new ArrayList<Station>();
 
 		for (Station station : allStations) {
 			if (station.hasCompatibleChargingPoint(car)) {
-				for (int i = 0; i < waypoints.size() - 1; ++i) {
-					if (isInEllipse(waypoints.get(i), waypoints.get(i + 1), station)) {
-						relevantStations.add(station);
-						break;
-					}
-				}
+				relevantStations.add(station);
 			}
 		}
 
 		return relevantStations;
+	}
+
+
+	// Returns a list of stations in the same area than the waypoints.
+	// Potential improvement: return a list of list of Coord, one for each subpath.
+	private static ArrayList<Station> areaFiltering(ArrayList<Station> relevantStations, ArrayList<Coord> waypoints)
+	{
+		ArrayList<Station> filteredStations = new ArrayList<Station>();
+
+		for (Station station : relevantStations) {
+			for (int i = 0; i < waypoints.size() - 1; ++i) {
+				if (isInEllipse(waypoints.get(i), waypoints.get(i + 1), station)) {
+					filteredStations.add(station);
+					break;
+				}
+			}
+		}
+
+		return filteredStations;
 	}
 
 
@@ -75,16 +91,20 @@ public class Pathfinding
 	}
 
 
+	// Returns a station which have to be reachable from the next user step.
 	private static Station chooseSafetyStation(ArrayList<Station> stations)
 	{
 		if (stations.isEmpty()) {
 			return null;
 		}
 
-		return stations.get(0); // arbitrary, make a parameter out of this...
+		int safetyRank = Math.min(stations.size(), minimalSafetyStationsNumber) - 1;
+		return stations.get(safetyRank);
 	}
 
 
+	// Chooses the best station, according to the following criteria:
+	// nearest, cheaper, and lowest recharging time.
 	private static Station chooseBestStation(ArrayList<Station> stations)
 	{
 		if (stations.isEmpty()) {
@@ -104,7 +124,7 @@ public class Pathfinding
 
 		if (nextStep.isStation()) { // This cannot be used for now, waypoints should be scrutinized first...
 			System.out.println("\nLucky one!");
-			car.setCurrentAutonomy(car.getMaxAutonomy()); // tell the User!
+			car.setCurrentAutonomy(car.getMaxAutonomy());
 		}
 	}
 
@@ -133,36 +153,48 @@ public class Pathfinding
 		}
 
 		path.add(chosenStation);
-		car.setCurrentAutonomy(car.getMaxAutonomy()); // tell the User!
+		car.setCurrentAutonomy(car.getMaxAutonomy());
 		return chosenStation;
 	}
 
 
-	// Returns null on failure. The car is not modified, indeed autonomy computations are only estimates here.
+	// Finds a route going through each waypoints, in the same order, while optimizing some criteria.
+	// 'waypoints' essentially are the user steps, possibly slightly corrected by the route API.
+	// This returns null on failure. The car is not modified, indeed autonomy computations are only estimates here.
 	public static ArrayList<Coord> find(ArrayList<Station> allStations, Car userCar,
-		ArrayList<Coord> waypoints, ArrayList<Double> legLengths)
+		ArrayList<Coord> waypoints, ArrayList<Double> legsLengths)
 	{
-		Car car = userCar.copy();
-
-		if (waypoints.size() < 2) {
-			System.err.println("\nUnsupported use case, as of now.");
-			return null;
+		if (! Core.enableFirstQuery) { // using an estimation of the legs lengths.
+			legsLengths = mockLegsLengths(waypoints);
 		}
 
-		if (legLengths.size() != waypoints.size() - 1) {
+		Car car = userCar.copy();
+
+		if (legsLengths.size() != waypoints.size() - 1) {
 			System.err.println("\nIncoherent list sizes, could not start the pathfinding.");
 			return null;
 		}
 
-		ArrayList<Station> relevantStations = getRelevantStations(allStations, car, waypoints);
+		if (waypoints.isEmpty()) {
+			System.err.println("\nAt least 1 waypoint is needed for the pathfinding.\n");
+			return null;
+		}
+
+		Boolean singleWaypoint = waypoints.size() == 1;
+
+		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'zone' filtering!
+
+		if (! singleWaypoint) {
+			relevantStations = areaFiltering(relevantStations, waypoints);
+		}
 
 		if (relevantStations.isEmpty()) {
-			System.err.printf("\nNo relevant station for the given car:\n\n" + car.toString() + "\n");
+			System.err.printf("\nNo relevant station for the given car:\n\n%s\n", car.toString());
 			System.err.println("\n-> Pathfinding failure.\n");
 			return null;
 		}
 
-		Coord currentStep = waypoints.get(0), nextStep = waypoints.get(1);
+		Coord currentStep = waypoints.get(0), nextStep = waypoints.get(singleWaypoint ? 0 : 1);
 		int stepIndex = 1;
 
 		ArrayList<Coord> path = new ArrayList<Coord>();
@@ -179,15 +211,12 @@ public class Pathfinding
 
 			Station safetyNext = chooseSafetyStation(relevantStations);
 
-			double legLength = legLengths.get(stepIndex - 1);
-
-			if (currentStep.isStation()) {
-				legLength = lengthUpperBound(currentStep, nextStep);
-			}
+			double legLength = singleWaypoint ? 0. : legsLengths.get(stepIndex - 1);
+			legLength = currentStep.isStation() ? lengthUpperBound(currentStep, nextStep) : legLength;
 
 			System.out.printf("\nlegLength: %.3f km\n", legLength);
 
-			if (lengthReachable(car, legLength + lengthUpperBound(nextStep, safetyNext)))
+			if (! singleWaypoint && lengthReachable(car, legLength + lengthUpperBound(nextStep, safetyNext)))
 			{
 				goNextStep(car, path, legLength, nextStep);
 
@@ -211,13 +240,17 @@ public class Pathfinding
 					printPath(path);
 					return null;
 				}
+
+				if (singleWaypoint) { // done.
+					break;
+				}
 			}
 
 			System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
 		}
 
 		System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
-		System.out.println("\n-> Done.\n");
+		System.out.println("\n-> Successfull pathfinding.\n");
 		return path;
 	}
 
@@ -251,9 +284,9 @@ public class Pathfinding
 		waypoints.add(new Coord(47.34083, 5.05015, "Dijon", ""));
 		waypoints.add(new Coord(48.85661, 2.3499, "Paris", ""));
 
-		ArrayList<Double> legLengths = mockStepLengths(waypoints); // mocks API queries.
+		ArrayList<Double> legsLengths = mockLegsLengths(waypoints); // mocks API queries.
 
-		ArrayList<Coord> path = find(allStations, car, waypoints, legLengths);
+		ArrayList<Coord> path = find(allStations, car, waypoints, legsLengths);
 		printPath(path);
 	}
 }
