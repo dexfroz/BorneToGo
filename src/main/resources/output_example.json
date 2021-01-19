@@ -1,6 +1,7 @@
 {
 	"type": "output",
 	"status": "Ok",
+	"processingTime": 0.924619236,
 	"convention": "lat-long",
 	"routes": [
 		{

@@ -6,7 +6,7 @@ import jakarta.json.*;
 
 public class Output
 {
-	public static JsonObject buildAnswer(ArrayList<Route> routes)
+	public static JsonObject buildAnswer(ArrayList<Route> routes, long startTime)
 	{
 		// routesArray:
 
@@ -82,9 +82,13 @@ public class Output
 
 		// answer:
 
+		long endTime = System.nanoTime();
+		double processingTime = (endTime - startTime) / 1e9;
+
 		JsonObject answer = Json.createObjectBuilder()
 			.add("type", "output")
 			.add("status", "Ok")
+			.add("processingTime", processingTime)
 			.add("convention", "lat-long")
 			.add("routes", routesArray)
 			.build();

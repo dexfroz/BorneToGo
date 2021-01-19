@@ -22,27 +22,21 @@ Start the docker process with: ```sudo systemctl start docker```
 
 Then run as sudoer: ```sh start_backend.sh ```
 
-To test GET requests, simply go to the following links from a web browser:
+To obtain a path from the backend, send a POST request containing the user given steps in a json file, like below:
 
 ```
-http://localhost:8080/bornetogo/backend
-http://localhost:8080/bornetogo/backend/get/123
+curl -w '\n' -X POST -H "Content-Type: application/json" \
+ --data '{"type":"input","convention":"lat-long","useCase":"trip","optimOption":"default","carModel":"Tesla cybertruck","maxAutonomy":200,"currentAutonomy":50,"subscription":"","userSteps":[{"location":[43.124228,5.928],"name":"Toulon","address":""},{"location":[43.296482,5.36978],"name":"Marseille","address":""}]}' \
+ http://localhost:8080/bornetogo/backend/path
 ```
 
-This may alternatively be done using curl:
+A path will then be returned, with some additional data. Note that the output of the previous command may be saved in a file, by appending ``` > result.json ``` at it's end.
+
+On the other hand, one could test this without using curl - on a hardcoded example - simply by pasting the following link into a web browser:
 
 ```
-curl -w '\n' http://localhost:8080/bornetogo/backend
-curl -w '\n' http://localhost:8080/bornetogo/backend/get/123
+http://localhost:8080/bornetogo/backend/mock
 ```
-
-For POST requests:
-
-```
-curl -w '\n' -X POST --data 'This is my request.' http://localhost:8080/bornetogo/backend/post
-```
-
-The type of content to be POSTed may also be specified, e.g by adding ```-H 'Content-Type: text/plain'``` before the url.
 
 
 ## Deployment:
@@ -61,7 +55,6 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 - Get both cost and duration of a recharging.
 - Add multiple-criteria optimization in the pathfinding, and therefore use the input field "optimOption".
 - Support incomplete input locations, i.e locations only defined by name or address, with a batch geocoding query in getUserStepsFromJson(). Get all available data.
-- Open the app to POST requests.
 - Update the output file with stations data, in the field: "data": {}
 - Filter user steps before the pathfinding: remove following duplicates (unless asking for a refill with start = end).
 - Add the feature of returning several routes in the answer.

@@ -1,8 +1,10 @@
 package main.java.bornetogo.backend;
 
+import java.io.*;
+import java.util.*;
+import jakarta.json.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import jakarta.json.*;
 
 
 // N.B: Do not put a main function here, it can't be run.
@@ -51,5 +53,51 @@ public class RequestHandler
 		// Equivalent to 404 / 200:
 		Response.Status status = content == null ? Response.Status.NOT_FOUND : Response.Status.OK;
 		return Response.status(status).entity(answer).build();
+	}
+
+
+	@GET
+	@Path("mock")
+	public Response mockOutput()
+	{
+		// String inputString = FileContent.read("input_example.json");
+		String inputString = FileContent.read("input_example_singleStep.json");
+
+		JsonObject input = GetJson.jsonFromString(inputString);
+		JsonObject output = Core.core(input);
+
+		if (output == null) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity("Core program failed to output a path.").build();
+		}
+
+		return Response.ok(output).build();
+	}
+
+
+	@POST
+	@Path("path")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response backendOutput(String stringQuery)
+	{
+		try
+		{
+			JsonReader reader = Json.createReader(new StringReader(stringQuery));
+			JsonObject input = reader.readObject();
+			reader.close();
+
+			JsonObject output = Core.core(input);
+
+			if (output == null) {
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("Core program failed to output a path.").build();
+			}
+
+			return Response.ok(output).build();
+		}
+		catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity("Wrong query.").build();
+		}
 	}
 }

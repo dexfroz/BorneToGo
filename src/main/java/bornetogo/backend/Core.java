@@ -167,7 +167,7 @@ public class Core
 
 		// Building the answer:
 
-		JsonObject answer = Output.buildAnswer(routes);
+		JsonObject answer = Output.buildAnswer(routes, time_0);
 
 		long time_6 = System.nanoTime();
 
@@ -187,6 +187,7 @@ public class Core
 	{
 		String inputString = FileContent.read("input_example.json");
 		// String inputString = FileContent.read("input_example_singleStep.json");
+
 		JsonObject input = GetJson.jsonFromString(inputString);
 		JsonObject output = core(input);
 		// safeJsonPrinting(output); // big output!
