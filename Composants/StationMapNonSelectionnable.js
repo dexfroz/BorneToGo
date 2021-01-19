@@ -76,35 +76,34 @@ class StationMap extends PureComponent {
         const { marker, propsnavigation } = this.props;
 
         // On compte le nombre de bornes disponibles pour la station
-        var nbTotal = Object.keys(marker.bornes).length;
+        var nbTotal = Object.keys(marker.data.bornes).length;
         var nbDispo = 0;
-        for (const obj of marker.bornes) {
+        for (const obj of marker.data.bornes) {
             if (obj.status)
                 nbDispo++;
         }
 
-        // On regarde si la station est la station active
-        var egalite = false;
-        if (this.props.active == marker.idStation) {
-            egalite = true;
+        marker.data = {
+            ...marker.data,
+            "latitude": marker.location.latitude,
+            "longitude": marker.location.longitude,
         }
-        else {
-            egalite = false;
-        }
+
+        console.log(marker.data);
 
         return (
             <Marker
                 coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude
+                    latitude: marker.data.latitude,
+                    longitude: marker.data.longitude
                 }}
                 ref={(ref) => this.markerRef = ref}
-                title={marker.adresse}
-                pinColor={egalite ? 'green' : 'linen'}
-                key={`${marker.idStation}-${egalite ? 'active' : 'inactive'}`}
-                onPress={() => this.changerStationActive(marker.idStation)}
+                title={marker.data.adresse}
+                pinColor={'green'}
+                key={`${marker.data.idStation}`}
+                onPress={() => this.changerStationActive(marker.dataidStation)}
             >
-                { this.renderCalloutMarker(propsnavigation, marker, nbTotal, nbDispo)}
+                { this.renderCalloutMarker(propsnavigation, marker.data, nbTotal, nbDispo)}
             </Marker >
         );
     }

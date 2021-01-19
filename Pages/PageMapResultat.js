@@ -1,4 +1,4 @@
-// Pages/PageMap.js
+// Pages/PageMapResultat.js
 
 import React from 'react'
 import { StyleSheet, View, Text, FlatList, Dimensions, Image } from 'react-native'
@@ -6,6 +6,8 @@ import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture
 import MapView, { MAP_TYPES, PROVIDER_OSMDROID, Geojson } from 'react-native-maps';
 import MarkerItineraire from '../Composants/MarkerItineraire';
 import ItineraireMap from '../Composants/ItineraireMap';
+import StationMapNonSelectionnable from '../Composants/StationMapNonSelectionnable';
+import { isEmpty } from 'ol/extent';
 
 // Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
@@ -451,11 +453,18 @@ function identification(element, id) {
             ...info_element,
         }
     }
+    else {
+        // Convertir la localisation en LatLng
+        info_element.location = {
+            "latitude": info_element.location[0],
+            "longitude": info_element.location[1],
+        };
+    }
 
     return info_element;
 }
 
-function formaterDistance(distance) {
+function formaterDistance(distance) { // A MODIFIER POUR LES KM
     let kmetres = Math.floor(distance / 1000);
     distance %= 1000;
     let metres = Math.trunc(distance);
@@ -491,7 +500,7 @@ function formateDuree(duree) {
     return new_duree;
 }
 
-class PageMap extends React.Component {
+class PageMapResultat extends React.Component {
     constructor(props) {
         super(props);
 
@@ -502,8 +511,17 @@ class PageMap extends React.Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             },
+            // Itinéraire
             idItineraireCourant: 0,
             itineraires: getItineraires(test2),
+            markers: [],
+            // Markers
+            depart: null,
+            arrivee: null,
+            stations_etapes: [],
+            // Distance et durée formatée
+            duree: null,
+            distance: null
         };
     }
 
@@ -512,45 +530,149 @@ class PageMap extends React.Component {
         return this.props.provider === PROVIDER_OSMDROID ? MAP_TYPES.STANDARD : MAP_TYPES.NONE;
     }
 
-    changerItineraireActif(id, itineraires) {
+    renderMarkerDepart() {
+        // DEPART
+        var depart = this.state.depart;
+        if (depart == null) {
+            depart = this.state.itineraires[this.state.idItineraireCourant].waypoints[0];
+        }
+
+        var station = false;
+        if (depart.isStation) {
+            station = true;
+        }
+
+        return (
+            station
+                ?
+                <MarkerItineraire
+                    key={`Depart-${this.state.idItineraireCourant}-${depart.location.latitude}-${depart.location.longitude}`}
+                    marker={depart}
+                    station={true}
+                    depart={true}
+                    arrivee={false}
+                    propsnavigation={this.props}
+                />
+                :
+                <MarkerItineraire
+                    key={`Depart-${this.state.idItineraireCourant}-${depart.location.latitude}-${depart.location.longitude}`}
+                    marker={depart}
+                    station={false}
+                    depart={true}
+                    arrivee={false}
+                    propsnavigation={this.props}
+                />
+        )
+    }
+
+    renderMarkerArrivee() {
+        var arrivee = this.state.arrivee;
+        if (arrivee == null) {
+            arrivee = this.state.itineraires[this.state.idItineraireCourant].waypoints[this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1];
+        }
+        var station = false;
+        if (arrivee.isStation) {
+            station = true;
+        }
+
+        return (
+            station
+                ?
+                <MarkerItineraire
+                    key={`Arrivee-${this.state.idItineraireCourant}-${arrivee.location.latitude}-${arrivee.location.longitude}`}
+                    marker={arrivee}
+                    station={true}
+                    depart={false}
+                    arrivee={true}
+                    propsnavigation={this.props}
+                />
+                :
+                <MarkerItineraire
+                    key={`Arrivee-${this.state.idItineraireCourant}-${arrivee.location.latitude}-${arrivee.location.longitude}`}
+                    marker={arrivee}
+                    station={false}
+                    depart={false}
+                    arrivee={true}
+                    propsnavigation={this.props}
+                />
+        )
+    }
+
+    renderMarkersStationsEtapes() {
+        var stations_etapes = this.state.stations_etapes;
+        if (stations_etapes.length == 0) {
+            // STATIONS et ETAPES
+            for (var i = 1; i < this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1; i++) {
+                stations_etapes.push(this.state.itineraires[this.state.idItineraireCourant].waypoints[i]);
+            }
+        }
+
+        return (
+            stations_etapes.map(item =>
+                item.isStation ?
+                    <StationMapNonSelectionnable
+                        key={`Station-${this.state.idItineraireCourant}-${item.idStation}-${item.location.latitude}-${item.location.longitude}`}
+                        marker={item}
+                        propsnavigation={this.props}
+                    />
+                    :
+                    <MarkerItineraire
+                        key={`Station-${this.state.idItineraireCourant}-${item.location.latitude}-${item.location.longitude}`}
+                        marker={item}
+                        station={false}
+                        depart={false}
+                        arrivee={false}
+                        propsnavigation={this.props}
+                    ></MarkerItineraire>
+            )
+        )
+    }
+
+
+    changerItineraireActif(id) {
         this.state.idItineraireCourant = id - 1;
+
+        // Récupération des informations pour : 
+        // DEPART
+        this.state.depart = this.state.itineraires[this.state.idItineraireCourant].waypoints[0];
+
+        // ARRIVEE
+        this.state.arrivee = this.state.itineraires[this.state.idItineraireCourant].waypoints[this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1];
+
+        // STATIONS et ETAPES
+        this.state.stations_etapes = [];
+        for (var i = 1; i < this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1; i++) {
+            this.state.stations_etapes.push(this.state.itineraires[this.state.idItineraireCourant].waypoints[i]);
+        }
+
+        // DUREE
+        this.state.duree = this.state.itineraires[this.state.idItineraireCourant].routes[0].duration;
+
+        this.state.duree = formateDuree(this.state.duree);
+
+        // DISTANCE
+        this.state.distance = this.state.itineraires[this.state.idItineraireCourant].routes[0].distance;
+
+        this.state.distance = formaterDistance(this.state.distance);
+
+        // On change le state
         this.setState({ state: this.state });
     }
 
     renderItineraire(item) {
-        // Récupération des informations pour : 
         // DEPART
         var depart = this.state.itineraires[this.state.idItineraireCourant].waypoints[0];
 
         // ARRIVEE
         var arrivee = this.state.itineraires[this.state.idItineraireCourant].waypoints[this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1];
 
-        // STATIONS et ETAPES
-        var stations = [];
-        var etapes = [];
-        for (var i = 1; i < this.state.itineraires[this.state.idItineraireCourant].waypoints.length - 1; i++) {
-            if (this.state.itineraires[this.state.idItineraireCourant].waypoints[i].isStation) {
-                stations.push(this.state.itineraires[this.state.idItineraireCourant].waypoints[i]);
-            }
-            else {
-                etapes.push(this.state.itineraires[this.state.idItineraireCourant].waypoints[i]);
-            }
-        }
-
         // DUREE
         var duree = this.state.itineraires[this.state.idItineraireCourant].routes[0].duration;
-
         duree = formateDuree(duree);
 
         // DISTANCE
         var distance = this.state.itineraires[this.state.idItineraireCourant].routes[0].distance;
-
         distance = formaterDistance(distance);
-
-        // console.log("DEPART", depart);
-        // console.log("ARRIVEE", arrivee);
-        // console.log("ETAPES", etapes);
-        // console.log("STATIONS", stations);
 
         return (
             <TouchableWithoutFeedback
@@ -570,13 +692,13 @@ class PageMap extends React.Component {
                                 />
                             </View>
                             <View style={styles.depart_arrivee}>
-                                <Text>{depart.name}</Text>
-                                <Text>{arrivee.name}</Text>
+                                <Text style={styles.depart}>{depart.name}</Text>
+                                <Text style={styles.arrivee}>{arrivee.name}</Text>
                             </View>
                         </View>
                         <View style={styles.info2}>
-                            <Text>{duree}</Text>
-                            <Text>{distance}</Text>
+                            <Text style={styles.duree}>{duree}</Text>
+                            <Text style={styles.distance}>{distance}</Text>
                         </View>
                     </View>
                     <View style={styles.boutons}>
@@ -649,16 +771,30 @@ class PageMap extends React.Component {
                         zIndex={-3}
                     />
                     <ItineraireMap
+                        // Affiche l'itinéraire courant
                         key={`Itinéraire-${this.state.itineraires[this.state.idItineraireCourant].idItineraire}`}
                         itineraire={this.state.itineraires[this.state.idItineraireCourant]}
                         propsnavigation={this.props}
                     />
+
+                    {this.renderMarkersStationsEtapes()}
+                    {this.renderMarkerDepart()}
+                    {this.renderMarkerArrivee()}
+
                 </MapView>
                 {this.renderItineraires()}
             </View>
         );
     }
 }
+
+/*
+{this.renderMarkerDepart()}
+                    {this.renderMarkerArrivee()}
+                    {this.renderMarkersEtapes()}
+                    {this.renderMarkersStations()}
+                
+*/
 
 const styles = StyleSheet.create({
     // Vue totale de la page
@@ -711,12 +847,35 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         marginLeft: 10,
     },
+    depart: {
+        fontSize: 12,
+        textAlignVertical: 'center',
+    },
+    arrivee: {
+        fontSize: 12,
+        textAlignVertical: 'center',
+    },
     info2: {
         marginTop: 10,
         flexDirection: 'row',
         flex: 1,
         justifyContent: 'space-evenly'
     },
+    duree: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlignVertical: 'center',
+        textAlign: 'center',
+        color: 'green',
+    },
+    distance: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlignVertical: 'center',
+        textAlign: 'center',
+        color: 'green',
+    },
+    // Boutons
     boutons: {
         justifyContent: 'space-evenly',
         alignItems: 'center',
@@ -743,7 +902,7 @@ const styles = StyleSheet.create({
     },
 })
 
-export default PageMap
+export default PageMapResultat
 
 /*
 {this.state.markers.map(item =>
