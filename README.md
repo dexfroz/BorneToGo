@@ -15,8 +15,24 @@ BDD brand of the BorneToGo project. This is *work-in-progress* version of the BD
 
 ## Architecture Requête
 
+### INSERT INTO status
+`INSERT INTO BorneToGo.Status (idStatus, Titre, IsOperational, IsUserSelectable) VALUES ('0','Unknown','None','True');`
+
+### INSERT INTO paiement
+`INSERT INTO BorneToGo.Paiement (idPaiement, Titre, IsPayAtLocation, IsMembershipRequired, IsAccessKeyRequired) VALUES ('0','(Unknown)','None','None');`
+
+### INSERT INTO courant
+`INSERT INTO BorneToGo.Courant (idCourant, Titre, Description) VALUES ('10','AC (Single-Phase)','Alternating Current - Single Phase');`
+
+### INSERT INTO connecteur
+`INSERT INTO BorneToGo.Connecteur (idConnecteur, Titre, Name) VALUES ('7','Avcon Connector','Avcon SAE J1772-2001');`
+
 ### INSERT INTO station
 `INSERT INTO Station (idStation, Latitude, Longitude, Adresse, Ville, CodePostal, Titre, Paiement) VALUES ('171965','46.204107','-1.372894','87 Cours Pasteur','Saint-Martin-de-Ré','17410','Le Clos Saint-Martin Hôtel & Spa','7');`
 
 ### INSERT INTO borne
 `INSERT INTO borne (IDBorne, IDStation, IDConnecteur, Puissance, Status) VALUES ('6789', '6948', '0', '3.5', '0');`
+
+### INSERT INTO voiture
+
+### INSERT INTO batterie
