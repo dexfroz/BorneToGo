@@ -32,14 +32,19 @@ def INSERT_INTO_SQLCreator_borne(data):
                     Puissance = "-1"
 
                 try:
-                    Status = str(j['StatusTypeID'])
+                    idStatus = str(j['StatusTypeID'])
                 except:
-                    Status = "-1"
+                    idStatus = "-1"
 
-                requete = "INSERT INTO BorneToGo.Borne (idBorne, idStation, idConnecteur, Puissance, Status) VALUES ('{}','{}','{}','{}','{}');"
+                try:
+                    idCourant = str(j['CurrentTypeID'])
+                except:
+                    idCourant = "-1"
+
+                requete = "INSERT INTO BorneToGo.Borne (idBorne, idStation, idConnecteur, idCourant, idStatus, Puissance) VALUES ('{}','{}','{}','{}','{}','{}');"
 
                 SQLlistRequete.append(
-                    requete.format(IDBorne, IDStation, IDConnecteur, Puissance, Status)
+                    requete.format(IDBorne, IDStation, IDConnecteur, idCourant, idStatus, Puissance)
                 )
 
     return SQLlistRequete
@@ -72,14 +77,14 @@ def INSERT_INTO_SQLCreator_station(data):
             Titre = correctionString(str(i['AddressInfo']['Title']))
 
             try:
-                Paiement = str(i['UsageTypeID'])
+                idPaiement = str(i['UsageTypeID'])
             except:
-                Paiement = "-1"
+                idPaiement = "-1"
             
-            requete = "INSERT INTO BorneToGo.Station (idStation, Latitude, Longitude, Adresse, Ville, CodePostal, Titre, Paiement) VALUES ('{}','{}','{}','{}','{}','{}','{}','{}');"
+            requete = "INSERT INTO BorneToGo.Station (idStation, idPaiement, Titre, Latitude, Longitude, Adresse, Ville, CodePostal) VALUES ('{}','{}','{}','{}','{}','{}','{}','{}');"
 
             SQLlistRequete.append(
-                requete.format(IDStation,Latitude,Longitude,Adresse,Ville,Code_Postal,Titre,Paiement)
+                requete.format(IDStation,idPaiement,Titre,Latitude,Longitude,Adresse,Ville,Code_Postal)
             )
 
     return SQLlistRequete
@@ -171,10 +176,10 @@ def createSQLFilefromlist(data,filename):
 def correctionString(texte):
     return texte.replace("'","\\'")
 
-#createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
-#createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
 
-#createSQLFilefromlist(INSERT_INTO_SQLCreator_connecteur(loadJSONfromFile("dataReference.json")),"connecteur.sql")
-#createSQLFilefromlist(INSERT_INTO_SQLCreator_courant(loadJSONfromFile("dataReference.json")),"courant.sql")
-#createSQLFilefromlist(INSERT_INTO_SQLCreator_status(loadJSONfromFile("dataReference.json")),"status.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_connecteur(loadJSONfromFile("dataReference.json")),"connecteur.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_courant(loadJSONfromFile("dataReference.json")),"courant.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_status(loadJSONfromFile("dataReference.json")),"status.sql")
 createSQLFilefromlist(INSERT_INTO_SQLCreator_paiement(loadJSONfromFile("dataReference.json")),"paiement.sql")
