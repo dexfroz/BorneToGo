@@ -95,8 +95,8 @@ class StationMap extends PureComponent {
         return (
             <Marker
                 coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude
+                    latitude: marker.latitude ? marker.latitude : 0,
+                    longitude: marker.longitude ? marker.longitude : 0,
                 }}
                 ref={(ref) => this.markerRef = ref}
                 title={marker.adresse}

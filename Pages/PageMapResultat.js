@@ -55,7 +55,8 @@ class PageMapResultat extends React.Component {
 
     renderMarkerDepart() {
         // DEPART
-        var depart = this.state.depart;
+        /*
+       var depart = this.state.depart;
         if (depart == null) {
             depart = this.state.itineraires[this.state.idRouteCourant].waypoints[0];
         }
@@ -63,24 +64,23 @@ class PageMapResultat extends React.Component {
         var station = false;
         if (depart.isStation) {
             station = true;
-        }
+        }*/
+
 
         return (
-            station
+            this.state.depart.isStation
                 ?
-                <MarkerItineraire
-                    key={`Depart-${this.state.idRouteCourant}-${depart.location.latitude}-${depart.location.longitude}`}
-                    marker={depart}
-                    station={true}
+                <StationMapNonSelectionnable
+                    key={`Depart-Station-${this.state.idRouteCourant}-${this.state.depart.location.latitude}-${this.state.depart.location.longitude}`}
+                    marker={this.state.depart}
                     depart={true}
                     arrivee={false}
                     propsnavigation={this.props}
                 />
                 :
                 <MarkerItineraire
-                    key={`Depart-${this.state.idRouteCourant}-${depart.location.latitude}-${depart.location.longitude}`}
-                    marker={depart}
-                    station={false}
+                    key={`Depart-${this.state.idRouteCourant}-${this.state.depart.location.latitude}-${this.state.depart.location.longitude}`}
+                    marker={this.state.depart}
                     depart={true}
                     arrivee={false}
                     propsnavigation={this.props}
@@ -90,31 +90,33 @@ class PageMapResultat extends React.Component {
 
     renderMarkerArrivee() {
         // ARRIVEE
+        /* 
         var arrivee = this.state.arrivee;
-        if (arrivee == null) {
-            arrivee = this.state.itineraires[this.state.idRouteCourant].waypoints[this.state.itineraires[this.state.idRouteCourant].waypoints.length - 1];
-        }
+         if (arrivee == null) {
+             arrivee = this.state.itineraires[this.state.idRouteCourant].waypoints[this.state.itineraires[this.state.idRouteCourant].waypoints.length - 1];
+         }
+         
         var station = false;
         if (arrivee.isStation) {
             station = true;
         }
+        */
+
 
         return (
-            station
+            this.state.arrivee.isStation
                 ?
-                <MarkerItineraire
-                    key={`Arrivee-${this.state.idRouteCourant}-${arrivee.location.latitude}-${arrivee.location.longitude}`}
-                    marker={arrivee}
-                    station={true}
-                    depart={false}
-                    arrivee={true}
+                <StationMapNonSelectionnable
+                    key={`Arrivee-Station-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
+                    marker={this.state.arrivee}
+                    depart={true}
+                    arrivee={false}
                     propsnavigation={this.props}
                 />
                 :
                 <MarkerItineraire
-                    key={`Arrivee-${this.state.idRouteCourant}-${arrivee.location.latitude}-${arrivee.location.longitude}`}
-                    marker={arrivee}
-                    station={false}
+                    key={`Arrivee-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
+                    marker={this.state.arrivee}
                     depart={false}
                     arrivee={true}
                     propsnavigation={this.props}
@@ -123,13 +125,16 @@ class PageMapResultat extends React.Component {
     }
 
     renderMarkersStationsEtapes() {
-        /*var stations_etapes = this.state.stations_etapes;
+        // ETAPES ET STATIONS
+        /*
+        var stations_etapes = this.state.stations_etapes;
         if (stations_etapes.length == 0) {
             // STATIONS et ETAPES
             for (var i = 1; i < this.state.itineraires[this.state.idRouteCourant].waypoints.length - 1; i++) {
                 stations_etapes.push(this.state.itineraires[this.state.idRouteCourant].waypoints[i]);
             }
-        }*/
+        }
+        */
 
         return (
             this.state.stations_etapes.map(item =>
@@ -137,13 +142,14 @@ class PageMapResultat extends React.Component {
                     <StationMapNonSelectionnable
                         key={`Station-${this.state.idRouteCourant}-${item.idStation}-${item.location.latitude}-${item.location.longitude}`}
                         marker={item}
+                        depart={false}
+                        arrivee={false}
                         propsnavigation={this.props}
                     />
                     :
                     <MarkerItineraire
                         key={`Station-${this.state.idRouteCourant}-${item.location.latitude}-${item.location.longitude}`}
                         marker={item}
-                        station={false}
                         depart={false}
                         arrivee={false}
                         propsnavigation={this.props}
@@ -177,21 +183,21 @@ class PageMapResultat extends React.Component {
         this.setState({ state: this.state });
     }
 
+    renderTitre(item) {
+        var plusieurs = false;
+        if (this.state.itineraires.length > 1) {
+            plusieurs = true;
+        }
+
+        return (
+            plusieurs ?
+                <Text style={styles.title}>Itinéraire n°{item.idRoute}</Text>
+                :
+                <Text style={styles.title}>Itinéraire</Text>
+        )
+    }
+
     renderItineraire(item) {
-        // DEPART
-        var depart = this.state.itineraires[this.state.idRouteCourant].waypoints[0];
-
-        // ARRIVEE
-        var arrivee = this.state.itineraires[this.state.idRouteCourant].waypoints[this.state.itineraires[this.state.idRouteCourant].waypoints.length - 1];
-
-        // DUREE
-        var duree = this.state.itineraires[this.state.idRouteCourant].fullPath.duration;
-        duree = formaterDuree(duree);
-
-        // DISTANCE
-        var distance = this.state.itineraires[this.state.idRouteCourant].fullPath.length;
-        distance = formaterDistance(distance);
-
         return (
             <TouchableWithoutFeedback
                 key={`Itineraire-${item.idRoute}`}
@@ -200,7 +206,7 @@ class PageMapResultat extends React.Component {
                 <View style={styles.itineraire}>
                     <View style={styles.informations}>
                         <View>
-                            <Text style={styles.title}>Itinéraire n° {item.idRoute}</Text>
+                            {this.renderTitre(item)}
                         </View>
                         <View style={styles.info1}>
                             <View>
@@ -272,8 +278,7 @@ class PageMapResultat extends React.Component {
     }
 
     render() {
-        console.log('DUREE', this.state.duree);
-        console.log('DISTANCE', this.state.distance);
+
         return (
             <View style={styles.container}>
                 <MapView
@@ -283,8 +288,6 @@ class PageMapResultat extends React.Component {
                     mapType={this.mapType}
                     rotateEnabled={false}
                     style={styles.map}
-                    showsUserLocation
-
                 >
                     <MapView.UrlTile
                         //Permet de récupérer la source de la carte sur openstreetmap
@@ -294,29 +297,42 @@ class PageMapResultat extends React.Component {
                     />
                     <ItineraireMap
                         // Affiche l'itinéraire courant
-                        key={`Itinéraire-${this.state.itineraires[this.state.idRouteCourant].idRoute}`}
+                        key={`Itineraire-${this.state.itineraires[this.state.idRouteCourant].idRoute}`}
                         itineraire={this.state.itineraires[this.state.idRouteCourant]}
                         propsnavigation={this.props}
                     />
-
-                    {this.renderMarkersStationsEtapes()}
                     {this.renderMarkerDepart()}
+                    {this.renderMarkersStationsEtapes()}
                     {this.renderMarkerArrivee()}
                 </MapView>
                 {this.renderItineraires()}
             </View>
         );
     }
+ 
+
+    componentDidMount() {
+        // Permet d'ajuster la vue autour des coordonnées
+        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude != undefined) {
+            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+                edgePadding: {
+                    bottom: 50, right: 50, top: 50, left: 50,
+                },
+                animated: false,
+            });
+        }
+    }
 
     componentDidUpdate() {
-        console.log("fit to coordinates UPDATE AVANT");
-        this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
-            edgePadding: {
-                bottom: 50, right: 50, top: 50, left: 50,
-            },
-            animated: true,
-        });
-        console.log("fit to coordinates UPDATE APRES");
+        // Permet d'ajuster la vue autour des coordonnées
+        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude != undefined) {
+            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+                edgePadding: {
+                    bottom: 50, right: 50, top: 50, left: 50,
+                },
+                animated: false,
+            });
+        }
     }
 
 }
@@ -429,18 +445,3 @@ const styles = StyleSheet.create({
 })
 
 export default PageMapResultat
-
-/*
-onMapReady={() => {
-                        this.map.fitToSuppliedMarkers(...this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
-                            edgePadding:
-                            {
-                                top: 50,
-                                right: 50,
-                                bottom: 50,
-                                left: 50
-                            }
-
-                        })
-                    }}
-*/

@@ -42,14 +42,21 @@ class ItineraireMap extends PureComponent {
     render() {
         const { itineraire, propsnavigation } = this.props;
 
+        console.log(itineraire.fullPath.geometry.coordinates[0].latitude);
+        var test = false;
+
+        if (itineraire.fullPath.geometry.coordinates[0].latitude == undefined) {
+            itineraire.fullPath.geometry.coordinates = []
+        }
+
         return (
             <Polyline
                 coordinates={[
                     ...itineraire.fullPath.geometry.coordinates
                 ]}
-                key={`Polyline-Itinéraire-${itineraire.idItineraire}`}
+                key={`Polyline-Itinéraire-${itineraire.idRoute}`}
                 strokeWidth={6}
-                strokeColor={calculCouleurItinéraire(itineraire.idItineraire)}
+                strokeColor={calculCouleurItinéraire(itineraire.idRoute)}
                 tappable={true}
                 onPress={() => { }}
                 accessibilityLabel={"Itinéraire 1"}

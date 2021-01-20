@@ -1,4 +1,4 @@
-// Components/StationMap.js
+// Components/StationMapNonSelectionable.js
 
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
@@ -8,21 +8,12 @@ import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car
 import { connect } from 'react-redux';
 
 
-class StationMap extends PureComponent {
+class StationMapNonSelectionable extends PureComponent {
 
     constructor(props) {
         super(props);
     }
 
-    // Méthode pour modifier la station active
-    changerStationActive(id) {
-        const TIME_FOR_ANIMATION = 0;
-        const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: id }
-        this.props.dispatch(action)
-        setTimeout(() => {
-            this.markerRef.showCallout();
-        }, TIME_FOR_ANIMATION);
-    }
 
     // Méthode pour afficher les bornes disponibles
     renderBornesDisponibles(nbTotal, nbDispo) {
@@ -73,7 +64,7 @@ class StationMap extends PureComponent {
     }
 
     render() {
-        const { marker, propsnavigation } = this.props;
+        const { marker, depart, arrivee, propsnavigation } = this.props;
 
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(marker.data.bornes).length;
@@ -85,23 +76,20 @@ class StationMap extends PureComponent {
 
         marker.data = {
             ...marker.data,
-            "latitude": marker.location.latitude,
-            "longitude": marker.location.longitude,
+            "latitude": marker.location.latitude ? marker.location.latitude : 0,
+            "longitude": marker.location.longitude ? marker.location.longitude : 0,
         }
-
-        console.log(marker.data);
 
         return (
             <Marker
                 coordinate={{
-                    latitude: marker.data.latitude,
-                    longitude: marker.data.longitude
+                    latitude: marker.data.latitude ? marker.location.latitude : 0,
+                    longitude: marker.data.longitude ? marker.location.longitude : 0,
                 }}
                 ref={(ref) => this.markerRef = ref}
                 title={marker.data.adresse}
-                pinColor={'green'}
-                key={`${marker.data.idStation}`}
-                onPress={() => this.changerStationActive(marker.dataidStation)}
+                pinColor={depart ? 'green' : arrivee ? 'green' : 'green'}
+                key={`Station-${marker.data.idStation}-${depart ? 'depart' : ''}${arrivee ? 'arrivee' : ''}`}
             >
                 { this.renderCalloutMarker(propsnavigation, marker.data, nbTotal, nbDispo)}
             </Marker >
@@ -169,19 +157,4 @@ const styles = StyleSheet.create({
     },
 })
 
-/* REDUX */
-// Connexion du state global au component PageMap
-const mapStateToProps = (state) => {
-    return {
-        active: state.borneActive.active
-    }
-}
-
-// Dispatcher
-const mapDispatchToProps = (dispatch) => {
-    return {
-        dispatch: (action) => { dispatch(action) }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(StationMap)
+export default StationMapNonSelectionable

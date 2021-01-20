@@ -33,31 +33,45 @@ export function getItineraires(routes) {
     var i = 0;
 
     routes = routes.map(function (route) {
+        console.log(route.location);
         // Conversion des points de l'itinéraires du JSON en LatLng
-        route.fullPath.geometry.coordinates = route.fullPath.geometry.coordinates.map(function (coordinates) {
-            var coord = {
-                "latitude": coordinates[0],
-                "longitude": coordinates[1],
-            }
-            return coord
-        });
+        if (route.fullPath.geometry.coordinates.length > 0) {
+            route.fullPath.geometry.coordinates = route.fullPath.geometry.coordinates.map(function (coordinates) {
+                var coord = {
+                    "latitude": coordinates[0] ? coordinates[0] : 0,
+                    "longitude": coordinates[1] ? coordinates[1] : 0,
+                }
+                return coord
+            });
+        }
 
         // Ajout des identifiants pour les stations, les bornes et les connecteurs
         var j = 0;
-        route.waypoints = route.waypoints.map(function (waypoint) {
-            j++;
-            var info = identification(waypoint, j);
-            return info;
-        });
+        if (route.waypoints.length > 0) {
+            route.waypoints = route.waypoints.map(function (waypoint) {
+                j++;
+                if (waypoint != undefined) {
+                    var info = identification(waypoint, j);
+                    return info;
+                }
+                else {
+                    return waypoint;
+                }
+            });
+        }
 
         // Ajout d'un identifiant
         i++;
-        var info_route = {
-            ...route,
-            "idRoute": i,
+        if (route != undefined) {
+            var info_route = {
+                ...route,
+                "idRoute": i,
+            }
+            return info_route
         }
-
-        return info_route
+        else {
+            return route;
+        }
     });
 
     return routes;
@@ -67,48 +81,62 @@ export function getItineraires(routes) {
 function identification(element, id) {
     var info_element = element;
 
-    if (info_element.isStation) {
+    if (info_element.isStation && info_element.data.bornes != undefined) {
         // Numéroter les bornes
         var j = 0;
+
         info_element.data.bornes = info_element.data.bornes.map(function (borne) {
             // Numéroter les connecteurs
             var k = 0;
-            borne.connecteurs = borne.connecteurs.map(function (connecteur) {
-                k++;
-                var info_connecteur = {
-                    "idConnecteur": k,
-                    ...connecteur,
-                }
-                return info_connecteur;
-            });
-
-            j++;
-            var info_borne = {
-                "idBorne": j,
-                ...borne,
+            if (borne.connecteurs != undefined) {
+                borne.connecteurs = borne.connecteurs.map(function (connecteur) {
+                    k++;
+                    var info_connecteur = {
+                        "idConnecteur": k,
+                        ...connecteur,
+                    }
+                    return info_connecteur;
+                });
             }
 
-            return info_borne;
+            j++;
+            if (borne != undefined) {
+                var info_borne = {
+                    "idBorne": j,
+                    ...borne,
+                }
+                return info_borne;
+            }
+            else {
+                return borne;
+            }
+
         });
 
         // Convertir la localisation en LatLng
-        info_element.location = {
-            "latitude": info_element.location[0],
-            "longitude": info_element.location[1],
-        };
+        if (info_element.location.length == 2) {
+            info_element.location = {
+                "latitude": info_element.location[0] ? info_element.location[0] : 0,
+                "longitude": info_element.location[1] ? info_element.location[1] : 0,
+            };
+        }
 
         // Ajouter l'identifiant
-        info_element = {
-            "idStation": id,
-            ...info_element,
+        if (info_element != undefined) {
+            info_element = {
+                "idStation": id,
+                ...info_element,
+            }
         }
     }
     else {
         // Convertir la localisation en LatLng
-        info_element.location = {
-            "latitude": info_element.location[0],
-            "longitude": info_element.location[1],
-        };
+        if (info_element.location.length == 2) {
+            info_element.location = {
+                "latitude": info_element.location[0] ? info_element.location[0] : 0,
+                "longitude": info_element.location[1] ? info_element.location[1] : 0,
+            };
+        }
     }
 
     return info_element;

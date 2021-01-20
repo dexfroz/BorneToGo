@@ -6,6 +6,7 @@ import { Marker, Callout } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car un bug de react native fait que les images de react-native ne s'affichent pas (sauf dans un <Text></Text> mais cela ajoute des marges et compliquent la mise en forme)
 import { connect } from 'react-redux';
+import StationMapNonSelectionnable from './StationMapNonSelectionnable';
 
 
 class MarkerItineraire extends PureComponent {
@@ -14,26 +15,24 @@ class MarkerItineraire extends PureComponent {
         super(props);
     }
 
-
-
     render() {
-        const { marker, propsnavigation } = this.props;
+        const { marker, depart, arrivee, propsnavigation } = this.props;
 
         return (
             <Marker
                 coordinate={{
-                    latitude: marker.location.latitude,
-                    longitude: marker.location.longitude
+                    latitude: marker.location.latitude ? marker.location.latitude : 0,
+                    longitude: marker.location.longitude ? marker.location.longitude : 0,
                 }}
-                pinColor={'red'}
+                pinColor={depart ? 'red' : arrivee ? 'blue' : 'linen'}
                 title={marker.address}
-                key={`Marker-${marker.label}-${marker.location.latitude}-${marker.location.longitude}`}
-                onPress={() => { }}
-            >
-            </Marker >
+                key={`Marker-${marker.location.latitude}-${marker.location.longitude}-${depart ? 'depart' : ''}${arrivee ? 'arrivee' : ''}`}
+            />
         );
     }
 }
+/*
+*/
 
 
 const styles = StyleSheet.create({
