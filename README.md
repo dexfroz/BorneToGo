@@ -2,6 +2,14 @@
 
 BDD brand of the BorneToGo project. This is *work-in-progress* version of the BDD project. All BDD dev commits have to be done here.
 
+## Installation
+1. Installer XAMPP (Version 8.0.1) [Lien d'installation XAMPP](https://www.apachefriends.org/download.html)
+2. Lancer Xampp Control Panel
+3. Start Apache et MySQL
+4. Admin MySQL nous amène sur phpMyAdmin
+5. Dans l'onglet Import, Browse le fichier **BDDScript2.sql**, enfin click Go
+6. Profit
+
 ## Architecture de la BDD
 ![Architecture de la BDD V3](/images/Schema_BDD_V3.png)
 
