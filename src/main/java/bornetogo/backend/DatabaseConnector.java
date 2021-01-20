@@ -33,7 +33,10 @@ public class DatabaseConnector
 
 	private static ArrayList<Car> loadCars()
 	{
-		return null; // TODO!
+		// TODO!
+
+		// For testing:
+		return Car.mock();
 	}
 
 
@@ -42,8 +45,8 @@ public class DatabaseConnector
 		// TODO!
 
 		// For testing:
-		return Station.mockStations();
-		// return Station.bigMockStations();
+		return Station.mock();
+		// return Station.bigMock();
 	}
 
 

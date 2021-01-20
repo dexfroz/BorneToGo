@@ -54,7 +54,7 @@ public class Station extends Coord
 
 
 	// For testing only:
-	public static ArrayList<Station> mockStations()
+	public static ArrayList<Station> mock()
 	{
 		ArrayList<Station> allStations = new ArrayList<Station>();
 		allStations.add(new Station(43.183331, 5.71667, "Station", "Saint Cyr-sur-Mer"));
@@ -76,7 +76,7 @@ public class Station extends Coord
 
 
 	// For load testing only:
-	public static ArrayList<Station> bigMockStations()
+	public static ArrayList<Station> bigMock()
 	{
 		Random r = new Random();
 

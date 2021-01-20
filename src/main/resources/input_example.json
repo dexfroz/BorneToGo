@@ -3,10 +3,19 @@
 	"convention": "long-lat",
 	"useCase": "trip",
 	"optimOption": "default",
-	"carModel": "Tesla cybertruck",
-	"maxAutonomy": 200,
-	"currentAutonomy": 50,
-	"subscription": "",
+	"car":
+	{
+		"model": "Tesla cybertruck",
+		"subscription": "",
+		"batteryType": "",
+		"maxAutonomy": 200,
+		"currentAutonomy": 50,
+		"maxWattage": 42.1,
+		"connectors": [
+			"EF-T2",
+			"EF"
+		]
+	},
 	"userSteps": [
 		{
 			"location": [

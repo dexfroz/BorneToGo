@@ -1,28 +1,32 @@
 package main.java.bornetogo.backend;
 
 import java.io.*;
+import java.util.*;
 import jakarta.json.*;
 
 
 public class Car
 {
 	private String model;
+	private String subscription;
+	private String batteryType;
 	private double maxAutonomy; // in km
 	private double currentAutonomy; // in km
-	private String batteryType;
-	private String connector;
-	private String subscription;
+	private double maxWattage; // in kW
+	private ArrayList<String> connectors;
 
 
 	public Car(String model, double maxAutonomy, double currentAutonomy, String subscription)
 	{
 		this.model = model;
+		this.subscription = subscription;
+		this.batteryType = "";
 		this.maxAutonomy = maxAutonomy;
 		this.currentAutonomy = currentAutonomy;
-		this.batteryType = "";
-		this.connector = "";
-		this.subscription = "";
+		this.maxWattage = 0.;
+		this.connectors = new ArrayList<String>();
 
+		// TODO: fill the empty fields with the following function:
 		DatabaseConnector.fetchData(this);
 	}
 
@@ -39,6 +43,18 @@ public class Car
 	}
 
 
+	public String getSubscription()
+	{
+		return this.subscription;
+	}
+
+
+	public String getBatteryType()
+	{
+		return this.batteryType;
+	}
+
+
 	public double getMaxAutonomy()
 	{
 		return this.maxAutonomy;
@@ -51,21 +67,15 @@ public class Car
 	}
 
 
-	public String getBatteryType()
+	public double getMaxWattage()
 	{
-		return this.batteryType;
+		return this.maxWattage;
 	}
 
 
-	public String getConnector()
+	public ArrayList<String> getConnectors()
 	{
-		return this.connector;
-	}
-
-
-	public String getSubscription()
-	{
-		return this.subscription;
+		return this.connectors;
 	}
 
 
@@ -77,9 +87,9 @@ public class Car
 
 	public String toString()
 	{
-		return "Car: " + this.model + "\nMax autonomy: " + this.maxAutonomy + " km\nCurrent autonomy: " +
-			this.currentAutonomy + " km\nBattery type: " + this.batteryType + "\nConnector: " + this.connector +
-			"\nSubscription: " + this.subscription;
+		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nBattery type: " + this.batteryType +
+			"\nMax autonomy: " + this.maxAutonomy + " km\nCurrent autonomy: " + this.currentAutonomy +
+			" km\nmaxWattage: " + this.maxWattage + " kW\nConnectors number: " + this.connectors.size();
 	}
 
 
@@ -94,18 +104,20 @@ public class Car
 	{
 		try
 		{
-			String model = json.getString("carModel");
-			double maxAutonomy = json.getJsonNumber​("maxAutonomy").doubleValue(); // in km
-			double currentAutonomy = json.getJsonNumber​("currentAutonomy").doubleValue(); // in km
-			String subscription = json.getString("subscription");
-			// Not known by the User:
-			// String batteryType = json.getString("batteryType");
-			// String connector = json.getString("connector");
+			JsonObject carJson = json.getJsonObject("car");
+			String model = carJson.getString("model");
+			String subscription = carJson.getString("subscription");
+			double maxAutonomy = carJson.getJsonNumber​("maxAutonomy").doubleValue(); // in km
+			double currentAutonomy = carJson.getJsonNumber​("currentAutonomy").doubleValue(); // in km
+
+			// TODO: update the constructor to add those:
+			String batteryType = carJson.getString("batteryType");
+			double maxWattage = carJson.getJsonNumber​("maxWattage").doubleValue(); // in kW
+			// ArrayList<String> connectors = carJson.getString("connectors"); // TODO
 
 			return new Car(model, maxAutonomy, currentAutonomy, subscription);
 		}
 		catch (Exception e) {
-			// e.printStackTrace();
 			System.err.println("\nError while parsing a json: could not extract a car.\n");
 			return null;
 		}
@@ -114,20 +126,44 @@ public class Car
 
 	public JsonObject toJson()
 	{
+		JsonArrayBuilder connectorsBuilder = Json.createArrayBuilder();
+
+		for (String connector : this.connectors) {
+			connectorsBuilder.add(connector);
+		}
+
+		JsonArray connectorsArray = connectorsBuilder.build();
+
 		return Json.createObjectBuilder()
 			.add("model", this.model)
+			.add("subscription", this.subscription)
+			.add("batteryType", this.batteryType)
 			.add("maxAutonomy", this.maxAutonomy)
 			.add("currentAutonomy", this.currentAutonomy)
-			.add("batteryType", this.batteryType)
-			.add("connector", this.connector)
-			.add("subscription", this.subscription)
+			.add("maxWattage", this.maxWattage)
+			.add("connectors", connectorsArray)
 			.build();
+	}
+
+
+	// For testing only:
+	public static ArrayList<Car> mock()
+	{
+		ArrayList<Car> allCars = new ArrayList<Car>();
+		allCars.add(new Car("Renault Zoe", 66, 66, ""));
+		allCars.add(new Car("Tesla cybertruck", 200, 200, ""));
+		return allCars;
 	}
 
 
 	public static void main(String[] args)
 	{
-		Car car = new Car("Tesla cybertruck", 66, 30, "None");
-		System.out.println(car.toString());
+		Car car_1 = new Car("Renault Zoe", 66, 30, "None");
+		System.out.println(car_1.toString() + "\n");
+
+		String inputString = FileContent.read("input_example_singleStep.json");
+		JsonObject input = GetJson.jsonFromString(inputString);
+		Car car_2 = getFromJson(input);
+		System.out.println(car_2.toString() + "\n");
 	}
 }

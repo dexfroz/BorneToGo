@@ -121,20 +121,28 @@ public class Coord
 	}
 
 
+	// Safe version.
 	public static Coord getFromJsonArray(JsonArray coordJson, String name, String address, Format format)
 	{
-		double latitude = 0., longitude = 0.;
+		try
+		{
+			double latitude = 0., longitude = 0.;
 
-		if (format == Format.LAT_LONG) {
-			latitude = coordJson.getJsonNumber​(0).doubleValue();
-			longitude = coordJson.getJsonNumber​(1).doubleValue();
-		}
-		else { // Format.LONG_LAT
-			latitude = coordJson.getJsonNumber​(1).doubleValue();
-			longitude = coordJson.getJsonNumber​(0).doubleValue();
-		}
+			if (format == Format.LAT_LONG) {
+				latitude = coordJson.getJsonNumber​(0).doubleValue();
+				longitude = coordJson.getJsonNumber​(1).doubleValue();
+			}
+			else { // Format.LONG_LAT
+				latitude = coordJson.getJsonNumber​(1).doubleValue();
+				longitude = coordJson.getJsonNumber​(0).doubleValue();
+			}
 
-		return new Coord(latitude, longitude, name, address);
+			return new Coord(latitude, longitude, name, address);
+		}
+		catch (Exception e) {
+			System.err.println("\nError while parsing a json: could not extract a Coord.\n");
+			return null;
+		}
 	}
 
 

@@ -272,7 +272,8 @@ public class Pathfinding
 
 	public static void main(String[] args)
 	{
-		ArrayList<Station> allStations = Station.mockStations();
+		ArrayList<Station> allStations = Station.mock();
+		// ArrayList<Station> allStations = Station.bigMock();
 		// There should be enough mock stations, for a max autonomy of 200 km.
 
 		Car car = new Car("Tesla cybertruck", 200, 50, "None");

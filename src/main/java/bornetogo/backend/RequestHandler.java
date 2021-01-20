@@ -57,21 +57,62 @@ public class RequestHandler
 
 
 	@GET
+	@Path("cars")
+	public Response getCars()
+	{
+		try
+		{
+			ArrayList<Car> allCars = DatabaseConnector.getCars();
+
+			if (allCars == null) {
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("Cars could not be loaded by the backend.").build();
+			}
+
+			JsonArrayBuilder carsBuilder = Json.createArrayBuilder();
+
+			for (Car car : allCars) {
+				carsBuilder.add(car.toJson());
+			}
+
+			JsonArray carsArray = carsBuilder.build();
+
+			JsonObject carsJson = Json.createObjectBuilder()
+				.add("cars", carsArray)
+				.build();
+
+			return Response.ok(carsJson).build();
+		}
+		catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity("Unknown error.").build();
+		}
+	}
+
+
+	@GET
 	@Path("mock")
 	public Response mockOutput()
 	{
-		// String inputString = FileContent.read("input_example.json");
-		String inputString = FileContent.read("input_example_singleStep.json");
+		try
+		{
+			// String inputString = FileContent.read("input_example.json");
+			String inputString = FileContent.read("input_example_singleStep.json");
 
-		JsonObject input = GetJson.jsonFromString(inputString);
-		JsonObject output = Core.core(input);
+			JsonObject input = GetJson.jsonFromString(inputString);
+			JsonObject output = Core.core(input);
 
-		if (output == null) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity("Core program failed to output a path.").build();
+			if (output == null) {
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("Core program failed to output a path.").build();
+			}
+
+			return Response.ok(output).build();
 		}
-
-		return Response.ok(output).build();
+		catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity("Unknown error.").build();
+		}
 	}
 
 
@@ -97,7 +138,8 @@ public class RequestHandler
 			return Response.ok(output).build();
 		}
 		catch (Exception e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity("Wrong query.").build();
+			return Response.status(Response.Status.BAD_REQUEST)
+				.entity("Wrong request.").build();
 		}
 	}
 }
