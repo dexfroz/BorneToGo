@@ -165,16 +165,20 @@ def INSERT_INTO_SQLCreator_paiement(data):
     return SQLlistRequete
 
 def INSERT_INTO_SQLCreator_voiture(data):
-    i33 = i25 = i1036 = 0
+    SQLlistRequete = list()
+
     for i in data:
-        for j in i['Connections']:
-            if j['ConnectionTypeID'] == 33:
-                i33 += 1
-            if j['ConnectionTypeID'] == 25:
-                i25 += 1
-            if j['ConnectionTypeID'] == 1036:
-                i1036 += 1
-    print("i33=",i33,", i25=",i25,", i1036=",i1036)
+        IDVoiture = i['IDVoiture']
+        IDBatterie = i['BatterieInfo']['ID']
+        Modele = i['Modele']
+
+        requete = "INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele) VALUES ('{}','{}','{}');"
+
+        SQLlistRequete.append(
+            requete.format(IDVoiture,IDBatterie,Modele)
+        )
+
+    return SQLlistRequete
 
 def createSQLFilefromlist(data,filename):
     fs = open(filename,"w",encoding="utf-8")
@@ -188,8 +192,9 @@ def createSQLFilefromlist(data,filename):
 def correctionString(texte):
     return texte.replace("'","\\'")
 
-INSERT_INTO_SQLCreator_voiture(loadJSONfromFile("dataStationBorne.json"))
+createSQLFilefromlist(INSERT_INTO_SQLCreator_voiture(loadJSONfromFile("dataVoitureBatterie.json")),"voiture.sql")
 
+'''
 createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
 createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
 
@@ -197,3 +202,4 @@ createSQLFilefromlist(INSERT_INTO_SQLCreator_connecteur(loadJSONfromFile("dataRe
 createSQLFilefromlist(INSERT_INTO_SQLCreator_courant(loadJSONfromFile("dataReference.json")),"courant.sql")
 createSQLFilefromlist(INSERT_INTO_SQLCreator_status(loadJSONfromFile("dataReference.json")),"status.sql")
 createSQLFilefromlist(INSERT_INTO_SQLCreator_paiement(loadJSONfromFile("dataReference.json")),"paiement.sql")
+'''
