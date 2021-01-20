@@ -132,4 +132,348 @@
     }],
     "Modele":"Renault ZOE Q90",
     "Chargement":100
+},{
+    "IDVoiture":9,
+    "BatterieInfo":{
+        "ID":6,
+        "Capacite":54.5,
+        "Autonomie":409
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":250
+    }],
+    "Modele":"Tesla Model 3 Autonomie Standard Plus",
+    "Chargement":100
+},{
+    "IDVoiture":10,
+    "BatterieInfo":{
+        "ID":7,
+        "Capacite":74,
+        "Autonomie":560
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":250
+    }],
+    "Modele":"Tesla Model 3 Grande autonomie",
+    "Chargement":100
+},{
+    "IDVoiture":11,
+    "BatterieInfo":{
+        "ID":8,
+        "Capacite":74,
+        "Autonomie":530
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":250
+    }],
+    "Modele":"Tesla Model 3 Performance",
+    "Chargement":100
+},{
+    "IDVoiture":12,
+    "BatterieInfo":{
+        "ID":9,
+        "Capacite":46,
+        "Autonomie":340
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Peugeot e-208",
+    "Chargement":100
+},{
+    "IDVoiture":13,
+    "BatterieInfo":{
+        "ID":10,
+        "Capacite":45,
+        "Autonomie":330
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.2
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Volkswagen ID3 Pure",
+    "Chargement":100
+},{
+    "IDVoiture":14,
+    "BatterieInfo":{
+        "ID":11,
+        "Capacite":58,
+        "Autonomie":425
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Volkswagen ID3 Pro Performance",
+    "Chargement":100
+},{
+    "IDVoiture":15,
+    "BatterieInfo":{
+        "ID":12,
+        "Capacite":77,
+        "Autonomie":549
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Volkswagen ID3 Pro S",
+    "Chargement":100
+},{
+    "IDVoiture":16,
+    "BatterieInfo":{
+        "ID":13,
+        "Capacite":72.5,
+        "Autonomie":450
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":200
+    }],
+    "Modele":"Tesla Model S Autonomie Standard",
+    "Chargement":100
+},{
+    "IDVoiture":17,
+    "BatterieInfo":{
+        "ID":14,
+        "Capacite":95,
+        "Autonomie":610
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":200
+    }],
+    "Modele":"Tesla Model S Grande autonomie",
+    "Chargement":100
+},{
+    "IDVoiture":18,
+    "BatterieInfo":{
+        "ID":15,
+        "Capacite":95,
+        "Autonomie":593
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":200
+    }],
+    "Modele":"Tesla Model S Performance",
+    "Chargement":100
+},{
+    "IDVoiture":19,
+    "BatterieInfo":{
+        "ID":16,
+        "Capacite":69,
+        "Autonomie":305
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":200
+    }],
+    "Modele":"Tesla Model S 70",
+    "Chargement":100
+},{
+    "IDVoiture":20,
+    "BatterieInfo":{
+        "ID":17,
+        "Capacite":69,
+        "Autonomie":359
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":200
+    }],
+    "Modele":"Tesla Model S 70D",
+    "Chargement":100
+},{
+    "IDVoiture":20,
+    "BatterieInfo":{
+        "ID":18,
+        "Capacite":0,
+        "Autonomie":840
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":200
+    }],
+    "Modele":"Tesla Model S Plaid",
+    "Chargement":100
+},{
+    "IDVoiture":21,
+    "BatterieInfo":{
+        "ID":19,
+        "Capacite":37.9,
+        "Autonomie":310
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3 120 Ah",
+    "Chargement":100
+},{
+    "IDVoiture":22,
+    "BatterieInfo":{
+        "ID":20,
+        "Capacite":27.3,
+        "Autonomie":244
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3 94 Ah",
+    "Chargement":100
+},{
+    "IDVoiture":23,
+    "BatterieInfo":{
+        "ID":21,
+        "Capacite":27.3,
+        "Autonomie":325
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3 94 Ah REX",
+    "Chargement":100
+},{
+    "IDVoiture":24,
+    "BatterieInfo":{
+        "ID":22,
+        "Capacite":18.8,
+        "Autonomie":154
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3 60 Ah",
+    "Chargement":100
+},{
+    "IDVoiture":25,
+    "BatterieInfo":{
+        "ID":22,
+        "Capacite":18.8,
+        "Autonomie":244
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3 60 Ah REX",
+    "Chargement":100
 }]

@@ -12,7 +12,7 @@ BDD brand of the BorneToGo project. This is *work-in-progress* version of the BD
 7. D:\xampp\phpMyAdmin\libraries\config.default.php -> $cfg[‘ExecTimeLimit’] = 300; Changer 300 par beaucoup plus.
 
 ## Architecture de la BDD
-![Architecture de la BDD V3](/images/Schema_BDD_V3.png)
+![Architecture de la BDD V4](/images/Schema_BDD_V4.png)
 
 ## Architecture Requête
 
@@ -38,13 +38,16 @@ BDD brand of the BorneToGo project. This is *work-in-progress* version of the BD
 
 ### INSERT INTO batterie
 
+### INSERT INTO voitureconnecteurcourant
+Puissance est le plus petit de Voiture.Puissance et de Borne.Puissance.
+
 ## TODO Voiture
 - [x] Renault ZEO
-- [ ] Tesla Model 3
-- [ ] Peugeot e-208
-- [ ] Volkswagen ID. 3
-- [ ] Tesla Model S
-- [ ] BMW i3
+- [x] Tesla Model 3
+- [x] Peugeot e-208
+- [x] Volkswagen ID. 3
+- [x] Tesla Model S
+- [x] BMW i3
 - [ ] Renault Twizy
 - [ ] Kia e-Niro
 - [ ] Citroën AMI
