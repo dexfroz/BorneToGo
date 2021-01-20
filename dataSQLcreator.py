@@ -156,7 +156,7 @@ def INSERT_INTO_SQLCreator_paiement(data):
             IsMembershipRequired = i['IsMembershipRequired']
             IsAccessKeyRequired = i['IsAccessKeyRequired']
 
-            requete = "INSERT INTO BorneToGo.Paiement (idPaiement, Titre, IsPayAtLocation, IsMembershipRequired, IsAccessKeyRequired) VALUES ('{}','{}','{}','{}');"
+            requete = "INSERT INTO BorneToGo.Paiement (idPaiement, Titre, IsPayAtLocation, IsMembershipRequired, IsAccessKeyRequired) VALUES ('{}','{}','{}','{}','{}');"
 
             SQLlistRequete.append(
                 requete.format(IDConnecteur,Titre,IsPayAtLocation,IsMembershipRequired,IsAccessKeyRequired)
