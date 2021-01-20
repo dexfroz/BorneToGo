@@ -45,13 +45,13 @@ class ItineraireMap extends PureComponent {
         return (
             <Polyline
                 coordinates={[
-                    ...itineraire.routes[0].geometry.coordinates
+                    ...itineraire.fullPath.geometry.coordinates
                 ]}
                 key={`Polyline-Itinéraire-${itineraire.idItineraire}`}
                 strokeWidth={6}
                 strokeColor={calculCouleurItinéraire(itineraire.idItineraire)}
                 tappable={true}
-                onPress={(e) => log('Polyline pressé : ', e)}
+                onPress={() => { }}
                 accessibilityLabel={"Itinéraire 1"}
             />
         );

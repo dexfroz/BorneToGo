@@ -18,7 +18,7 @@ class MarkerItineraire extends PureComponent {
 
     render() {
         const { marker, propsnavigation } = this.props;
-        console.log(marker);
+
         return (
             <Marker
                 coordinate={{
@@ -28,7 +28,7 @@ class MarkerItineraire extends PureComponent {
                 pinColor={'red'}
                 title={marker.address}
                 key={`Marker-${marker.label}-${marker.location.latitude}-${marker.location.longitude}`}
-                onPress={() => console.log("Presse")}
+                onPress={() => { }}
             >
             </Marker >
         );
