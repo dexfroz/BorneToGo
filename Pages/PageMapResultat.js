@@ -309,30 +309,36 @@ class PageMapResultat extends React.Component {
             </View>
         );
     }
- 
+
 
     componentDidMount() {
-        // Permet d'ajuster la vue autour des coordonnées
-        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude != undefined) {
-            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
-                edgePadding: {
-                    bottom: 50, right: 50, top: 50, left: 50,
-                },
-                animated: false,
-            });
+        // Permet d'ajuster la vue autour des coordonnées`
+        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude == undefined) {
+            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = [];
+            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = data[0].routes[itineraire.idStation - 1].fullPath.geometry.coordinates;
         }
+
+        this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+            edgePadding: {
+                bottom: 50, right: 50, top: 50, left: 50,
+            },
+            animated: false,
+        });
     }
 
     componentDidUpdate() {
-        // Permet d'ajuster la vue autour des coordonnées
-        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude != undefined) {
-            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
-                edgePadding: {
-                    bottom: 50, right: 50, top: 50, left: 50,
-                },
-                animated: false,
-            });
+        // Permet d'ajuster la vue autour des coordonnées`
+        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude == undefined) {
+            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = [];
+            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = data[0].routes[itineraire.idStation - 1].fullPath.geometry.coordinates;
         }
+
+        this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+            edgePadding: {
+                bottom: 50, right: 50, top: 50, left: 50,
+            },
+            animated: false,
+        });
     }
 
 }

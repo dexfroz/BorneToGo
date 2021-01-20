@@ -3,7 +3,7 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Polyline } from 'react-native-maps';
-
+import data from '../Fichiers/input'
 
 function calculCouleurItinéraire(id) {
     var color = 'blue';
@@ -42,12 +42,14 @@ class ItineraireMap extends PureComponent {
     render() {
         const { itineraire, propsnavigation } = this.props;
 
-        console.log(itineraire.fullPath.geometry.coordinates[0].latitude);
-        var test = false;
+        console.log('AVANT', itineraire.fullPath.geometry.coordinates[0].latitude);
 
         if (itineraire.fullPath.geometry.coordinates[0].latitude == undefined) {
-            itineraire.fullPath.geometry.coordinates = []
+            itineraire.fullPath.geometry.coordinates = [];
+            itineraire.fullPath.geometry.coordinates = data[0].routes[itineraire.idStation - 1].fullPath.geometry.coordinates;
         }
+
+        console.log('APRES', itineraire.fullPath.geometry.coordinates[0].latitude);
 
         return (
             <Polyline
@@ -59,7 +61,7 @@ class ItineraireMap extends PureComponent {
                 strokeColor={calculCouleurItinéraire(itineraire.idRoute)}
                 tappable={true}
                 onPress={() => { }}
-                accessibilityLabel={"Itinéraire 1"}
+                accessibilityLabel={`Itinéraire-${itineraire.idRoute}`}
             />
         );
     }
