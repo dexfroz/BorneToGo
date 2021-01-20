@@ -9,7 +9,7 @@ BDD brand of the BorneToGo project. This is *work-in-progress* version of the BD
 4. Admin MySQL nous amène sur phpMyAdmin
 5. Dans l'onglet Import, Browse le fichier **BDDScript2.sql**, enfin click Go
 6. Si la création plante car la requête est trop longue, il faut modifier les paramètres de phpMyAdmin
-7. 
+7. D:\xampp\phpMyAdmin\libraries\config.default.php -> $cfg[‘ExecTimeLimit’] = 300; Changer 300 par beaucoup plus.
 
 ## Architecture de la BDD
 ![Architecture de la BDD V3](/images/Schema_BDD_V3.png)
