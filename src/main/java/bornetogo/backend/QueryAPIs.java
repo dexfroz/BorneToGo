@@ -65,7 +65,7 @@ public class QueryAPIs
 			}
 
 			String request = requests.get(0);
-			String options = "&pretty=1&no_annotations=0&limit=1";
+			String options = "&pretty=0&no_annotations=1&limit=1";
 			String url = "https://api.opencagedata.com/geocode/v1/json?key=" + apiKey + "&q=" + request + options;
 			return GetJson.jsonFromUrl(url);
 		}
@@ -77,8 +77,8 @@ public class QueryAPIs
 				requestbatch += "&location=" + request;
 			}
 
-			// String options = "&thumbMaps=false&maxResults=1"; // no metadata, slightly faster.
-			String options = "&thumbMaps=false&includeNearestIntersection=true&includeRoadMetadata=true&maxResults=1";
+			String options = "&thumbMaps=false&maxResults=1"; // no metadata, slightly faster.
+			// String options = "&thumbMaps=false&includeNearestIntersection=true&includeRoadMetadata=true&maxResults=1";
 			String url = "http://www.mapquestapi.com/geocoding/v1/batch?key=" + apiKey +
 						 "&outFormat=json" + requestbatch + options;
 
@@ -118,23 +118,23 @@ public class QueryAPIs
 
 
 	// Careful! Json structure will change depending on routeMode!
-	public static JsonObject queryRoute(String routeMode, ArrayList<Coord> coordinates)
+	public static JsonObject queryRoute(String routeMode, ArrayList<Coord> coordinates, String additionalOptions)
 	{
 		if (coordinates.size() == 0) {
 			System.err.println("No coordinates supplied in 'queryRoute'.");
 			return null;
 		}
 
-		String options = "";
+		String fullOptions = "";
 
 		// Finds the fastest route between coordinates in the supplied order:
 		if (routeMode.equals("route")) {
-			options = "geometries=geojson&alternatives=true&overview=full";
+			fullOptions = "geometries=geojson&alternatives=false" + additionalOptions;
 		}
 
 		// Snaps a coordinate to the street network and returns the nearest n matches (n forced to 1):
 		else if (routeMode.equals("nearest")) {
-			options = "number=1";
+			fullOptions = "number=1";
 
 			if (coordinates.size() > 1) {
 				System.err.println("Route mode 'nearest' only supports 1 coordinate!");
@@ -144,7 +144,7 @@ public class QueryAPIs
 
 		// The trip plugin solves the Traveling Salesman Problem using a greedy heuristic:
 		else if (routeMode.equals("trip")) {
-			options = "geometries=geojson&steps=true&overview=false&annotations=true";
+			fullOptions = "geometries=geojson&steps=true&overview=false&annotations=true";
 		}
 
 		else {
@@ -153,7 +153,7 @@ public class QueryAPIs
 		}
 
 		String url = "http://router.project-osrm.org/" + routeMode + "/v1/car/" +
-					 formatCoordinateList(coordinates) + ".json?" + options;
+					 formatCoordinateList(coordinates) + ".json?" + fullOptions;
 
 		System.out.println("\nRoute query:\n\n-> " + url + "\n");
 		return GetJson.jsonFromUrl(url);
@@ -183,18 +183,18 @@ public class QueryAPIs
 		routeCoordinates.add(new Coord(43.296482, 5.36978, "Marseille", ""));
 
 		// The trip plugin solves the Traveling Salesman Problem using a greedy heuristic:
-		JsonObject json_1 = queryRoute("trip", routeCoordinates);
+		JsonObject json_1 = queryRoute("trip", routeCoordinates, "");
 		Core.safeJsonPrinting(json_1);
 
 		// Finds the fastest route between coordinates in the supplied order:
-		JsonObject json_2 = queryRoute("route", routeCoordinates);
+		JsonObject json_2 = queryRoute("route", routeCoordinates, "&overview=full");
 		Core.safeJsonPrinting(json_2);
 
 		ArrayList<Coord> onlyOneCoord = new ArrayList<Coord>();
 		onlyOneCoord.add(new Coord(47.34083, 5.05015, "Dijon", ""));
 
 		// Snaps a coordinate to the street network and returns the nearest match:
-		JsonObject json_3 = queryRoute("nearest", onlyOneCoord);
+		JsonObject json_3 = queryRoute("nearest", onlyOneCoord, "");
 		Core.safeJsonPrinting(json_3);
 
 		////////////////////////////////////////////////////////////////

@@ -6,93 +6,85 @@ import jakarta.json.*;
 
 public class Output
 {
-	public static JsonObject buildAnswer(ArrayList<Route> routes, long startTime)
+	// Returns null on failure.
+	public static JsonObject build(ArrayList<Route> routes, long startTime)
 	{
-		// routesArray:
-
-		JsonArrayBuilder routesBuilder = Json.createArrayBuilder();
-
-		for (Route route : routes)
+		try
 		{
-			// waypoints:
+			// routesArray:
 
-			JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
+			JsonArrayBuilder routesBuilder = Json.createArrayBuilder();
 
-			for (Coord coord : route.getWaypoints()) {
-				waypointsBuilder.add(coord.toJsonFull(Coord.Format.LAT_LONG));
-			}
-
-			JsonArray waypointsArray = waypointsBuilder.build();
-
-			// legs:
-
-			JsonArrayBuilder legsBuilder = Json.createArrayBuilder();
-
-			for (int i = 0; i < route.getLegsLengths().size(); ++i)
+			for (Route route : routes)
 			{
-				JsonObject legJson = Json.createObjectBuilder()
-					.add("length", route.getLegsLengths().get(i))
-					.add("duration", route.getLegsDurations().get(i))
+				// waypoints:
+
+				JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
+
+				for (Coord coord : route.getWaypoints()) {
+					waypointsBuilder.add(coord.toJsonFull(Coord.Format.LONG_LAT));
+				}
+
+				JsonArray waypointsArray = waypointsBuilder.build();
+
+				// legs:
+
+				JsonArrayBuilder legsBuilder = Json.createArrayBuilder();
+
+				for (int i = 0; i < route.getLegsLengths().size(); ++i)
+				{
+					JsonObject legJson = Json.createObjectBuilder()
+						.add("length", route.getLegsLengths().get(i))
+						.add("duration", route.getLegsDurations().get(i))
+						.build();
+
+					legsBuilder.add(legJson);
+				}
+
+				JsonArray legsArray = legsBuilder.build();
+
+				// fullPathJson:
+
+				JsonObject fullPathJson = Json.createObjectBuilder()
+					.add("length", route.getLength())
+					.add("duration", route.getDuration())
+					.add("cost", route.getCost())
+					.add("autonomyLeft", route.getAutonomyLeft())
+					.add("stats", route.getStats())
+					.add("legs", legsArray)
+					.add("geometry", route.getGeometry())
 					.build();
 
-				legsBuilder.add(legJson);
+				// routeJson:
+
+				JsonObject routeJson = Json.createObjectBuilder()
+					.add("waypoints", waypointsArray)
+					.add("fullPath", fullPathJson)
+					.build();
+
+				routesBuilder.add(routeJson);
 			}
 
-			JsonArray legsArray = legsBuilder.build();
+			JsonArray routesArray = routesBuilder.build();
 
-			// coordinates:
+			// output:
 
-			JsonArrayBuilder coordsBuilder = Json.createArrayBuilder();
+			long endTime = System.nanoTime();
+			double processingTime = (endTime - startTime) / 1e9; // in seconds.
 
-			for (Coord coord : route.getFullPath()) {
-				coordsBuilder.add(coord.toJsonSmall(Coord.Format.LAT_LONG));
-			}
-
-			JsonArray coordsArray = coordsBuilder.build();
-
-			// geometry:
-
-			JsonObject geometry = Json.createObjectBuilder()
-				.add("coordinates", coordsArray)
+			JsonObject output = Json.createObjectBuilder()
+				.add("type", "output")
+				.add("status", "Ok")
+				.add("processingTime", processingTime)
+				.add("convention", "long-lat")
+				.add("routes", routesArray)
 				.build();
 
-			// fullPathJson:
-
-			JsonObject fullPathJson = Json.createObjectBuilder()
-				.add("length", route.getLength())
-				.add("duration", route.getDuration())
-				.add("cost", route.getCost())
-				.add("autonomyLeft", route.getAutonomyLeft())
-				.add("stats", route.getStats())
-				.add("legs", legsArray)
-				.add("geometry", geometry)
-				.build();
-
-			// routeJson:
-
-			JsonObject routeJson = Json.createObjectBuilder()
-				.add("waypoints", waypointsArray)
-				.add("fullPath", fullPathJson)
-				.build();
-
-			routesBuilder.add(routeJson);
+			return output;
 		}
-
-		JsonArray routesArray = routesBuilder.build();
-
-		// answer:
-
-		long endTime = System.nanoTime();
-		double processingTime = (endTime - startTime) / 1e9;
-
-		JsonObject answer = Json.createObjectBuilder()
-			.add("type", "output")
-			.add("status", "Ok")
-			.add("processingTime", processingTime)
-			.add("convention", "lat-long")
-			.add("routes", routesArray)
-			.build();
-
-		return answer;
+		catch (Exception e) {
+			System.err.println("\nError while building the output json.\n");
+			return null;
+		}
 	}
 }

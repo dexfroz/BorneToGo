@@ -26,11 +26,11 @@ To obtain a path from the backend, send a POST request containing the user given
 
 ```
 curl -w '\n' -X POST -H "Content-Type: application/json" \
- --data '{"type":"input","convention":"lat-long","useCase":"trip","optimOption":"default","carModel":"Tesla cybertruck","maxAutonomy":200,"currentAutonomy":50,"subscription":"","userSteps":[{"location":[43.124228,5.928],"name":"Toulon","address":""},{"location":[43.296482,5.36978],"name":"Marseille","address":""}]}' \
+ --data '{"type":"input","convention":"lat-long","useCase":"trip","optimOption":"default","carModel":"Tesla cybertruck","maxAutonomy":200,"currentAutonomy":50,"subscription":"","userSteps":[{"location":[5.928,43.124228],"name":"Toulon","address":""},{"location":[5.36978,43.296482],"name":"Marseille","address":""}]}' \
  http://localhost:8080/bornetogo/backend/path
 ```
 
-A path will then be returned, with some additional data. Note that the output of the previous command may be saved in a file, by appending ``` > result.json ``` at it's end.
+A path will then be returned, with some additional data. Note that the output of the previous command may be saved in a file, by appending ``` > result.json ``` at its end.
 
 On the other hand, one could test this without using curl - on a hardcoded example - simply by pasting the following link into a web browser:
 
@@ -63,6 +63,4 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 
 ## Possible optimizations:
 
-- Tune the options in API queries (route and geocoding), for smaller answers.
-- Circumvent (at least in part) the steps JsonObject -> Route -> JsonObject at the end, specifically on the 'geometry' field (changing of convention)... Also, getting said 'geometry' field in the first Route is useless too!
-- Bypass many distance computations in the pathfinding, by using various tricks, like precomputation or factorization. Note: for now this is overkill, since said pathfinding doesn't take more than 0.1 second to run.
+- Bypass many distance computations in the pathfinding, by using various tricks, like precomputation or factorization. Note: for now this is overkill, since said pathfinding take less than 0.1 second to run.

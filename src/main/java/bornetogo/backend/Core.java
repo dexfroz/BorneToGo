@@ -27,12 +27,12 @@ public class Core
 
 
 	// Returns null on failure:
-	private static ArrayList<Coord> getUserStepsFromJson(JsonObject json)
+	private static ArrayList<Coord> getUserStepsFromJson(JsonObject input)
 	{
 		try
 		{
 			ArrayList<Coord> userSteps = new ArrayList<Coord>();
-			JsonArray stepsArray = json.getJsonArray("userSteps");
+			JsonArray stepsArray = input.getJsonArray("userSteps");
 
 			for (int i = 0; i < stepsArray.size(); ++i)
 			{
@@ -42,7 +42,7 @@ public class Core
 				JsonArray coordJson = step.getJsonArray("location");
 
 				try {
-					Coord coord = Coord.getFromJsonArray(coordJson, name, address, Coord.Format.LAT_LONG);
+					Coord coord = Coord.getFromJsonArray(coordJson, name, address, Coord.Format.LONG_LAT);
 					userSteps.add(coord);
 				}
 				catch (Exception e)
@@ -69,7 +69,6 @@ public class Core
 			return userSteps;
 		}
 		catch (Exception e) {
-			// e.printStackTrace();
 			System.err.println("\nError while parsing a json: could not extract user steps.\n");
 			return null;
 		}
@@ -105,7 +104,7 @@ public class Core
 
 		if (enableFirstQuery && userSteps.size() > 1) // querying the route API.
 		{
-			JsonObject firstQuery = QueryAPIs.queryRoute("route", userSteps); // no need of all coordinates here!
+			JsonObject firstQuery = QueryAPIs.queryRoute("route", userSteps, "&overview=false"); // without geometry.
 			// safeJsonPrinting(firstQuery);
 
 			if (firstQuery == null) {
@@ -114,7 +113,6 @@ public class Core
 			}
 
 			Route firstDraw = Route.getFromJson(firstQuery, car, null);
-			firstQuery = null;
 
 			if (firstDraw == null) {
 				System.err.println("\nError while parsing 'firstQuery'.\n");
@@ -140,7 +138,7 @@ public class Core
 
 		// Second route query, for getting the full path:
 
-		JsonObject secondQuery = QueryAPIs.queryRoute("route", path);
+		JsonObject secondQuery = QueryAPIs.queryRoute("route", path, "&overview=full"); // with geometry.
 		// safeJsonPrinting(secondQuery);
 
 		if (secondQuery == null) {
@@ -153,7 +151,6 @@ public class Core
 		// Building the final route:
 
 		Route foundRoute = Route.getFromJson(secondQuery, car, path);
-		secondQuery = null;
 
 		if (foundRoute == null) {
 			System.err.println("\nIncorrect found route.\n");
@@ -163,23 +160,20 @@ public class Core
 		ArrayList<Route> routes = new ArrayList<Route>();
 		routes.add(foundRoute); // only 1 route for now.
 
+		// Building the output:
+
+		JsonObject output = Output.build(routes, time_0);
+
 		long time_5 = System.nanoTime();
-
-		// Building the answer:
-
-		JsonObject answer = Output.buildAnswer(routes, time_0);
-
-		long time_6 = System.nanoTime();
 
 		// Benchmarking results:
 		benchmark(time_0, time_1, "DatabaseConnector.getStations(), Car.getFromJson(), getUserStepsFromJson()");
 		benchmark(time_1, time_2, "QueryAPIs.queryRoute() + Route.getFromJson(), if (enableFirstQuery && userSteps.size() > 1)");
 		benchmark(time_2, time_3, "Pathfinding.find()");
 		benchmark(time_3, time_4, "QueryAPIs.queryRoute()");
-		benchmark(time_4, time_5, "Route.getFromJson()");
-		benchmark(time_5, time_6, "Output.buildAnswer()");
+		benchmark(time_4, time_5, "Route.getFromJson() + Output.build()");
 
-		return answer;
+		return output;
 	}
 
 
@@ -190,6 +184,7 @@ public class Core
 
 		JsonObject input = GetJson.jsonFromString(inputString);
 		JsonObject output = core(input);
-		// safeJsonPrinting(output); // big output!
+
+		// safeJsonPrinting(output); // lots of printing...
 	}
 }

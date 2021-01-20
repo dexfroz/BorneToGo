@@ -1,6 +1,6 @@
 {
 	"type": "input",
-	"convention": "lat-long",
+	"convention": "long-lat",
 	"useCase": "trip",
 	"optimOption": "default",
 	"carModel": "Tesla cybertruck",
@@ -10,40 +10,40 @@
 	"userSteps": [
 		{
 			"location": [
-				43.124228,
-				5.928
+				5.928,
+				43.124228
 			],
 			"name": "Toulon",
 			"address": ""
 		},
 		{
 			"location": [
-				43.296482,
-				5.36978
+				5.36978,
+				43.296482
 			],
 			"name": "Marseille",
 			"address": ""
 		},
 		{
 			"location": [
-				45.76404,
-				4.83566
+				4.83566,
+				45.76404
 			],
 			"name": "Lyon",
 			"address": ""
 		},
 		{
 			"location": [
-				47.34083,
-				5.05015
+				5.05015,
+				47.34083
 			],
 			"name": "Dijon",
 			"address": ""
 		},
 		{
 			"location": [
-				48.85661,
-				2.3499
+				2.3499,
+				48.85661
 			],
 			"name": "Paris",
 			"address": ""

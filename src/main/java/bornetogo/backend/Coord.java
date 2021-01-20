@@ -6,7 +6,7 @@ import jakarta.json.*;
 
 public class Coord
 {
-	enum Format {
+	public enum Format {
 		LAT_LONG,
 		LONG_LAT
 	}
@@ -121,7 +121,6 @@ public class Coord
 	}
 
 
-	// Long-lat convention!
 	public static Coord getFromJsonArray(JsonArray coordJson, String name, String address, Format format)
 	{
 		double latitude = 0., longitude = 0.;

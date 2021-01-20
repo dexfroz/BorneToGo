@@ -15,7 +15,8 @@ public class Route
 	private ArrayList<Coord> waypoints; // size n
 	private ArrayList<Double> legsLengths; // size n-1
 	private ArrayList<Double> legsDurations; // size n-1
-	private ArrayList<Coord> fullPath;
+	private JsonObject geometry; // JsonObject containing the list of coordinates of the full path.
+	// N.B: faster than doing the previous JsonObject -> ArrayList<Coord> -> JsonObject conversion.
 
 
 	public double getLength()
@@ -66,9 +67,9 @@ public class Route
 	}
 
 
-	public ArrayList<Coord> getFullPath()
+	public JsonObject getGeometry()
 	{
-		return this.fullPath;
+		return this.geometry;
 	}
 
 
@@ -76,14 +77,37 @@ public class Route
 	{
 		return "Route:\nLength: " + this.length + " km\nDuration: " + this.duration + " s\nCost: " +
 			this.cost + " €\nAutonomy left: " + this.autonomyLeft + " km\nStatistics: " + this.stats +
-			"\nWaypoints number: " + this.waypoints.size() + "\nLegs number: " + this.legsLengths.size() +
-			"\nTotal points number: " + this.fullPath.size();
+			"\nWaypoints number: " + this.waypoints.size() + "\nLegs number: " + this.legsLengths.size();
 	}
 
 
 	public void print()
 	{
 		System.out.println(this.toString());
+	}
+
+
+	// For testing, it isn't actually useful to parse this:
+	private ArrayList<Coord> getFullPath()
+	{
+		try
+		{
+			ArrayList<Coord> fullPath = new ArrayList<Coord>();
+			JsonArray coordsArray = this.geometry.getJsonArray("coordinates");
+
+			for (int j = 0; j < coordsArray.size(); ++j)
+			{
+				JsonArray coordJson = coordsArray.getJsonArray(j);
+				Coord coord = Coord.getFromJsonArray(coordJson, "", "", Coord.Format.LONG_LAT);
+				fullPath.add(coord);
+			}
+
+			return fullPath;
+		}
+		catch (Exception e) {
+			System.err.println("\nError while parsing a json: could not extract the full path.\n");
+			return null;
+		}
 	}
 
 
@@ -170,7 +194,6 @@ public class Route
 			route.waypoints = new ArrayList<Coord>();
 			route.legsLengths = new ArrayList<Double>();
 			route.legsDurations = new ArrayList<Double>();
-			route.fullPath = new ArrayList<Coord>();
 
 			String status = json.getString("code");
 
@@ -210,23 +233,16 @@ public class Route
 					route.legsDurations.add(duration);
 				}
 
-				JsonObject geometry = routeJson.getJsonObject("geometry");
-				JsonArray coordsArray = geometry.getJsonArray("coordinates");
+				route.geometry = routeJson.getJsonObject("geometry"); // null if 'geometry' not found.
 
-				for (int j = 0; j < coordsArray.size(); ++j)
-				{
-					JsonArray coordJson = coordsArray.getJsonArray(j);
-					Coord coord = Coord.getFromJsonArray(coordJson, "", "", Coord.Format.LONG_LAT);
-					route.fullPath.add(coord);
+				if (route.geometry == null) {
+					route.geometry = Json.createObjectBuilder().build(); // empty JsonObject.
 				}
 
 				route.length = routeJson.getJsonNumber​("distance").doubleValue() / 1000.; // in km
 				route.duration = routeJson.getJsonNumber​("duration").doubleValue(); // in sec
 				route.stats = "";
 				// cost and autonomyLeft are left to default values.
-
-				// N.B: filling 'fullPath' is useless when path = null...
-				// If so, it could be set as a 0 sized list (just not null).
 			}
 
 			if (path != null)
@@ -245,7 +261,6 @@ public class Route
 			return route;
 		}
 		catch (Exception e) {
-			// e.printStackTrace();
 			System.err.println("\nError while parsing a json: could not extract routes.\n");
 			return null;
 		}
@@ -254,6 +269,8 @@ public class Route
 
 	public static void main(String[] args)
 	{
+		long startTime = System.nanoTime();
+
 		ArrayList<Coord> path = new ArrayList<Coord>();
 		path.add(new Coord(43.124228, 5.928, "Chez Patrick", "Toulon"));
 		path.add(new Station(43.183331, 5.71667, "La station de Gégé", "Saint Cyr-sur-Mer"));
@@ -261,7 +278,7 @@ public class Route
 
 		Car car = new Car("Tesla cybertruck", 200, 50, "None");
 
-		JsonObject routeQuery = QueryAPIs.queryRoute("route", path);
+		JsonObject routeQuery = QueryAPIs.queryRoute("route", path, "&overview=full");
 		// safeJsonPrinting(routeQuery);
 
 		if (routeQuery == null) {
@@ -278,10 +295,10 @@ public class Route
 
 		route.print();
 
-		// // This is quite long to print:
-		// ArrayList<Route> routes = new ArrayList<Route>();
-		// routes.add(route);
-		// JsonObject json = Output.buildAnswer(routes);
-		// Core.safeJsonPrinting(json);
+		ArrayList<Route> routes = new ArrayList<Route>();
+		routes.add(route);
+		JsonObject output = Output.build(routes, startTime);
+
+		// Core.safeJsonPrinting(output); // lots of printing...
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"type": "input",
-	"convention": "lat-long",
+	"convention": "long-lat",
 	"useCase": "trip",
 	"optimOption": "default",
 	"carModel": "Tesla cybertruck",
@@ -10,8 +10,8 @@
 	"userSteps": [
 		{
 			"location": [
-				43.124228,
-				5.928
+				5.928,
+				43.124228
 			],
 			"name": "Toulon",
 			"address": ""
