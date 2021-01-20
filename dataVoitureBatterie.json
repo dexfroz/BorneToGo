@@ -1,0 +1,135 @@
+[{
+    "IDVoiture":1,
+    "BatterieInfo":{
+        "ID":1,
+        "Capacite":52,
+        "Autonomie":390
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Renault ZOE R135",
+    "Chargement":100
+},{
+    "IDVoiture":2,
+    "BatterieInfo":{
+        "ID":1,
+        "Capacite":52,
+        "Autonomie":390
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Renault ZOE R110",
+    "Chargement":100
+},{
+    "IDVoiture":3,
+    "BatterieInfo":{
+        "ID":2,
+        "Capacite":41,
+        "Autonomie":325
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    }],
+    "Modele":"Renault ZOE R110",
+    "Chargement":100
+},{
+    "IDVoiture":4,
+    "BatterieInfo":{
+        "ID":2,
+        "Capacite":41,
+        "Autonomie":325
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    }],
+    "Modele":"Renault ZOE R75",
+    "Chargement":100
+},{
+    "IDVoiture":5,
+    "BatterieInfo":{
+        "ID":2,
+        "Capacite":41,
+        "Autonomie":325
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    }],
+    "Modele":"Renault ZOE R90",
+    "Chargement":100
+},{
+    "IDVoiture":6,
+    "BatterieInfo":{
+        "ID":3,
+        "Capacite":41,
+        "Autonomie":301
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":43
+    }],
+    "Modele":"Renault ZOE Q90",
+    "Chargement":100
+},{
+    "IDVoiture":7,
+    "BatterieInfo":{
+        "ID":4,
+        "Capacite":23.3,
+        "Autonomie":195
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    }],
+    "Modele":"Renault ZOE R240",
+    "Chargement":100
+},{
+    "IDVoiture":8,
+    "BatterieInfo":{
+        "ID":5,
+        "Capacite":22,
+        "Autonomie":171
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":43
+    }],
+    "Modele":"Renault ZOE R210/Q210",
+    "Chargement":100
+},{
+    "IDVoiture":9,
+    "BatterieInfo":{
+        "ID":5,
+        "Capacite":22,
+        "Autonomie":171
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":43
+    }],
+    "Modele":"Renault ZOE Q90",
+    "Chargement":100
+}]

@@ -37,3 +37,65 @@ BDD brand of the BorneToGo project. This is *work-in-progress* version of the BD
 ### INSERT INTO voiture
 
 ### INSERT INTO batterie
+
+## TODO Voiture
+- [x] Renault ZEO
+- [ ] Tesla Model 3
+- [ ] Peugeot e-208
+- [ ] Volkswagen ID. 3
+- [ ] Tesla Model S
+- [ ] BMW i3
+- [ ] Renault Twizy
+- [ ] Kia e-Niro
+- [ ] Citroën AMI
+- [ ] Tesla Model Y
+- [ ] Porsche Taycan
+- [ ] Hyundai Kona électrique
+- [ ] Tesla Model X
+- [ ] Audi e-tron
+- [ ] Honda e
+- [ ] Mercedes EQC
+- [ ] Renault Twingo Z.E
+- [ ] DS 3 Crossback e-Tense
+- [ ] Nissan Leaf
+- [ ] Peugeot e-2008
+- [ ] Mini Cooper SE
+- [ ] Opel Corsa-e
+- [ ] Ford Mustang Mach-E
+- [ ] Smart Fortwo Electric Drive
+- [ ] Peugeot iOn
+- [ ] Renault Kangoo ZE
+- [ ] Volkswagen e-UP
+- [ ] Hyundai Ioniq électrique
+- [ ] Citroën e-Méhari
+- [ ] Skoda Citigo e iV
+- [ ] Jaguar i-Pace
+- [ ] Volkswagen ID. 4
+- [ ] Audi e-tron Sportback
+- [ ] Citroën C-Zero
+- [ ] BMW iX3
+- [ ] Skoda Enyaq
+- [ ] Nissan e-NV200
+- [ ] Citroën ë-C4
+- [ ] Bolloré Bluesummer
+- [ ] Peugeot Partner Electric
+- [ ] Volvo XC40 Recharge
+- [ ] Seat Mii Electrique
+- [ ] BMW i3s
+- [ ] Smart Forfour Electric Drive
+- [ ] Mazda MX-30
+- [ ] Opel Mokka-e
+- [ ] Renault Master ZE
+- [ ] Lexus UX 300e
+- [ ] Mitsubishi i-MiEV
+- [ ] Kia e-Soul EV
+- [ ] Fiat 500e
+- [ ] Peugeot Partner Tepee Electric
+- [ ] Nissan e-NV200 Evalia
+- [ ] Volkswagen e-Crafter
+- [ ] Citroën e-Berlingo Multispace
+- [ ] Mercedes eVito
+- [ ] Citroën ë-SpaceTourer
+- [ ] Fuso eCanter
+- [ ] Mercedes eSprinter
+- [ ] Opel Zafira-e Life
