@@ -26,3 +26,8 @@ buildNumber.properties
 .factorypath
 .project
 .vscode/
+
+#
+# Secret files, API keys...
+#
+src/main/resources/secret/

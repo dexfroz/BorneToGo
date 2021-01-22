@@ -9,6 +9,30 @@ import jakarta.json.*;
 
 public class QueryAPIs
 {
+	// Each API key is to be stored in the src/main/resources/secret directory,
+	// in a file with the service as name. This directory should be added to .gitignore.
+	private static String loadAPIkey(String service)
+	{
+		try
+		{
+			String filename = "secret/" + service;
+			String content = FileContent.read(filename);
+			int endIndex = content.indexOf("\n");
+
+			if (endIndex != -1) {
+				content = content.substring(0, endIndex);
+			}
+
+			return content;
+		}
+		catch (Exception e) {
+			System.err.println("\nNo API key found for the service: " + service + "\n");
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+
 	// Encode a string using UTF-8 encoding scheme:
 	public static String encodeStringUTF8(String str)
 	{
@@ -50,14 +74,19 @@ public class QueryAPIs
 
 
 	// Careful! Json structure will change depending on service!
-	private static JsonObject queryGeocodingByBatch(String service, String apiKey, ArrayList<String> requests)
+	private static JsonObject queryGeocodingByBatch(String service, ArrayList<String> requests)
 	{
-		if (requests.size() == 0) {
+		if (requests == null || requests.size() == 0) {
 			System.err.println("No requests supplied in 'queryGeocodingByBatch'.");
 			return null;
 		}
 
-		else if (service.equals("opencagedata"))
+		String apiKey = loadAPIkey(service);
+		if (apiKey.equals("")) {
+			return null;
+		}
+
+		if (service.equals("opencagedata"))
 		{
 			if (requests.size() > 1) {
 				System.err.println("Warning! opencagedata does not support batch requests!");
@@ -93,7 +122,7 @@ public class QueryAPIs
 	}
 
 
-	public static JsonObject queryFromLocation(String service, String apiKey, ArrayList<String> locations)
+	public static JsonObject queryFromLocation(String service, ArrayList<String> locations)
 	{
 		ArrayList<String> requests = new ArrayList<String>();
 
@@ -101,11 +130,11 @@ public class QueryAPIs
 			requests.add(encodeLocation(location));
 		}
 
-		return queryGeocodingByBatch(service, apiKey, requests);
+		return queryGeocodingByBatch(service, requests);
 	}
 
 
-	public static JsonObject queryFromCoord(String service, String apiKey, ArrayList<Coord> coords)
+	public static JsonObject queryFromCoord(String service, ArrayList<Coord> coords)
 	{
 		ArrayList<String> requests = new ArrayList<String>();
 
@@ -113,14 +142,14 @@ public class QueryAPIs
 			requests.add(encodeCoord(service, coord));
 		}
 
-		return queryGeocodingByBatch(service, apiKey, requests);
+		return queryGeocodingByBatch(service, requests);
 	}
 
 
 	// Careful! Json structure will change depending on routeMode!
 	public static JsonObject queryRoute(String routeMode, ArrayList<Coord> coordinates, String additionalOptions)
 	{
-		if (coordinates.size() == 0) {
+		if (coordinates == null || coordinates.size() == 0) {
 			System.err.println("No coordinates supplied in 'queryRoute'.");
 			return null;
 		}
@@ -160,7 +189,6 @@ public class QueryAPIs
 	}
 
 
-	// For Geocoding queries: first arg must be the service, and snd the API key!
 	public static void main(String[] args)
 	{
 		////////////////////////////////////////////////////////////////
@@ -177,43 +205,38 @@ public class QueryAPIs
 		////////////////////////////////////////////////////////////////
 		// Finding a route data from a list of coordinates:
 
-		ArrayList<Coord> routeCoordinates = new ArrayList<Coord>();
-		routeCoordinates.add(new Coord(43.124228, 5.928, "Toulon", ""));
-		routeCoordinates.add(new Station(43.183331, 5.71667, "La station de Gégé", "Saint Cyr-sur-Mer"));
-		routeCoordinates.add(new Coord(43.296482, 5.36978, "Marseille", ""));
+		// ArrayList<Coord> routeCoordinates = new ArrayList<Coord>();
+		// routeCoordinates.add(new Coord(43.124228, 5.928, "Toulon", ""));
+		// routeCoordinates.add(new Station(43.183331, 5.71667, "La station de Gégé", "Saint Cyr-sur-Mer"));
+		// routeCoordinates.add(new Coord(43.296482, 5.36978, "Marseille", ""));
 
-		// The trip plugin solves the Traveling Salesman Problem using a greedy heuristic:
-		JsonObject json_1 = queryRoute("trip", routeCoordinates, "");
-		Core.safeJsonPrinting(json_1);
+		// // The trip plugin solves the Traveling Salesman Problem using a greedy heuristic:
+		// JsonObject json_1 = queryRoute("trip", routeCoordinates, "");
+		// Core.safeJsonPrinting(json_1);
 
-		// Finds the fastest route between coordinates in the supplied order:
-		JsonObject json_2 = queryRoute("route", routeCoordinates, "&overview=full");
-		Core.safeJsonPrinting(json_2);
+		// // Finds the fastest route between coordinates in the supplied order:
+		// JsonObject json_2 = queryRoute("route", routeCoordinates, "&overview=full");
+		// Core.safeJsonPrinting(json_2);
 
-		ArrayList<Coord> onlyOneCoord = new ArrayList<Coord>();
-		onlyOneCoord.add(new Coord(47.34083, 5.05015, "Dijon", ""));
+		// ArrayList<Coord> onlyOneCoord = new ArrayList<Coord>();
+		// onlyOneCoord.add(new Coord(47.34083, 5.05015, "Dijon", ""));
 
-		// Snaps a coordinate to the street network and returns the nearest match:
-		JsonObject json_3 = queryRoute("nearest", onlyOneCoord, "");
-		Core.safeJsonPrinting(json_3);
+		// // Snaps a coordinate to the street network and returns the nearest match:
+		// JsonObject json_3 = queryRoute("nearest", onlyOneCoord, "");
+		// Core.safeJsonPrinting(json_3);
 
 		////////////////////////////////////////////////////////////////
 		// Geocoding queries - from a place, and from coordinates:
 
-		if (args.length >= 2)
-		{
-			String service = args[0], apiKey = args[1];
+		ArrayList<String> searchedLocations = new ArrayList<String>();
+		searchedLocations.add("Isen Toulon");
+		JsonObject json_4 = queryFromLocation("mapquestapi", searchedLocations);
+		Core.safeJsonPrinting(json_4);
 
-			ArrayList<String> searchedLocations = new ArrayList<String>();
-			searchedLocations.add("Isen Toulon");
-			JsonObject json_4 = queryFromLocation(service, apiKey, searchedLocations);
-			Core.safeJsonPrinting(json_4);
-
-			ArrayList<Coord> searchedCoords = new ArrayList<Coord>();
-			searchedCoords.add(new Coord(48.85661, 2.3499, "Paris", ""));
-			JsonObject json_5 = queryFromCoord(service, apiKey, searchedCoords);
-			Core.safeJsonPrinting(json_5);
-		}
+		ArrayList<Coord> searchedCoords = new ArrayList<Coord>();
+		searchedCoords.add(new Coord(48.85661, 2.3499, "Paris", ""));
+		JsonObject json_5 = queryFromCoord("opencagedata", searchedCoords);
+		Core.safeJsonPrinting(json_5);
 
 		////////////////////////////////////////////////////////////////
 
@@ -221,3 +244,8 @@ public class QueryAPIs
 		// this will need to be handled case by case by the whole App!
 	}
 }
+
+// APIs documentations:
+// - https://opencagedata.com/api
+// - https://developer.mapquest.com/documentation/geocoding-api
+// - http://project-osrm.org/docs/v5.5.1/api/#general-options

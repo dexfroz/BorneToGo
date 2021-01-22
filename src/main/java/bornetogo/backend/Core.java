@@ -26,76 +26,38 @@ public class Core
 	}
 
 
-	// Returns null on failure:
-	private static ArrayList<Coord> getUserStepsFromJson(JsonObject input)
-	{
-		try
-		{
-			ArrayList<Coord> userSteps = new ArrayList<Coord>();
-			JsonArray stepsArray = input.getJsonArray("userSteps");
-
-			for (int i = 0; i < stepsArray.size(); ++i)
-			{
-				JsonObject step = stepsArray.getJsonObject(i);
-				String name = step.getString("name");
-				String address = step.getString("address");
-				JsonArray coordJson = step.getJsonArray("location");
-
-				try {
-					Coord coord = Coord.getFromJsonArray(coordJson, name, address, Coord.Format.LONG_LAT);
-					userSteps.add(coord);
-				}
-				catch (Exception e)
-				{
-					if (name.equals("") || address.equals("")) {
-						System.err.println("\nTotally empty location in the input json!\n");
-						return null;
-					}
-					else
-					{
-						System.err.println("\nTODO: batch geocoding request!\n");
-						// TODO: send BATCH requests to the geocoding API, to retrieve the location
-						// coordinates from the name and addresse.
-						return null;
-					}
-				}
-			}
-
-			if (userSteps.size() == 0) {
-				System.err.println("\nAt least 1 user step is needed in the input json.\n");
-				return null;
-			}
-
-			return userSteps;
-		}
-		catch (Exception e) {
-			System.err.println("\nError while parsing a json: could not extract user steps.\n");
-			return null;
-		}
-	}
-
-
+	// Main function of the backend.
 	public static JsonObject core(JsonObject input)
 	{
 		long time_0 = System.nanoTime();
-
-		// Collecting the input resources:
 
 		if (input == null) {
 			System.err.println("\nCould not process a null input.\n");
 			return null;
 		}
 
+		// Collecting the stations and the car:
+
 		ArrayList<Station> stations = DatabaseConnector.getStations(); // already loaded in memory!
 		Car car = Car.getFromJson(input);
-		ArrayList<Coord> userSteps = getUserStepsFromJson(input);
 
-		if (stations == null || car == null || userSteps == null) {
-			System.err.println("\nError while parsing the input json.\n");
+		if (stations == null || car == null) {
+			System.err.println("\nCould not obtain the stations or the car.\n");
 			return null;
 		}
 
 		long time_1 = System.nanoTime();
+
+		// Collecting the user steps:
+
+		ArrayList<Coord> userSteps = UserStepsLoader.load(input);
+
+		if (userSteps == null) {
+			System.err.println("\nCould not obtain the user steps.\n");
+			return null;
+		}
+
+		long time_2 = System.nanoTime();
 
 		// First route query, replacing mockLegsLengths():
 
@@ -123,7 +85,7 @@ public class Core
 			legsLengths = firstDraw.getLegsLengths();
 		}
 
-		long time_2 = System.nanoTime();
+		long time_3 = System.nanoTime();
 
 		// Pathfinding:
 
@@ -134,7 +96,7 @@ public class Core
 			return null;
 		}
 
-		long time_3 = System.nanoTime();
+		long time_4 = System.nanoTime();
 
 		// Second route query, for getting the full path:
 
@@ -146,7 +108,7 @@ public class Core
 			return null;
 		}
 
-		long time_4 = System.nanoTime();
+		long time_5 = System.nanoTime();
 
 		// Building the final route:
 
@@ -164,14 +126,15 @@ public class Core
 
 		JsonObject output = Output.build(routes, time_0);
 
-		long time_5 = System.nanoTime();
+		long time_6 = System.nanoTime();
 
 		// Benchmarking results:
-		benchmark(time_0, time_1, "DatabaseConnector.getStations(), Car.getFromJson(), getUserStepsFromJson()");
-		benchmark(time_1, time_2, "QueryAPIs.queryRoute() + Route.getFromJson(), if (enableFirstQuery && userSteps.size() > 1)");
-		benchmark(time_2, time_3, "Pathfinding.find()");
-		benchmark(time_3, time_4, "QueryAPIs.queryRoute()");
-		benchmark(time_4, time_5, "Route.getFromJson() + Output.build()");
+		benchmark(time_0, time_1, "DatabaseConnector.getStations(), Car.getFromJson()");
+		benchmark(time_1, time_2, "UserStepsLoader.load()");
+		benchmark(time_2, time_3, "QueryAPIs.queryRoute() + Route.getFromJson(), if needed");
+		benchmark(time_3, time_4, "Pathfinding.find()");
+		benchmark(time_4, time_5, "QueryAPIs.queryRoute()");
+		benchmark(time_5, time_6, "Route.getFromJson() + Output.build()");
 
 		return output;
 	}

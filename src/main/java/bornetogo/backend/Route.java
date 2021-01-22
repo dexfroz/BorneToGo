@@ -100,6 +100,11 @@ public class Route
 				JsonArray coordJson = coordsArray.getJsonArray(j);
 				Coord coord = Coord.getFromJsonArray(coordJson, "", "", Coord.Format.LONG_LAT);
 				fullPath.add(coord);
+
+				if (coord == null) {
+					System.err.println("\nInvalid coord found in the full path.\n");
+					return null;
+				}
 			}
 
 			return fullPath;
@@ -211,6 +216,11 @@ public class Route
 				JsonArray coordJson = waypoint.getJsonArray("location");
 				Coord foundCoord = Coord.getFromJsonArray(coordJson, foundName, "", Coord.Format.LONG_LAT);
 				route.waypoints.add(foundCoord);
+
+				if (foundCoord == null) {
+					System.err.println("\nInvalid waypoint found in routes json.\n");
+					return null;
+				}
 			}
 
 			JsonArray routesArray = json.getJsonArray("routes");

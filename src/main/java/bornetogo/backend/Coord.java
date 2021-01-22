@@ -30,19 +30,26 @@ public class Coord
 
 	public Coord(double latitude, double longitude, String name, String address)
 	{
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.latRadian = DEG_TO_RAD * this.latitude;
-		this.longRadian = DEG_TO_RAD * this.longitude;
 		this.isStation = false;
 		this.name = name;
 		this.address = address;
+
+		this.move(latitude, longitude);
 	}
 
 
 	public Coord(double latitude, double longitude)
 	{
 		this(latitude, longitude, "", "");
+	}
+
+
+	public void move(double latitude, double longitude)
+	{
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.latRadian = DEG_TO_RAD * latitude;
+		this.longRadian = DEG_TO_RAD * longitude;
 	}
 
 
@@ -121,20 +128,20 @@ public class Coord
 	}
 
 
-	// Safe version.
-	public static Coord getFromJsonArray(JsonArray coordJson, String name, String address, Format format)
+	// Safe version. Returns null on failure.
+	public static Coord getFromJsonArray(JsonArray coordJsonArray, String name, String address, Format format)
 	{
 		try
 		{
 			double latitude = 0., longitude = 0.;
 
 			if (format == Format.LAT_LONG) {
-				latitude = coordJson.getJsonNumber​(0).doubleValue();
-				longitude = coordJson.getJsonNumber​(1).doubleValue();
+				latitude = coordJsonArray.getJsonNumber​(0).doubleValue();
+				longitude = coordJsonArray.getJsonNumber​(1).doubleValue();
 			}
 			else { // Format.LONG_LAT
-				latitude = coordJson.getJsonNumber​(1).doubleValue();
-				longitude = coordJson.getJsonNumber​(0).doubleValue();
+				latitude = coordJsonArray.getJsonNumber​(1).doubleValue();
+				longitude = coordJsonArray.getJsonNumber​(0).doubleValue();
 			}
 
 			return new Coord(latitude, longitude, name, address);
