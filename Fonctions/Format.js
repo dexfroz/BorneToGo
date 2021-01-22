@@ -41,6 +41,35 @@ export function formaterDuree(duree) {
     return new_duree;
 }
 
+export function calculCouleurItinéraire(id) {
+    var color = 'blue';
+    switch (id) {
+        case 1:
+            color = 'green';
+            break;
+        case 2:
+            color = 'mediumseagreen';
+            break;
+        case 3:
+            color = 'teal';
+            break;
+        case 4:
+            color = 'darkseagreen';
+            break;
+        case 5:
+            color = 'yellowgreen';
+            break;
+        case 6:
+            color = 'forestgreen';
+            break;
+        default:
+            color = 'red';
+    }
+
+    return color;
+}
+
+
 /*
 // Récupères les différents itinéraires résultats
 function getItineraires(document) {

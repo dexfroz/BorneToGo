@@ -38,8 +38,8 @@ export function getItineraires(routes) {
         if (route.fullPath.geometry.coordinates.length > 0) {
             route.fullPath.geometry.coordinates = route.fullPath.geometry.coordinates.map(function (coordinates) {
                 var coord = {
-                    "latitude": coordinates[0] ? coordinates[0] : 0,
-                    "longitude": coordinates[1] ? coordinates[1] : 0,
+                    "latitude": coordinates[1] ? coordinates[1] : 0,
+                    "longitude": coordinates[0] ? coordinates[0] : 0,
                 }
                 return coord
             });
@@ -116,8 +116,8 @@ function identification(element, id) {
         // Convertir la localisation en LatLng
         if (info_element.location.length == 2) {
             info_element.location = {
-                "latitude": info_element.location[0] ? info_element.location[0] : 0,
-                "longitude": info_element.location[1] ? info_element.location[1] : 0,
+                "latitude": info_element.location[1] ? info_element.location[1] : 0,
+                "longitude": info_element.location[0] ? info_element.location[0] : 0,
             };
         }
 
@@ -133,8 +133,8 @@ function identification(element, id) {
         // Convertir la localisation en LatLng
         if (info_element.location.length == 2) {
             info_element.location = {
-                "latitude": info_element.location[0] ? info_element.location[0] : 0,
-                "longitude": info_element.location[1] ? info_element.location[1] : 0,
+                "latitude": info_element.location[1] ? info_element.location[1] : 0,
+                "longitude": info_element.location[0] ? info_element.location[0] : 0,
             };
         }
     }

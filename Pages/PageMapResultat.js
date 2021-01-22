@@ -3,7 +3,7 @@
 import React from 'react'
 import { StyleSheet, View, Text, FlatList, Dimensions, Image } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import MapView, { MAP_TYPES, PROVIDER_OSMDROID } from 'react-native-maps';
+import MapView, { MAP_TYPES, PROVIDER_OSMDROID, Polyline } from 'react-native-maps';
 import MarkerItineraire from '../Composants/MarkerItineraire';
 import ItineraireMap from '../Composants/ItineraireMap';
 import StationMapNonSelectionnable from '../Composants/StationMapNonSelectionnable';
@@ -23,11 +23,10 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
 class PageMapResultat extends React.Component {
+
     constructor(props) {
         super(props);
-
         this.mapRef = null;
-
         this.state = {
             region: {
                 latitude: LATITUDE,
@@ -172,12 +171,10 @@ class PageMapResultat extends React.Component {
         this.state.stations_etapes = getStationsEtapes(this.state.itineraires[this.state.idRouteCourant]);
 
         // DUREE
-        this.state.duree = getDuree(this.state.itineraires[this.state.idRouteCourant]);
-        this.state.duree = formaterDuree(this.state.duree);
+        this.state.duree = formaterDuree(getDuree(this.state.itineraires[this.state.idRouteCourant]));
 
         // DISTANCE
-        this.state.distance = getDistance(this.state.itineraires[this.state.idRouteCourant]);
-        this.state.distance = formaterDistance(this.state.distance);
+        this.state.distance = formaterDistance(getDistance(this.state.itineraires[this.state.idRouteCourant]));
 
         // On change le state
         this.setState({ state: this.state });
@@ -295,12 +292,14 @@ class PageMapResultat extends React.Component {
                         shouldReplaceMapContent={true}
                         zIndex={-3}
                     />
+
                     <ItineraireMap
                         // Affiche l'itinéraire courant
                         key={`Itineraire-${this.state.itineraires[this.state.idRouteCourant].idRoute}`}
                         itineraire={this.state.itineraires[this.state.idRouteCourant]}
                         propsnavigation={this.props}
                     />
+
                     {this.renderMarkerDepart()}
                     {this.renderMarkersStationsEtapes()}
                     {this.renderMarkerArrivee()}
@@ -313,32 +312,33 @@ class PageMapResultat extends React.Component {
 
     componentDidMount() {
         // Permet d'ajuster la vue autour des coordonnées`
-        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude == undefined) {
-            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = [];
-            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = data[0].routes[itineraire.idStation - 1].fullPath.geometry.coordinates;
+        try {
+            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+                edgePadding: {
+                    bottom: 50, right: 50, top: 50, left: 50,
+                },
+                animated: false,
+            });
         }
-
-        this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
-            edgePadding: {
-                bottom: 50, right: 50, top: 50, left: 50,
-            },
-            animated: false,
-        });
+        catch (error) {
+            console.error(error);
+        }
     }
 
     componentDidUpdate() {
         // Permet d'ajuster la vue autour des coordonnées`
-        if (this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates[0].latitude == undefined) {
-            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = [];
-            this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates = data[0].routes[itineraire.idStation - 1].fullPath.geometry.coordinates;
+        try {
+            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+                edgePadding: {
+                    bottom: 50, right: 50, top: 50, left: 50,
+                },
+                animated: false,
+            });
+        }
+        catch (error) {
+            console.error(error);
         }
 
-        this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
-            edgePadding: {
-                bottom: 50, right: 50, top: 50, left: 50,
-            },
-            animated: false,
-        });
     }
 
 }
