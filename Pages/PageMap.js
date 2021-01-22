@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, Dimensions, Image, FlatList } from 'react-nativ
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MapView, { MAP_TYPES, PROVIDER_OSMDROID } from 'react-native-maps';
 import StationMap from '../Composants/StationMap';
+import { RadioButton } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 // Dimensions de l'écran
@@ -244,25 +245,8 @@ class PageMap extends React.Component {
                 longitudeDelta: LONGITUDE_DELTA,
             },
             borneActive: null,
+            value: 'rapide',
         };
-    }
-
-    onRegionChange(region) {
-        this.setState({ region });
-    }
-
-    onMapPress(e) {
-        log('OnMapPress', e)
-        this.setState({
-            markers: [
-                ...this.state.markers,
-                {
-                    coordinate: e.nativeEvent.coordinate,
-                    key: id++,
-                    marker1: true,
-                },
-            ],
-        });
     }
 
     // Permet de définir le provider de la map comme étant openstreetmap si on ne trouve pas d'autres providers
@@ -278,12 +262,6 @@ class PageMap extends React.Component {
     }
 
     renderStation(item) {
-        /* Ne fonctionne pas
-        if (update) {
-            var id = this.props.active - 1;
-            item = stationsElectriques[id];
-        } 
-        */
 
         return (
             <TouchableWithoutFeedback
@@ -336,10 +314,6 @@ class PageMap extends React.Component {
     }
 
     renderStations() {
-        /* Ne fonctionne pas
-        var update = false;
-        this.state.borneActive != null ? update = (this.state.borneActive == active ? false : true) : update = false;
-        */
 
         return (
             <FlatList
@@ -357,9 +331,46 @@ class PageMap extends React.Component {
         )
     }
 
+    changeStateRadioButton(value) {
+        this.setState({ value });
+    }
+
+    renderChoixUseCase() {
+        return (
+            <View style={styles.choix}>
+                <View>
+                    <RadioButton.Group
+                        onValueChange={value => this.changeStateRadioButton(value)}
+                        value={this.state.value}
+                    >
+                        <View>
+                            <Text>Le plus proche</Text>
+                            <RadioButton value="rapide" />
+                        </View>
+                        <View>
+                            <Text>Le moins cher</Text>
+                            <RadioButton value="economique" />
+                        </View>
+                    </RadioButton.Group>
+                </View>
+                <View>
+                    <TouchableOpacity
+                        key={`Bouton Sélection`}
+                    //onPress={ }
+                    >
+                        <View style={styles.bouton}>
+                            <Text style={styles.selection}>Choisir</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
+
     render() {
         return (
             <View style={styles.container}>
+                {this.renderChoixUseCase()}
                 <MapView
                     region={this.state.region}
                     provider={this.props.provider}
@@ -509,4 +520,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(PageMap)
                 //onPress={e => log('onPress', e)}
                 draggable
             />
+
+            <View>
+                    <RadioButton
+                        value="first"
+                        status={checked === 'first' ? 'checked' : 'unchecked'}
+                        onPress={() => setChecked('first')}
+                    />
+                    <RadioButton
+                        value="second"
+                        status={checked === 'second' ? 'checked' : 'unchecked'}
+                        onPress={() => setChecked('second')}
+                    />
+                </View>
 */
