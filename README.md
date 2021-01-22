@@ -11,11 +11,15 @@ Install docker, java 1.8 (jdk + jre), and maven 3.6.3. Don't forget to export th
 
 Download the Payara Micro docker image, found at <https://hub.docker.com/r/payara/micro>, by running:
 
-```sudo docker pull payara/micro```
+```
+sudo docker pull payara/micro
+```
 
 Finally, an API key for the service <https://developer.mapquest.com> must be generated, and stored in a file:
 
-```src/main/resources/secret/mapquestapi```
+```
+src/main/resources/secret/mapquestapi
+```
 
 
 ## Runtime:
@@ -63,7 +67,6 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 - Get both cost and duration of a recharging.
 - Add multiple-criteria optimization in the pathfinding, and therefore use the input field "optimOption".
 - Update the output file with stations data, in the field: "data": {}
-- Filter user steps before the pathfinding: remove following duplicates (unless asking for a refill with start = end).
 - Add the feature of returning several routes in the answer.
 - Provide a documentation, with detailed explanations on the workings of the backend, especially the core program and the pathfinding part.
 - (Optional) add a timeout to all API queries.
