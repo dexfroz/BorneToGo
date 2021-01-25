@@ -95,6 +95,8 @@ def INSERT_INTO_SQLCreator_connecteur(data):
 
     for i in data['ConnectionTypes']:
         if i['ID'] not in listID:
+            listID.append(i['ID'])
+
             IDConnecteur = i['ID']
             Titre = i['Title']
             Name = i['FormalName']
@@ -113,6 +115,8 @@ def INSERT_INTO_SQLCreator_courant(data):
 
     for i in data['CurrentTypes']:
         if i['ID'] not in listID:
+            listID.append(i['ID'])
+
             IDConnecteur = i['ID']
             Titre = i['Title']
             Description = i['Description']
@@ -131,6 +135,8 @@ def INSERT_INTO_SQLCreator_status(data):
 
     for i in data['StatusTypes']:
         if i['ID'] not in listID:
+            listID.append(i['ID'])
+
             IDConnecteur = i['ID']
             Titre = i['Title']
             IsOperational = i['IsOperational']
@@ -150,6 +156,8 @@ def INSERT_INTO_SQLCreator_paiement(data):
 
     for i in data['UsageTypes']:
         if i['ID'] not in listID:
+            listID.append(i['ID'])
+
             IDConnecteur = i['ID']
             Titre = i['Title']
             IsPayAtLocation = i['IsPayAtLocation']
@@ -166,17 +174,61 @@ def INSERT_INTO_SQLCreator_paiement(data):
 
 def INSERT_INTO_SQLCreator_voiture(data):
     SQLlistRequete = list()
+    listID = list()
 
     for i in data:
-        IDVoiture = i['IDVoiture']
-        IDBatterie = i['BatterieInfo']['ID']
-        Modele = i['Modele']
+        if i['IDVoiture'] not in listID:
+            listID.append(i['IDVoiture'])
 
-        requete = "INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele) VALUES ('{}','{}','{}');"
+            IDVoiture = i['IDVoiture']
+            IDBatterie = i['BatterieInfo']['ID']
+            Modele = i['Modele']
 
-        SQLlistRequete.append(
-            requete.format(IDVoiture,IDBatterie,Modele)
-        )
+            requete = "INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('{}','{}','{}','{}');"
+
+            SQLlistRequete.append(
+                requete.format(IDVoiture,IDBatterie,Modele,100)
+            )
+
+    return SQLlistRequete
+
+def INSERT_INTO_SQLCreator_batterie(data):
+    SQLlistRequete = list()
+    listID = list()
+
+    for i in data:
+        if i['BatterieInfo']['ID'] not in listID:
+            listID.append(i['BatterieInfo']['ID'])
+
+            IDBatterie = i['BatterieInfo']['ID']
+            Capacite = i['BatterieInfo']['Capacite']
+            Autonomie = i['BatterieInfo']['Autonomie']
+
+            requete = "INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('{}','{}','{}');"
+
+            SQLlistRequete.append(
+                requete.format(IDBatterie,Capacite,Autonomie)
+            )
+
+    return SQLlistRequete
+
+def INSERT_INTO_SQLCreator_VCC(data):
+    SQLlistRequete = list()
+    IDVCC = 0
+
+    for i in data:
+        IDVCC += 1
+        for j in i['ConnecteurCourantInfo']:
+            IDVoiture = i['IDVoiture']
+            IDConnecteur = j['IDConnecteur']
+            IDCourant = j['IDCourant']
+            Puissance = j['PuissanceMAX']
+
+            requete = "INSERT INTO BorneToGo.Batterie (idVCC,idVoiture,idConnecteur,idCourant,Puissance) VALUES ('{}','{}','{}','{}','{}');"
+
+            SQLlistRequete.append(
+                requete.format(IDVCC,IDVoiture,IDConnecteur,IDCourant,Puissance)
+            )
 
     return SQLlistRequete
 
@@ -192,9 +244,12 @@ def createSQLFilefromlist(data,filename):
 def correctionString(texte):
     return texte.replace("'","\\'")
 
-createSQLFilefromlist(INSERT_INTO_SQLCreator_voiture(loadJSONfromFile("dataVoitureBatterie.json")),"voiture.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_VCC(loadJSONfromFile("dataVoitureBatterie.json")),"vcc.sql")
 
 '''
+createSQLFilefromlist(INSERT_INTO_SQLCreator_batterie(loadJSONfromFile("dataVoitureBatterie.json")),"batterie.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_voiture(loadJSONfromFile("dataVoitureBatterie.json")),"voiture.sql")
+
 createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
 createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
 
