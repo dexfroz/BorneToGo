@@ -320,20 +320,25 @@ class PageMap extends React.Component {
     }
 
     renderStations() {
-
+        affichage = false;
+        if (stationsElectriques.length > 0) {
+            affichage = true;
+        }
         return (
-            <FlatList
-                horizontal
-                style={styles.stations}
-                pagingEnabled // répartie les stations dans des pages de sorte qu'on ne voit qu'une station à la fois
-                scrollEnabled // rend possible le scroll entre les différentes "pages" de station
-                showsHorizontalScrollIndicator={false} // empêche l'apparition d'un scroll horizontal interne quand le nom est trop grand
-                scrollEventThrottle={16} // intervalle de temps en ms, permet de fluidifier le scrolling
-                snapToAlignment="center"
-                data={stationsElectriques}
-                keyExtractor={(item) => `${item.idStation}`}
-                renderItem={({ item }) => this.renderStation(item)}
-            />
+            affichage ?
+                <FlatList
+                    horizontal
+                    style={styles.stations}
+                    pagingEnabled // répartie les stations dans des pages de sorte qu'on ne voit qu'une station à la fois
+                    scrollEnabled // rend possible le scroll entre les différentes "pages" de station
+                    showsHorizontalScrollIndicator={false} // empêche l'apparition d'un scroll horizontal interne quand le nom est trop grand
+                    scrollEventThrottle={16} // intervalle de temps en ms, permet de fluidifier le scrolling
+                    snapToAlignment="center"
+                    data={stationsElectriques}
+                    keyExtractor={(item) => `${item.idStation}`}
+                    renderItem={({ item }) => this.renderStation(item)}
+                />
+                : <View></View>
         )
     }
 
@@ -363,6 +368,24 @@ class PageMap extends React.Component {
             this.setState({ value: value });
         }
 
+    }
+
+    renderMarker() {
+        affichage = false;
+        if (stationsElectriques.length > 0) {
+            affichage = true;
+        }
+        return (
+            affichage ?
+                stationsElectriques.map(item =>
+                    <StationMap
+                        key={`Marker-${item.idStation}`}
+                        marker={item}
+                        propsnavigation={this.props}
+                    />
+                )
+                : <View></View>
+        )
     }
 
     renderChoixUse() {
@@ -398,15 +421,7 @@ class PageMap extends React.Component {
                         urlTemplate={"https://www.openstreetmap.org/#map={z}/{x}/{y}"}
                         shouldReplaceMapContent={true}
                     />
-
-                    {stationsElectriques.map(item =>
-                        <StationMap
-                            key={`Marker-${item.idStation}`}
-                            marker={item}
-                            propsnavigation={this.props}
-                        />
-                    )}
-
+                    {this.renderMarker()}
                 </MapView>
                 {this.renderStations()}
                 {this.renderChoixUse()}
