@@ -100,9 +100,8 @@ class StationMap extends PureComponent {
                 }}
                 ref={(ref) => this.markerRef = ref}
                 title={marker.adresse}
-                pinColor={egalite ? 'green' : 'linen'}
-                key={`${marker.idStation}-${egalite ? 'active' : 'inactive'}`}
-                onPress={() => this.changerStationActive(marker.idStation)}
+                pinColor={'green'}
+                key={`${marker.idStation}`}
             >
                 { this.renderCalloutMarker(propsnavigation, marker, nbTotal, nbDispo)}
             </Marker >

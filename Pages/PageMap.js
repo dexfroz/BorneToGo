@@ -423,12 +423,13 @@ class PageMap extends React.Component {
                     />
                     {this.renderMarker()}
                 </MapView>
-                {this.renderStations()}
                 {this.renderChoixUse()}
             </View>
         );
     }
 }
+
+//{this.renderStations()} <= Finalement plus utilisé
 
 const styles = StyleSheet.create({
     // Vue totale de la page
