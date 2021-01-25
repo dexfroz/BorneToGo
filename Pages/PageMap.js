@@ -5,8 +5,9 @@ import { StyleSheet, Text, View, Dimensions, Image, FlatList } from 'react-nativ
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MapView, { MAP_TYPES, PROVIDER_OSMDROID } from 'react-native-maps';
 import StationMap from '../Composants/StationMap';
-import { RadioButton } from 'react-native-paper';
+//import { RadioButton } from 'react-native-paper';
 import { connect } from 'react-redux';
+import RadioForm from 'react-native-simple-radio-button';
 
 // Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
@@ -228,6 +229,11 @@ const stationsElectriques = [
     },
 ];
 
+const radio_props = [
+    { label: 'La plus proche', value: 'rapide' },
+    { label: 'La moins chère', value: 'economique' }
+];
+
 // Fonction de log pour tester
 function log(eventName, e) {
     console.log(eventName, e.nativeEvent);
@@ -332,37 +338,46 @@ class PageMap extends React.Component {
     }
 
     changeStateRadioButton(value) {
-        this.setState({ value });
+        /*
+        - use case
+        - liste de points de l'utilisateur = coord de l'utilisateur
+        - infos véhicule
+        - paramètre d'optimisation (si possible)
+        */
+
+        if (this.state.value != value) {
+            if (value == "rapide") { // On envoie la requête HTTP GET pour la borne la plus proche
+                // ecriture du json à envoyer
+                // envoi du json
+                console.log("rapide");
+            }
+            else if (value == "economique") { // on envoie la requête HTTP GET la borne la moins chère
+                // ecriture du json à envoyer
+                // envoi du json
+                console.log("economique");
+            }
+            else {
+                console.log("pas de boutons sélectionnés")
+            }
+
+            this.setState({ value: value });
+        }
+
     }
 
-    renderChoixUseCase() {
+    renderChoixUse() {
         return (
             <View style={styles.choix}>
-                <View>
-                    <RadioButton.Group
-                        onValueChange={value => this.changeStateRadioButton(value)}
-                        value={this.state.value}
-                    >
-                        <View>
-                            <Text>Le plus proche</Text>
-                            <RadioButton value="rapide" />
-                        </View>
-                        <View>
-                            <Text>Le moins cher</Text>
-                            <RadioButton value="economique" />
-                        </View>
-                    </RadioButton.Group>
-                </View>
-                <View>
-                    <TouchableOpacity
-                        key={`Bouton Sélection`}
-                    //onPress={ }
-                    >
-                        <View style={styles.bouton}>
-                            <Text style={styles.selection}>Choisir</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                <RadioForm style={styles.fond_choix}
+                    animation={true}
+                    formHorizontal={true}
+                    labelHorizontal={false}
+                    radio_props={radio_props}
+                    initial={-1}
+                    onPress={(value) => { this.changeStateRadioButton(value) }}
+                    buttonColor={'#70B445'}
+                    selectedButtonColor={'#70B445'}
+                />
             </View>
         )
     }
@@ -370,7 +385,6 @@ class PageMap extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                {this.renderChoixUseCase()}
                 <MapView
                     region={this.state.region}
                     provider={this.props.provider}
@@ -395,6 +409,7 @@ class PageMap extends React.Component {
 
                 </MapView>
                 {this.renderStations()}
+                {this.renderChoixUse()}
             </View>
         );
     }
@@ -486,6 +501,24 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30
     },
+    // Choix de use case (borne la plus proche, borne la plus économique) 
+    choix: {
+        position: 'absolute',
+        right: 0,
+        left: 0,
+        top: 24,
+    },
+    fond_choix: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 18,
+        marginHorizontal: 48,
+        width: width - (48 * 2),
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
+    }
 })
 
 /* REDUX */
