@@ -217,8 +217,8 @@ def INSERT_INTO_SQLCreator_VCC(data):
     IDVCC = 0
 
     for i in data:
-        IDVCC += 1
         for j in i['ConnecteurCourantInfo']:
+            IDVCC += 1
             IDVoiture = i['IDVoiture']
             IDConnecteur = j['IDConnecteur']
             IDCourant = j['IDCourant']
