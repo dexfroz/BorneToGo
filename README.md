@@ -24,9 +24,11 @@ src/main/resources/secret/mapquestapi
 
 ## Runtime:
 
-Start the docker process with: ```sudo systemctl start docker```
+Compile the project by running: ``` sh build.sh ```
 
-Then run as sudoer: ```sh start_backend.sh ```
+Start the docker process with: ``` sudo systemctl start docker ```
+
+Then run: ``` sudo sh deploy.sh ```
 
 To obtain a path from the backend, send a POST request containing the user given steps in a json file, like below:
 
@@ -58,7 +60,8 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 - This README
 - Dockerfile
 - target/bornetogo-backend-1.0-SNAPSHOT.war
-- start_backend.sh in which the 'build phase' has been removed.
+- deploy.sh
+- The API key
 
 
 ## TODO:
@@ -69,6 +72,7 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 - Update the output file with stations data, in the field: "data": {}
 - Add the feature of returning several routes in the answer.
 - Provide a documentation, with detailed explanations on the workings of the backend, especially the core program and the pathfinding part.
+- Generate statistics about the found path.
 - (Optional) add a timeout to all API queries.
 - (Optional) add a logger, to better trace the failures of the whole app.
 

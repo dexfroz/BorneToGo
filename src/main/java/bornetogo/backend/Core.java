@@ -135,6 +135,7 @@ public class Core
 		benchmark(time_3, time_4, "Pathfinding.find()");
 		benchmark(time_4, time_5, "QueryAPIs.queryRoute()");
 		benchmark(time_5, time_6, "Route.getFromJson() + Output.build()");
+		benchmark(time_0, time_6, "Total");
 
 		return output;
 	}

@@ -5,6 +5,7 @@
 	"convention": "long-lat",
 	"routes": [
 		{
+			"stats": {},
 			"waypoints": [
 				{
 					"location": [
@@ -42,7 +43,6 @@
 				"duration": 3606.6,
 				"cost": 0,
 				"autonomyLeft": 158.8451,
-				"stats": "",
 				"legs": [
 					{
 						"length": 26.4206,

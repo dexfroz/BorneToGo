@@ -17,6 +17,10 @@ public class Output
 
 			for (Route route : routes)
 			{
+				// Stats:
+
+				JsonObject statsJson = Json.createObjectBuilder().build(); // TODO! Expand route.getStats()
+
 				// waypoints:
 
 				JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
@@ -50,7 +54,6 @@ public class Output
 					.add("duration", route.getDuration())
 					.add("cost", route.getCost())
 					.add("autonomyLeft", route.getAutonomyLeft())
-					.add("stats", route.getStats())
 					.add("legs", legsArray)
 					.add("geometry", route.getGeometry())
 					.build();
@@ -58,6 +61,7 @@ public class Output
 				// routeJson:
 
 				JsonObject routeJson = Json.createObjectBuilder()
+					.add("stats", statsJson)
 					.add("waypoints", waypointsArray)
 					.add("fullPath", fullPathJson)
 					.build();
