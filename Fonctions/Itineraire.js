@@ -36,13 +36,17 @@ export function getItineraires(routes) {
         console.log(route.location);
         // Conversion des points de l'itinéraires du JSON en LatLng
         if (route.fullPath.geometry.coordinates.length > 0) {
-            route.fullPath.geometry.coordinates = route.fullPath.geometry.coordinates.map(function (coordinates) {
-                var coord = {
-                    "latitude": coordinates[1] ? coordinates[1] : 0,
-                    "longitude": coordinates[0] ? coordinates[0] : 0,
-                }
-                return coord
-            });
+            // On vérifie que la conversion est nécessaire
+            if (route.fullPath.geometry.coordinates[1] && route.fullPath.geometry.coordinates[0]) {
+                route.fullPath.geometry.coordinates = route.fullPath.geometry.coordinates.map(function (coordinates) {
+                    var coord = {
+                        "latitude": coordinates[1] ? coordinates[1] : 0,
+                        "longitude": coordinates[0] ? coordinates[0] : 0,
+                    }
+                    return coord
+                });
+            }
+
         }
 
         // Ajout des identifiants pour les stations, les bornes et les connecteurs
@@ -115,10 +119,12 @@ function identification(element, id) {
 
         // Convertir la localisation en LatLng
         if (info_element.location.length == 2) {
-            info_element.location = {
-                "latitude": info_element.location[1] ? info_element.location[1] : 0,
-                "longitude": info_element.location[0] ? info_element.location[0] : 0,
-            };
+            if (info_element.location[0] && info_element.location[1]) {
+                info_element.location = {
+                    "latitude": info_element.location[1] ? info_element.location[1] : 0,
+                    "longitude": info_element.location[0] ? info_element.location[0] : 0,
+                };
+            }
         }
 
         // Ajouter l'identifiant
@@ -132,10 +138,12 @@ function identification(element, id) {
     else {
         // Convertir la localisation en LatLng
         if (info_element.location.length == 2) {
-            info_element.location = {
-                "latitude": info_element.location[1] ? info_element.location[1] : 0,
-                "longitude": info_element.location[0] ? info_element.location[0] : 0,
-            };
+            if (info_element.location[1] && info_element.location[0]) {
+                info_element.location = {
+                    "latitude": info_element.location[1] ? info_element.location[1] : 0,
+                    "longitude": info_element.location[0] ? info_element.location[0] : 0,
+                };
+            }
         }
     }
 

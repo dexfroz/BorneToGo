@@ -54,18 +54,6 @@ class PageMapResultat extends React.Component {
 
     renderMarkerDepart() {
         // DEPART
-        /*
-       var depart = this.state.depart;
-        if (depart == null) {
-            depart = this.state.itineraires[this.state.idRouteCourant].waypoints[0];
-        }
-
-        var station = false;
-        if (depart.isStation) {
-            station = true;
-        }*/
-
-
         return (
             this.state.depart.isStation
                 ?
@@ -89,19 +77,6 @@ class PageMapResultat extends React.Component {
 
     renderMarkerArrivee() {
         // ARRIVEE
-        /* 
-        var arrivee = this.state.arrivee;
-         if (arrivee == null) {
-             arrivee = this.state.itineraires[this.state.idRouteCourant].waypoints[this.state.itineraires[this.state.idRouteCourant].waypoints.length - 1];
-         }
-         
-        var station = false;
-        if (arrivee.isStation) {
-            station = true;
-        }
-        */
-
-
         return (
             this.state.arrivee.isStation
                 ?
@@ -125,16 +100,6 @@ class PageMapResultat extends React.Component {
 
     renderMarkersStationsEtapes() {
         // ETAPES ET STATIONS
-        /*
-        var stations_etapes = this.state.stations_etapes;
-        if (stations_etapes.length == 0) {
-            // STATIONS et ETAPES
-            for (var i = 1; i < this.state.itineraires[this.state.idRouteCourant].waypoints.length - 1; i++) {
-                stations_etapes.push(this.state.itineraires[this.state.idRouteCourant].waypoints[i]);
-            }
-        }
-        */
-
         return (
             this.state.stations_etapes.map(item =>
                 item.isStation ?
