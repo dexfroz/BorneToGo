@@ -476,4 +476,32 @@
     }],
     "Modele":"BMW i3 60 Ah REX",
     "Chargement":100
+},{
+    "IDVoiture":28,
+    "BatterieInfo":{
+        "ID":23,
+        "Capacite":6.1,
+        "Autonomie":98
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":23,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    }],
+    "Modele":"Renault Twizy 45",
+    "Chargement":100
+},{
+    "IDVoiture":29,
+    "BatterieInfo":{
+        "ID":24,
+        "Capacite":6.1,
+        "Autonomie":81
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":23,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    }],
+    "Modele":"Renault Twizy 80",
+    "Chargement":100
 }]

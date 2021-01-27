@@ -224,7 +224,7 @@ def INSERT_INTO_SQLCreator_VCC(data):
             IDCourant = j['IDCourant']
             Puissance = j['PuissanceMAX']
 
-            requete = "INSERT INTO BorneToGo.Batterie (idVCC,idVoiture,idConnecteur,idCourant,Puissance) VALUES ('{}','{}','{}','{}','{}');"
+            requete = "INSERT INTO BorneToGo.VCC (idVCC,idVoiture,idConnecteur,idCourant,Puissance) VALUES ('{}','{}','{}','{}','{}');"
 
             SQLlistRequete.append(
                 requete.format(IDVCC,IDVoiture,IDConnecteur,IDCourant,Puissance)
@@ -245,11 +245,10 @@ def correctionString(texte):
     return texte.replace("'","\\'")
 
 createSQLFilefromlist(INSERT_INTO_SQLCreator_VCC(loadJSONfromFile("dataVoitureBatterie.json")),"vcc.sql")
-
-'''
 createSQLFilefromlist(INSERT_INTO_SQLCreator_batterie(loadJSONfromFile("dataVoitureBatterie.json")),"batterie.sql")
 createSQLFilefromlist(INSERT_INTO_SQLCreator_voiture(loadJSONfromFile("dataVoitureBatterie.json")),"voiture.sql")
 
+'''
 createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
 createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
 

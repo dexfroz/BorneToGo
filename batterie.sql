@@ -21,3 +21,5 @@ INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('19','3
 INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('20','27.3','244');
 INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('21','27.3','325');
 INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('22','18.8','154');
+INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('23','6.1','98');
+INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('24','6.1','81');

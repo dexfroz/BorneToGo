@@ -48,7 +48,7 @@ Puissance est le plus petit de Voiture.Puissance et de Borne.Puissance.
 - [x] Volkswagen ID. 3
 - [x] Tesla Model S
 - [x] BMW i3
-- [ ] Renault Twizy
+- [x] Renault Twizy
 - [ ] Kia e-Niro
 - [ ] Citroën AMI
 - [ ] Tesla Model Y
