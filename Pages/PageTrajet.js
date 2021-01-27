@@ -1,5 +1,9 @@
 // Pages/PageTrajet.js
 
+/**
+ * Page comportant le formulaire d'entrée de l'itinéraire
+ */
+
 import React from 'react'
 import { StyleSheet, View, Text, Image } from 'react-native'
 
@@ -12,7 +16,7 @@ class PageTrajet extends React.Component {
     render() {
         return (
             <Text>Bonjour Trajet
-                </Text>
+            </Text>
         );
     }
 }

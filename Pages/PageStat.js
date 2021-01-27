@@ -1,5 +1,9 @@
 // Pages/PageStat.js
 
+/**
+ * Page affichant les statistiques sur un trajet
+ */
+
 import React from 'react'
 import { StyleSheet, View, Text, Image } from 'react-native'
 

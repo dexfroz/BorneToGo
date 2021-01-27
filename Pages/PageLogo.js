@@ -1,5 +1,9 @@
 // Components/PageLogo.js
 
+/**
+ * Page de garde qui montre le logo BorneToGo sur lequel il faut cliquer pour accéder aux fonctionnalités de l'application
+ */
+
 import React from 'react'
 import { StyleSheet, View, Text, TouchableHighlight, Image } from 'react-native'
 

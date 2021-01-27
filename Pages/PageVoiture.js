@@ -1,5 +1,9 @@
 // Pages/PageVoiture.js
 
+/**
+ * Page comportant le formulaire d'entrée de la voiture
+ */
+
 import React from 'react'
 import { StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Picker } from '@react-native-community/picker'

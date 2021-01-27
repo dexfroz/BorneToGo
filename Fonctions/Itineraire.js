@@ -1,3 +1,9 @@
+// Fonctions/Itinéraires.js
+
+/**
+ * Itinéraire.js réunit les fonctions ayant un rapport avec la récupération des différents éléments d'un itinéraire
+ */
+
 // Récupère la durée d'un itinéraire
 export function getDuree(route) {
     return route.fullPath.duration;
@@ -33,7 +39,6 @@ export function getItineraires(routes) {
     var i = 0;
 
     routes = routes.map(function (route) {
-        console.log(route.location);
         // Conversion des points de l'itinéraires du JSON en LatLng
         if (route.fullPath.geometry.coordinates.length > 0) {
             // On vérifie que la conversion est nécessaire

@@ -1,5 +1,11 @@
 // Pages/PageMapResultat.js
 
+/**
+ * PageMapResultat est la page qui affiche les itinéraires résultats suite au calcul d'un itinéraire en utilisant la PageTrajet.js
+ * Ce composant contient une MapView sur laquelle sont affichées les bornes (Marker) et les itinéraires (Polyline)
+ * Une FlatList permet d'afficher les informations des itinéraires résultats
+ */
+
 import React from 'react'
 import { StyleSheet, View, Text, FlatList, Dimensions, Image } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';

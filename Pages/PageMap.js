@@ -1,5 +1,13 @@
 // Pages/PageMap.js
 
+/**
+ * Cette page permet à l'utilisateur d'afficher les itinéraires vers bornes les plus proches et les moins chères
+ * Elle comporte un élément MapView sur lequel seront affichés les bornes (Marker) et les itinéraires (Polyline)
+ * Elle comporte aussi deux radio boutons : 
+ * un qui permet de trouver les itinéraires vers les bornes les plus proches
+ * et un qui permet de trouver les itinéraires vers les bornes les moins chères
+ */
+
 import React from 'react'
 import { StyleSheet, Text, View, Dimensions, Image, FlatList } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';

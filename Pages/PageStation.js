@@ -1,5 +1,9 @@
 // Components/PageStation.js
 
+/**
+ * Page affichant les informations d'un composant Station
+ */
+
 import React from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 import Station from '../Composants/Station'
@@ -18,6 +22,13 @@ class PageStation extends React.Component {
                 <View style={styles.station}>
                     <Station station={station} />
                 </View>
+            </View >
+        )
+    }
+}
+
+/*
+
                 <View style={styles.vue_bouton}>
                     <TouchableOpacity
                         style={styles.bouton}
@@ -27,10 +38,7 @@ class PageStation extends React.Component {
                         </View>
                     </TouchableOpacity>
                 </View>
-            </View >
-        )
-    }
-}
+*/
 
 const styles = StyleSheet.create({
     main_container: {
@@ -38,7 +46,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     station: {
-        flex: 9,
+        flex: 1,
     },
     vue_bouton: {
         flex: 1,

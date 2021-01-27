@@ -31,7 +31,7 @@ class StationMapNonSelectionable extends PureComponent {
         return (
             <Callout
                 tooltip
-                onPress={() => propsnavigation.navigation.navigate('Station ', {
+                onPress={() => propsnavigation.navigation.navigate('Station', {
                     station: marker,
                 })}
             >
