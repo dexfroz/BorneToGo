@@ -39,13 +39,13 @@ However, there is the possibility of using Expo on your computer (which may be m
 When you use the npm start command in your console, a QR Code will appear in the console. It also appears in the tab that opens in your default browser. This QR Code allows you to link your application to the Expo application and view it.
 
 To connect to your application via Expo :
-1. Launch Expo by clicking on it.
-
 If this is your first connection :
+1. Launch Expo by clicking on it.
 2. Click on "Scan QR Code". You will be asked for permission to use your camera. If you are on your computer, you must authorise the capture of your screen.
 3. Scan your QR Code. With LDPlayer, you will have to make the blue frame coincide with the outlines of the QR Code by adjusting its size.
+4. The application will then launch.
 
 If you have already logged in :
+1. Launch Expo by clicking on it.
 2. Click on the name of your application in the "Recently Opened" section.
-
-The application will then launch.
+3. The application will then launch.
