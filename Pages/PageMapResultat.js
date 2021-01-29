@@ -166,6 +166,7 @@ class PageMapResultat extends React.Component {
     }
 
     renderItineraire(item) {
+        console.log(this.props.navigation);
         return (
             <TouchableWithoutFeedback
                 key={`Itineraire-${item.idRoute}`}
@@ -197,7 +198,9 @@ class PageMapResultat extends React.Component {
                         <View>
                             <TouchableOpacity
                                 key={`Bouton Info`}
-                            //onPress={ }
+                                onPress={() => this.props.navigation.navigate('Informations', {
+                                    itineraire: this.state.itineraires[this.state.idRouteCourant],
+                                })}
                             >
                                 <View style={styles.bouton_info}>
                                     <Image

@@ -24,7 +24,7 @@ class MarkerItineraire extends PureComponent {
                     latitude: marker.location.latitude ? marker.location.latitude : 0,
                     longitude: marker.location.longitude ? marker.location.longitude : 0,
                 }}
-                pinColor={depart ? 'red' : arrivee ? 'blue' : 'linen'}
+                pinColor={depart ? 'tomato' : arrivee ? 'teal' : 'linen'}
                 title={marker.address}
                 key={`Marker-${marker.location.latitude}-${marker.location.longitude}-${depart ? 'depart' : ''}${arrivee ? 'arrivee' : ''}`}
             />

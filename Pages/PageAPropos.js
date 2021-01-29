@@ -6,6 +6,7 @@
 
 import React from 'react'
 import { StyleSheet, View, Text, Image } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler';
 
 class PageAPropos extends React.Component {
 
@@ -17,21 +18,25 @@ class PageAPropos extends React.Component {
         return (
             <View style={styles.mainContainer}>
                 <View style={styles.textStyle}>
-                    <Text style={styles.text}>Cette application a été réalisée dans le cadre du Bureau d'Etude de Master 2 à l'ISEN Toulon. Il a été réalisé par un groupe de 7 élèves :</Text>
-                    <View style={styles.noms}>
-                        <Text style={styles.pierrick}>Pierrick André</Text>
-                        <Text style={styles.guillaume}>Guillaume Bessueille</Text>
-                        <Text style={styles.benjamin}>Benjamin Callegarin</Text>
-                        <Text style={styles.marie}>Marie Giannoni</Text>
-                        <Text style={styles.lucas}>Lucas Magerand</Text>
-                        <Text style={styles.florian}>Florian Sananes</Text>
-                        <Text style={styles.arnaud}>Arnaud Van Den Reysen</Text>
-                        <View style={styles.vue_anais}>
-                            <Text style={styles.text}>sous la tutelle de </Text>
-                            <Text style={styles.anais}>Anaïs Galligani.</Text>
+                    <ScrollView>
+                        <View style={styles.textScroll}>
+                            <Text style={styles.text}>Cette application a été réalisée dans le cadre du Bureau d'Etude de Master 2 à l'ISEN Toulon. Il a été réalisé par un groupe de 7 élèves :</Text>
+                            <View style={styles.noms}>
+                                <Text style={styles.pierrick}>Pierrick André</Text>
+                                <Text style={styles.guillaume}>Guillaume Bessueille</Text>
+                                <Text style={styles.benjamin}>Benjamin Callegarin</Text>
+                                <Text style={styles.marie}>Marie Giannoni</Text>
+                                <Text style={styles.lucas}>Lucas Magerand</Text>
+                                <Text style={styles.florian}>Florian Sananes</Text>
+                                <Text style={styles.arnaud}>Arnaud Van Den Reysen</Text>
+                                <View style={styles.vue_anais}>
+                                    <Text style={styles.text}>sous la tutelle de </Text>
+                                    <Text style={styles.anais}>Anaïs Galligani.</Text>
+                                </View>
+                            </View>
+                            <Text style={styles.text}>Cette application permet aux possesseurs de voitures électriques de localiser les bornes de rechargement les plus proches et de réaliser des itinéraires prenant en compte l'autonomie de la voiture pour lui éviter de tomber en panne.</Text>
                         </View>
-                    </View>
-                    <Text style={styles.text}>Cette application permet aux possesseurs de voitures électriques de localiser les bornes de rechargement les plus proches et de réaliser des itinéraires prenant en compte l'autonomie de la voiture pour lui éviter de tomber en panne.</Text>
+                    </ScrollView>
                 </View>
                 <View style={styles.footer}>
                     <View style={styles.footerTextStyle}>
@@ -56,13 +61,16 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         flex: 8,
+    },
+    textScroll: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 32,
-        marginVertical: 24,
+        marginHorizontal: 24,
+        marginVertical: 14,
         backgroundColor: 'white',
-        paddingHorizontal: 48,
-        paddingVertical: 24,
+        paddingHorizontal: 14,
+        paddingVertical: 14,
         borderRadius: 10,
     },
     text: {
@@ -130,7 +138,7 @@ const styles = StyleSheet.create({
     },
     imageLogoISEN: {
         height: 75,
-        width: 200
+        width: 180
     }
 })
 

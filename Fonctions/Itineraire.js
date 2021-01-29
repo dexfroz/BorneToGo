@@ -4,6 +4,24 @@
  * Itinéraire.js réunit les fonctions ayant un rapport avec la récupération des différents éléments d'un itinéraire
  */
 
+
+// Récupère la première leg d'un itinéraire
+export function getFirstLeg(route) {
+    var leg = [route.fullPath.legs[0]];
+    return leg;
+}
+
+// Récupère les legs suivants s'il y en a
+export function getOtherLegs(route) {
+    var legs = [];
+    if (route.fullPath.legs.length > 1) {
+        for (var i = 1; i < route.fullPath.legs.length; i++) {
+            legs.push(route.fullPath.legs[i]);
+        }
+    }
+    return legs;
+}
+
 // Récupère la durée d'un itinéraire
 export function getDuree(route) {
     return route.fullPath.duration;
