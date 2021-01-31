@@ -1,4 +1,3 @@
 # BorneToGo
 
-Master branch of the BorneToGo project. This is the stable version of the project. 
-All developpments commits have to be done on the develop branch.
+BorneToGo is an ISEN school project. It is an app whose purpose is to help finding where to charge electric cars.
