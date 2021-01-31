@@ -9,11 +9,7 @@ Concretely, given an user request of either recharging his electric car, or plan
 
 Install docker, java 1.8 (jdk + jre), and maven 3.6.3. Don't forget to export the JAVA_HOME and M2_HOME environment variables, and if under a proxy to properly setup the setting.xml file, which must be placed in the ```~/.m2``` directory.
 
-Download the Payara Micro docker image, found at <https://hub.docker.com/r/payara/micro>, by running:
-
-```
-sudo docker pull payara/micro
-```
+The docker image used will be downloaded automatically, however it can still be found at <https://hub.docker.com/r/payara/micro>
 
 Finally, an API key for the service <https://developer.mapquest.com> must be generated, and stored in a file:
 
@@ -26,16 +22,18 @@ src/main/resources/secret/mapquestapi
 
 Compile the project by running: ``` sh build.sh ```
 
-Start the docker process with: ``` sudo systemctl start docker ```
+To start using the API, start the docker process with: ``` sudo systemctl start docker ```
 
 Then run: ``` sudo sh deploy.sh ```
+
+Note that after each update to the code, the build and deploy scripts need to be rerun.
 
 To obtain a path from the backend, send a POST request containing the user given steps in a json file, like below:
 
 ```
 curl -w '\n' -X POST -H "Content-Type: application/json" \
  --data '{"type":"input","convention":"long-lat","useCase":"trip","optimOption":"default","car":{"model":"Tesla cybertruck","subscription":"","batteryType":"","maxAutonomy":200,"currentAutonomy":50,"maxWattage":42.1,"connectors":["EF-T2","EF"]},"userSteps":[{"location":[5.928,43.124228],"name":"Toulon","address":""},{"location":[5.36978,43.296482],"name":"Marseille","address":""},{"location":[4.83566,45.76404],"name":"Lyon","address":""},{"location":[5.05015,47.34083],"name":"Dijon","address":""},{"location":[2.3499,48.85661],"name":"Paris","address":""}]}' \
- http://localhost:8080/bornetogo/backend/path
+ http://localhost:4321/bornetogo/backend/path
 ```
 
 A path will then be returned, with some additional data. Note that the output of the previous command may be saved in a file, by appending ``` > result.json ``` at its end.
@@ -43,14 +41,16 @@ A path will then be returned, with some additional data. Note that the output of
 On the other hand, one could test this without using curl - on a hardcoded example - simply by pasting the following link into a web browser:
 
 ```
-http://localhost:8080/bornetogo/backend/mock
+http://localhost:4321/bornetogo/backend/mockpath
 ```
 
 Similarly, to get the list of all supported cars, use the link:
 
 ```
-http://localhost:8080/bornetogo/backend/cars
+http://localhost:4321/bornetogo/backend/cars
 ```
+
+Finally, note that the port 4321 used can be configured in the deploy.sh script.
 
 
 ## Deployment:
@@ -59,8 +59,8 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 
 - This README
 - Dockerfile
-- target/bornetogo-backend-1.0-SNAPSHOT.war
 - deploy.sh
+- The target/ directory containing only the .war file.
 - The API key
 
 

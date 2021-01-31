@@ -2,25 +2,42 @@
 
 # Run this script as sudoer.
 
+##########################################
 # Settings:
 
 # Name must be lowercase:
-CONTAINER_NAME=bornetogo-backend
+IMAGE_NAME=bornetogo-backend
 
-# Exposing the given range of ports,
-# must be in accordance with the Dockerfile.
-PORTS=8080:8080
+# In production, :latest should not be used.
+IMAGE_VERSION=1.0
+
+# Visible port from which the container will be reachable:
+HOST_PORT=4321
+
+# Better not modify this:
+CONTAINER_PORT=8080
+
+# For the container to be removed upon exit, use the --rm flag.
+# Alternatively, automatic restart policies can be set by using
+# the --restart flag, with one of the following options:
+# no, on-failure, always, unless-stopped.
+LIFETIME='--restart on-failure'
+
+# To be able to access the container via bash:
+INTERACTIVE=-it
+
+# Run the container in the background.
+# Comment this for debugging purposes:
+DETACHED=-d
 
 # Used for cleaning unused images:
 ENABLE_DANGLING_CLEANING=true
 
-# Comment this for debugging purposes:
-DETACH_OPTION=-d
-
-# Directory containing compilation results:
+# Directory containing compilation results,
+# only used to check if the container must be run:
 TARGET_DIR=target
 
-
+##########################################
 # Deployment:
 
 if [ ! -d "$TARGET_DIR" ]; then
@@ -28,13 +45,17 @@ if [ ! -d "$TARGET_DIR" ]; then
 	exit 1
 fi
 
-if [ ! $(docker ps -q --filter ancestor=$CONTAINER_NAME) = "" ]; then
+ERROR_MESSAGE="\n-> Are you sure docker is installed, and this script is run as sudoer?\n\n"
+
+PREVIOUS_INSTANCES=$(docker ps -q --filter name=$IMAGE_NAME) || { printf "$ERROR_MESSAGE"; exit 1; }
+
+if [ ! "$PREVIOUS_INSTANCES" = "" ]; then # do not check the version!
 	printf "\n-> Removing any previous instance of the container:\n\n"
-	docker rm -f $CONTAINER_NAME
+	docker rm -f $PREVIOUS_INSTANCES
 fi
 
-printf "\n-> Building the new container:\n\n"
-docker build -t $CONTAINER_NAME .
+printf "\n-> Building the new image:\n\n"
+docker build -t $IMAGE_NAME:$IMAGE_VERSION .
 
 DANGLING_IMAGES=$(docker images -q --filter "dangling=true" --no-trunc)
 
@@ -44,11 +65,11 @@ if [ $ENABLE_DANGLING_CLEANING = true -a "$DANGLING_IMAGES" != "" ]; then
 fi
 
 printf "\n-> Running the new container:\n\n"
-docker run --rm $DETACH_OPTION --name $CONTAINER_NAME -it -p $PORTS $CONTAINER_NAME:latest
+docker run $LIFETIME $INTERACTIVE $DETACHED -p $HOST_PORT:$CONTAINER_PORT --name $IMAGE_NAME $IMAGE_NAME:$IMAGE_VERSION
 
-if [ ''$DETACH_OPTION = -d ]; then
-	CONTAINER_ID=$(docker ps -aqf "name=$CONTAINER_NAME")
-	printf "\n-> Container '$CONTAINER_NAME' (id = $CONTAINER_ID) is running.\n\n"
+if [ ''$DETACHED = -d ]; then
+	CONTAINER_ID=$(docker ps -aqf "name=$IMAGE_NAME")
+	printf "\n-> Container '$IMAGE_NAME:$IMAGE_VERSION' (id = $CONTAINER_ID) is running.\n\n"
 fi
 
 exit 0

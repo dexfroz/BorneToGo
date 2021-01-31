@@ -91,7 +91,7 @@ public class RequestHandler
 
 
 	@GET
-	@Path("mock")
+	@Path("mockpath")
 	public Response mockOutput()
 	{
 		try
