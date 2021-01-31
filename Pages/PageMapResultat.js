@@ -27,13 +27,13 @@ const LONGITUDE = 5.94; //5.94
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-
 class PageMapResultat extends React.Component {
 
     constructor(props) {
         super(props);
         this.mapRef = null;
         this.state = {
+            data_test: '',
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -166,7 +166,6 @@ class PageMapResultat extends React.Component {
     }
 
     renderItineraire(item) {
-        console.log(this.props.navigation);
         return (
             <TouchableWithoutFeedback
                 key={`Itineraire-${item.idRoute}`}
@@ -247,9 +246,24 @@ class PageMapResultat extends React.Component {
             />
         )
     }
+    //exp://192.168.1.32:19001
+    getData() {
+        fetch('http://192.168.1.32:4321/bornetogo/backend/cars')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson);
+                this.setState({
+                    data_test: responseJson
+                })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
 
     render() {
-
+        console.log("RENDER");
+        console.log('DATA TEST', this.state.data_test);
         return (
             <View style={styles.container}>
                 <MapView
@@ -285,6 +299,7 @@ class PageMapResultat extends React.Component {
 
 
     componentDidMount() {
+        this.getData();
         // Permet d'ajuster la vue autour des coordonnées`
         try {
             this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
