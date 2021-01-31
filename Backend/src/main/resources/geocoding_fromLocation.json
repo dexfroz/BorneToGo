@@ -1,0 +1,90 @@
+{
+	"info": {
+		"statuscode": 0,
+		"copyright": {
+			"text": "© 2021 MapQuest, Inc.",
+			"imageUrl": "http://api.mqcdn.com/res/mqlogo.gif",
+			"imageAltText": "© 2021 MapQuest, Inc."
+		},
+		"messages": []
+	},
+	"options": {
+		"maxResults": 1,
+		"thumbMaps": false,
+		"ignoreLatLngInput": false
+	},
+	"results": [
+		{
+			"providedLocation": {
+				"location": "Marseille,,france"
+			},
+			"locations": [
+				{
+					"street": "",
+					"adminArea6": "",
+					"adminArea6Type": "Neighborhood",
+					"adminArea5": "Marseille",
+					"adminArea5Type": "City",
+					"adminArea4": "",
+					"adminArea4Type": "County",
+					"adminArea3": "PROVENCE-ALPES-CÔTE-D'AZUR",
+					"adminArea3Type": "State",
+					"adminArea1": "FR",
+					"adminArea1Type": "Country",
+					"postalCode": "",
+					"geocodeQualityCode": "A5XAX",
+					"geocodeQuality": "CITY",
+					"dragPoint": false,
+					"sideOfStreet": "N",
+					"linkId": "283553834",
+					"unknownInput": "",
+					"type": "s",
+					"latLng": {
+						"lat": 43.301917,
+						"lng": 5.547842
+					},
+					"displayLatLng": {
+						"lat": 43.301917,
+						"lng": 5.547842
+					}
+				}
+			]
+		},
+		{
+			"providedLocation": {
+				"location": "Lyon,,france"
+			},
+			"locations": [
+				{
+					"street": "",
+					"adminArea6": "",
+					"adminArea6Type": "Neighborhood",
+					"adminArea5": "Lyon",
+					"adminArea5Type": "City",
+					"adminArea4": "Rhône",
+					"adminArea4Type": "County",
+					"adminArea3": "",
+					"adminArea3Type": "State",
+					"adminArea1": "FR",
+					"adminArea1Type": "Country",
+					"postalCode": "",
+					"geocodeQualityCode": "A5XAX",
+					"geocodeQuality": "CITY",
+					"dragPoint": false,
+					"sideOfStreet": "N",
+					"linkId": "283552506",
+					"unknownInput": "",
+					"type": "s",
+					"latLng": {
+						"lat": 45.757598,
+						"lng": 4.832332
+					},
+					"displayLatLng": {
+						"lat": 45.757598,
+						"lng": 4.832332
+					}
+				}
+			]
+		}
+	]
+}
