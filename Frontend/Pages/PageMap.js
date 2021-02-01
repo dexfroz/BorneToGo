@@ -16,6 +16,7 @@ import StationMap from '../Composants/StationMap';
 //import { RadioButton } from 'react-native-paper';
 import { connect } from 'react-redux';
 import RadioForm from 'react-native-simple-radio-button';
+import { setJsonInputBackend } from '../Fonctions/HTTPRequestjson'
 
 // Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
@@ -238,8 +239,8 @@ const stationsElectriques = [
 ];
 
 const radio_props = [
-    { label: 'La plus proche', value: 'rapide' },
-    { label: 'La moins chère', value: 'economique' }
+    { label: 'La plus proche', value: "fastest" },
+    { label: 'La moins chère', value: "cheapest" }
 ];
 
 // Fonction de log pour tester
@@ -259,7 +260,22 @@ class PageMap extends React.Component {
                 longitudeDelta: LONGITUDE_DELTA,
             },
             borneActive: null,
-            value: 'rapide',
+            value: "fastest",
+
+            // Données GET
+            data: null,
+
+            // Itinéraires
+            idRouteCourant: 0,
+            itineraires: null,
+
+            // Markers
+            depart: null,
+            arrivee: null,
+
+            // Distance et durée
+            distance: null,
+            duree: null,
         };
     }
 
@@ -268,118 +284,223 @@ class PageMap extends React.Component {
         return this.props.provider === PROVIDER_OSMDROID ? MAP_TYPES.STANDARD : MAP_TYPES.NONE;
     }
 
-    // Méthode pour modifier la borne active
-    changerStationActive(id) {
-        this.state.borneActive = id;
-        const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: id }
-        this.props.dispatch(action)
+    // Permet l'affichage du départ de l'itinéraire courant
+    renderMarkerDepart() {
+        // DEPART
+        var affichage = false;
+        if (this.state.data) {
+            affichage = true;
+        }
+        return (
+            affichage ?
+                <MarkerItineraire
+                    key={`Depart-${this.state.idRouteCourant}-${this.state.depart.location.latitude}-${this.state.depart.location.longitude}`}
+                    marker={this.state.depart}
+                    depart={true}
+                    arrivee={false}
+                    propsnavigation={this.props}
+                />
+                : <View></View>
+        )
     }
 
-    renderStation(item) {
+    // Permet l'affichage de la station d'arrivée de l'itinéraire courant
+    renderMarkerArrivee() {
+        // ARRIVEE
+        var affichage = false;
+        if (this.state.data) {
+            affichage = true;
+        }
+        return (
+            affichage ?
+                <StationMapNonSelectionnable
+                    key={`Arrivee-Station-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
+                    marker={this.state.arrivee}
+                    depart={false}
+                    arrivee={false}
+                    propsnavigation={this.props}
+                />
+                : <View></View>
+        )
+    }
+
+    // Changer les information du state sur l'itinéraire courant
+    changerItineraireActif(id) {
+        if (this.state.data) {
+            // DEPART
+            var depart = getDepart(this.state.data[id - 1]);
+
+            // ARRIVEE
+            var arrivee = getArrivee(this.state.data[id - 1]);
+
+            // DUREE
+            var duree = formaterDuree(getDuree(this.state.data[id - 1]));
+
+            // DISTANCE
+            var distance = formaterDistance(getDistance(this.state.data[id - 1]));
+
+            // On change le state
+            this.setState({
+                idRouteCourant: id - 1,
+                depart: depart,
+                arrivee: arrivee,
+                duree: duree,
+                distance: distance
+            });
+        }
+    }
+
+    // Ecriture du titre de l'itinéraire avec un numéro s'il y en a plusieurs
+    renderTitre(item) {
+        var plusieurs = false;
+        if (this.state.itineraires.length > 1) {
+            plusieurs = true;
+        }
 
         return (
+            plusieurs ?
+                <Text style={styles.title}>Itinéraire n°{item.idRoute}</Text>
+                :
+                <Text style={styles.title}>Itinéraire</Text>
+        )
+    }
+
+    // Ecriture des informations de l'itinéraire
+    renderItineraire(item) {
+        return (
             <TouchableWithoutFeedback
-                key={`Station-${item.idStation}`}
-                onPressIn={() => this.changerStationActive(item.idStation)}
+                key={`Itineraire-${item.idRoute}`}
+                onPressIn={() => this.changerItineraireActif(item.idRoute)}
             >
-                <View style={styles.station}>
-                    <View style={styles.titre_info}>
-                        <Text style={styles.title}>{item.title}</Text>
-                        <View >
+                <View style={styles.itineraire}>
+                    <View style={styles.informations}>
+                        <View>
+                            {this.renderTitre(item)}
+                        </View>
+                        <View style={styles.info1}>
+                            <View>
+                                <Image
+                                    style={styles.image}
+                                    source={require('../Images/itineraire.png')}
+                                />
+                            </View>
+                            <View style={styles.depart_arrivee}>
+                                <Text style={styles.depart}>{this.state.depart.name}</Text>
+                                <Text style={styles.arrivee}>{this.state.arrivee.name}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.info2}>
+                            <Text style={styles.duree}>{this.state.duree}</Text>
+                            <Text style={styles.distance}>{this.state.distance}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.boutons}>
+                        <View>
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('Station', {
-                                    station: item,
+                                key={`Bouton Info`}
+                                onPress={() => this.props.navigation.navigate('Informations', {
+                                    itineraire: this.state.itineraires[this.state.idRouteCourant],
                                 })}
                             >
-                                <View style={styles.vue_bouton_info}>
+                                <View style={styles.bouton_info}>
                                     <Image
-                                        style={styles.image_info}
+                                        style={styles.image_bouton}
                                         source={require('../Images/info.png')}
                                     />
-                                    <Text style={styles.info}>Voir Info</Text>
+                                    <Text style={styles.voir_info}>Voir Info</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
-                    </View>
-                    <Text style={styles.adresse}>{item.adresse}{"\n"}{item.codepostale} {item.ville}</Text>
-                    <View style={styles.station_corps}>
-                        <Image
-                            style={styles.image}
-                            source={require('../Images/borne.png')}
-                        />
-                        <View style={styles.paiement_horaire}>
-                            <Text style={styles.paiement}>{item.paiement}</Text>
-                            <Text style={styles.horaire}>{item.horaire}</Text>
-                        </View>
-                        <View style={styles.vue_bouton}>
+                        <View>
                             <TouchableOpacity
-                                style={styles.bouton}
+                                key={`Bouton Statistique`}
+                            //onPress={ }
                             >
-                                <View>
-                                    <Text style={styles.selection}>Sélectionner</Text>
+                                <View style={styles.bouton_stat}>
+                                    <Image
+                                        style={styles.image_bouton}
+                                        source={require('../Images/stat.png')}
+                                    />
+                                    <Text style={styles.voir_stat}>Voir Stat</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </TouchableWithoutFeedback >
-
         )
     }
 
-    renderStations() {
-        affichage = false;
-        if (stationsElectriques.length > 0) {
+    // FlatList contenant le ou les itinéraires
+    renderItineraires() {
+        var affichage = false;
+        if (this.state.data) {
             affichage = true;
         }
         return (
             affichage ?
                 <FlatList
                     horizontal
-                    style={styles.stations}
-                    pagingEnabled // répartie les stations dans des pages de sorte qu'on ne voit qu'une station à la fois
-                    scrollEnabled // rend possible le scroll entre les différentes "pages" de station
-                    showsHorizontalScrollIndicator={false} // empêche l'apparition d'un scroll horizontal interne quand le nom est trop grand
-                    scrollEventThrottle={16} // intervalle de temps en ms, permet de fluidifier le scrolling
+                    style={styles.itineraires}
+                    pagingEnabled
+                    scrollEnabled
+                    showsHorizontalScrollIndicator={false}
+                    scrollEventThrottle={16}
                     snapToAlignment="center"
-                    data={stationsElectriques}
-                    keyExtractor={(item) => `${item.idStation}`}
-                    renderItem={({ item }) => this.renderStation(item)}
+                    data={this.state.itineraires}
+                    keyExtractor={(item) => `${item.idRoute}`}
+                    renderItem={({ item }) => this.renderItineraire(item)}
                 />
                 : <View></View>
         )
     }
 
+    setData(data) {
+        // Initialise le state avec les itinéraires
+        // Itinéraire
+        idRouteCourant = 0;
+        itineraires = getItineraires(data[0].routes);
+        // Markers
+        depart = getDepart(data[0].routes[0]);
+        arrivee = getArrivee(data[0].routes[0]);
+        stations_etapes = getStationsEtapes(data[0].routes[0]);
+        // Distance et durée formatée
+        duree = formaterDuree(getDuree(data[0].routes[0]));
+        distance = formaterDistance(getDistance(data[0].routes[0]));
+    }
+
+    requestPOST(value) {
+        // récupération de la voiture dans le redux
+
+        // récupération des user steps dans le redux
+
+        // ecriture du json à envoyer
+        var requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(setJsonInputBackend("refill", value, car, userSteps))
+        };
+
+        // envoi du json par requête POST avec récupération du résultat
+        fetch('http://192.168.1.32:4321/bornetogo/backend/', requestOptions)
+            .then(response => response.json())
+            .then(data => this.setState({ data: data }));
+    }
+
     changeStateRadioButton(value) {
-        /*
-        - use case
-        - liste de points de l'utilisateur = coord de l'utilisateur
-        - infos véhicule
-        - paramètre d'optimisation (si possible)
-        */
-
         if (this.state.value != value) {
-            if (value == "rapide") { // On envoie la requête HTTP GET pour la borne la plus proche
-                // ecriture du json à envoyer
-                // envoi du json
-                console.log("rapide");
-            }
-            else if (value == "economique") { // on envoie la requête HTTP GET la borne la moins chère
-                // ecriture du json à envoyer
-                // envoi du json
-                console.log("economique");
-            }
-            else {
-                console.log("pas de boutons sélectionnés")
+            if (value == "fastest" || value == "cheapest") {
+                this.requestPOST(value);
             }
 
+            // On change la valeur du bouton sélectionné
             this.setState({ value: value });
         }
 
     }
 
     renderMarker() {
-        affichage = false;
+        var affichage = false;
         if (stationsElectriques.length > 0) {
             affichage = true;
         }
@@ -430,10 +551,44 @@ class PageMap extends React.Component {
                         shouldReplaceMapContent={true}
                     />
                     {this.renderMarker()}
+                    {this.renderMarkerDepart()}
+                    {this.renderMarkerArrivee()}
                 </MapView>
+                {this.renderItineraires()}
                 {this.renderChoixUse()}
             </View>
         );
+    }
+
+    componentDidMount() {
+        // Permet d'ajuster la vue autour des coordonnées`
+        try {
+            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+                edgePadding: {
+                    bottom: 50, right: 50, top: 50, left: 50,
+                },
+                animated: false,
+            });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    componentDidUpdate() {
+        // Permet d'ajuster la vue autour des coordonnées`
+        try {
+            this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
+                edgePadding: {
+                    bottom: 50, right: 50, top: 50, left: 50,
+                },
+                animated: false,
+            });
+        }
+        catch (error) {
+            console.error(error);
+        }
+
     }
 }
 
@@ -591,3 +746,86 @@ export default connect(mapStateToProps, mapDispatchToProps)(PageMap)
                     />
                 </View>
 */
+
+/*
+// Méthode pour modifier la borne active
+    changerStationActive(id) {
+        this.state.borneActive = id;
+        const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: id }
+        this.props.dispatch(action)
+    }
+
+    renderStation(item) {
+
+        return (
+            <TouchableWithoutFeedback
+                key={`Station-${item.idStation}`}
+                onPressIn={() => this.changerStationActive(item.idStation)}
+            >
+                <View style={styles.station}>
+                    <View style={styles.titre_info}>
+                        <Text style={styles.title}>{item.title}</Text>
+                        <View >
+                            <TouchableOpacity
+                                onPress={() => this.props.navigation.navigate('Station', {
+                                    station: item,
+                                })}
+                            >
+                                <View style={styles.vue_bouton_info}>
+                                    <Image
+                                        style={styles.image_info}
+                                        source={require('../Images/info.png')}
+                                    />
+                                    <Text style={styles.info}>Voir Info</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <Text style={styles.adresse}>{item.adresse}{"\n"}{item.codepostale} {item.ville}</Text>
+                    <View style={styles.station_corps}>
+                        <Image
+                            style={styles.image}
+                            source={require('../Images/borne.png')}
+                        />
+                        <View style={styles.paiement_horaire}>
+                            <Text style={styles.paiement}>{item.paiement}</Text>
+                            <Text style={styles.horaire}>{item.horaire}</Text>
+                        </View>
+                        <View style={styles.vue_bouton}>
+                            <TouchableOpacity
+                                style={styles.bouton}
+                            >
+                                <View>
+                                    <Text style={styles.selection}>Sélectionner</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </TouchableWithoutFeedback >
+
+        )
+    }
+
+    renderStations() {
+        affichage = false;
+        if (stationsElectriques.length > 0) {
+            affichage = true;
+        }
+        return (
+            affichage ?
+                <FlatList
+                    horizontal
+                    style={styles.stations}
+                    pagingEnabled // répartie les stations dans des pages de sorte qu'on ne voit qu'une station à la fois
+                    scrollEnabled // rend possible le scroll entre les différentes "pages" de station
+                    showsHorizontalScrollIndicator={false} // empêche l'apparition d'un scroll horizontal interne quand le nom est trop grand
+                    scrollEventThrottle={16} // intervalle de temps en ms, permet de fluidifier le scrolling
+                    snapToAlignment="center"
+                    data={stationsElectriques}
+                    keyExtractor={(item) => `${item.idStation}`}
+                    renderItem={({ item }) => this.renderStation(item)}
+                />
+                : <View></View>
+        )
+    }*/

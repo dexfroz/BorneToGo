@@ -89,8 +89,8 @@ class PageMapResultat extends React.Component {
                 <StationMapNonSelectionnable
                     key={`Arrivee-Station-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
                     marker={this.state.arrivee}
-                    depart={true}
-                    arrivee={false}
+                    depart={false}
+                    arrivee={true}
                     propsnavigation={this.props}
                 />
                 :
@@ -246,6 +246,7 @@ class PageMapResultat extends React.Component {
             />
         )
     }
+
     //exp://192.168.1.32:19001
     getData() {
         fetch('http://192.168.1.32:4321/bornetogo/backend/cars')
