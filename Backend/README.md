@@ -61,7 +61,6 @@ Once the project is done, and needs to be deployed e.g on a server, java and mav
 - Dockerfile
 - deploy.sh
 - The target/ directory containing only the .war file.
-- The API key
 
 
 ## TODO:
