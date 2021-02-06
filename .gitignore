@@ -46,3 +46,6 @@ web-build/
 
 # macOS
 .DS_Store
+Frontend/package.json
+Frontend/.expo
+Frontend/node_modules
