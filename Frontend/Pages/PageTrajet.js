@@ -7,6 +7,7 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image } from 'react-native'
 import RouteForm from '../Store/Forms/RouteForm'
+import { setJsonInputBackend } from '../Fonctions/HTTPRequestjson'
 
 function getUserSteps(values) {
     var userSteps = [];
@@ -41,14 +42,25 @@ class PageTrajet extends React.Component {
         // ecriture du json à envoyer
         var requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(setJsonInputBackend("trip", "fastest", car, userSteps))
         };
 
         // envoi du json par requête POST avec récupération du résultat
-        fetch('http://192.168.1.32:4321/bornetogo/backend/', requestOptions)
-            .then(response => response.json())
-            .then(data => this.setState({ data: data }));
+        fetch('http://192.168.1.32:4321/bornetogo/backend/path', requestOptions)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson);
+                this.setState({
+                    data: responseJson
+                })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     recupereItineraire(values) {
@@ -104,6 +116,7 @@ class PageTrajet extends React.Component {
                 if (position_address != -1 && position_name != -1) {
                     userSteps.push(
                         {
+                            "location": [],
                             "address": valuesTableau[position_address][1].toString(),
                             "name": valuesTableau[position_name][1].toString(),
                         }
@@ -112,6 +125,7 @@ class PageTrajet extends React.Component {
                 else if (position_address == -1 && position_name != -1) {
                     userSteps.push(
                         {
+                            "location": [],
                             "address": "",
                             "name": valuesTableau[position_name][1].toString(),
                         }
@@ -120,6 +134,7 @@ class PageTrajet extends React.Component {
                 else if (position_address == -1 && position_name != -1) {
                     userSteps.push(
                         {
+                            "location": [],
                             "address": valuesTableau[position_address][1].toString(),
                             "name": "",
                         }
@@ -128,6 +143,7 @@ class PageTrajet extends React.Component {
                 else {
                     userSteps.push(
                         {
+                            "location": [],
                             "address": "",
                             "name": "",
                         }
@@ -136,17 +152,12 @@ class PageTrajet extends React.Component {
             }
 
             // requête post avec les userSteps ainsi récupérés
-            //this.requestPOST(userSteps);
+            this.requestPOST(userSteps);
 
             // DATA
-            //console.log('DATA', this.state.data);
+            // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS en lui transmettant les itinéraires (formatés) dans un tableau immuable
+            console.log('DATA', this.state.data);
         }
-
-        // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS en lui transmettant les itinéraires (formatés) dans un tableau immuable
-
-        return (
-            <View></View>
-        )
     }
 
     render() {
