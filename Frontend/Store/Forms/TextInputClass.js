@@ -10,10 +10,10 @@ class TextInputClass extends React.Component {
       render() {
 
             const { input, ...inputProps } = this.props;
-            console.log('input : ');
-            console.log(input);
-            console.log('props : ')
-            console.log(this.props);
+            //console.log('input : ');
+            //console.log(input);
+            //console.log('props : ')
+            //console.log(this.props);
             return (
                   <FieldWrapper {...this.props}>
                         <Input
