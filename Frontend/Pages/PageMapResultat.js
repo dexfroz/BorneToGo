@@ -15,7 +15,6 @@ import ItineraireMap from '../Composants/ItineraireMap';
 import StationMapNonSelectionnable from '../Composants/StationMapNonSelectionnable';
 import { formaterDuree, formaterDistance } from '../Fonctions/Format'
 import { getItineraires, getDepart, getArrivee, getDistance, getDuree, getStationsEtapes } from '../Fonctions/Itineraire'
-import data from '../Fichiers/input'
 
 // Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
@@ -32,8 +31,11 @@ class PageMapResultat extends React.Component {
     constructor(props) {
         super(props);
         this.mapRef = null;
+        const { itineraires } = props.route.params;
+
+        // Définition du state
         this.state = {
-            data_test: '',
+            // Région
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -42,14 +44,14 @@ class PageMapResultat extends React.Component {
             },
             // Itinéraire
             idRouteCourant: 0,
-            itineraires: getItineraires(data[0].routes),
+            itineraires: itineraires,
             // Markers
-            depart: getDepart(data[0].routes[0]),
-            arrivee: getArrivee(data[0].routes[0]),
-            stations_etapes: getStationsEtapes(data[0].routes[0]),
+            depart: getDepart(itineraires[0]),
+            arrivee: getArrivee(itineraires[0]),
+            stations_etapes: getStationsEtapes(itineraires[0]),
             // Distance et durée formatée
-            duree: formaterDuree(getDuree(data[0].routes[0])),
-            distance: formaterDistance(getDistance(data[0].routes[0])),
+            duree: formaterDuree(getDuree(itineraires[0])),
+            distance: formaterDistance(getDistance(itineraires[0])),
         };
     }
 
@@ -247,29 +249,10 @@ class PageMapResultat extends React.Component {
         )
     }
 
-    //exp://192.168.1.32:19001
-    /*
-    -X POST -H "Content-Type: application/json" \
- --data '{"type":"input","convention":"long-lat","useCase":"trip","optimOption":"default","car":{"model":"Tesla cybertruck","subscription":"","batteryType":"","maxAutonomy":200,"currentAutonomy":50,"maxWattage":42.1,"connectors":["EF-T2","EF"]},"userSteps":[{"location":[5.928,43.124228],"name":"Toulon","address":""},{"location":[5.36978,43.296482],"name":"Marseille","address":""},{"location":[4.83566,45.76404],"name":"Lyon","address":""},{"location":[5.05015,47.34083],"name":"Dijon","address":""},{"location":[2.3499,48.85661],"name":"Paris","address":""}]}' \
- http://localhost:4321/bornetogo/backend/path
-    */
-    getData() {
-        fetch('http://192.168.1.32:4321/bornetogo/backend/cars')
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson);
-                this.setState({
-                    data_test: responseJson
-                })
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
     render() {
-        console.log("RENDER");
-        console.log('DATA TEST', this.state.data_test);
+        const { itineraires } = this.props.route.params;
+        //console.log("ITINERAIRE", itineraires);
+
         return (
             <View style={styles.container}>
                 <MapView
@@ -294,18 +277,21 @@ class PageMapResultat extends React.Component {
                         propsnavigation={this.props}
                     />
 
-                    {this.renderMarkerDepart()}
-                    {this.renderMarkersStationsEtapes()}
-                    {this.renderMarkerArrivee()}
+
                 </MapView>
                 {this.renderItineraires()}
             </View>
         );
     }
 
+    /*
+    {this.renderMarkerDepart()}
+                    {this.renderMarkersStationsEtapes()}
+                    {this.renderMarkerArrivee()}
+    */
+
 
     componentDidMount() {
-        this.getData();
         // Permet d'ajuster la vue autour des coordonnées`
         try {
             this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {

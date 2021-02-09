@@ -5,15 +5,10 @@
  */
 
 import React from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native'
 import RouteForm from '../Store/Forms/RouteForm'
-import { setJsonInputBackend } from '../Fonctions/HTTPRequestjson'
-
-function getUserSteps(values) {
-    var userSteps = [];
-
-    return userSteps;
-}
+import { setJsonInputBackend, getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
+import { getItineraires } from '../Fonctions/Itineraire';
 
 class PageTrajet extends React.Component {
 
@@ -21,23 +16,31 @@ class PageTrajet extends React.Component {
         super(props);
         this.state = {
             data: null,
+            isLoading: false
         }
     }
 
-    requestPOST(userSteps) {
-        // récupération de la voiture dans le redux
-        var car = {
-            "model": "Tesla cybertruck",
-            "subscription": "",
-            "batteryType": "",
-            "maxAutonomy": 200,
-            "currentAutonomy": 50,
-            "maxWattage": 42.1,
-            "connectors": [
-                "EF-T2",
-                "EF"
-            ]
+    afficheLoading() {
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.loading_container}>
+                    <ActivityIndicator size='large' color='green' />
+                </View>
+            )
         }
+    }
+
+    getRoutes(useCase, optimOption, car, userSteps) {
+        getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
+            var routes = getItineraires(data.routes);
+            this.setState({
+                data: routes
+            });
+        })
+    }
+
+    async requestPOST(userSteps) {
+
 
         // ecriture du json à envoyer
         var requestOptions = {
@@ -53,7 +56,6 @@ class PageTrajet extends React.Component {
         fetch('http://192.168.1.32:4321/bornetogo/backend/path', requestOptions)
             .then((response) => response.json())
             .then((responseJson) => {
-                console.log(responseJson);
                 this.setState({
                     data: responseJson
                 })
@@ -61,11 +63,17 @@ class PageTrajet extends React.Component {
             .catch((error) => {
                 console.error(error);
             });
+
+        if (this.state.data) {
+            this.formaterResultat(this.state.data);
+        }
     }
 
     recupereItineraire(values) {
-        // RECUPARATION DE L'ITINERAIRE + REQUETE POST
+        // LOADING
+        this.setState({ isLoading: true })
 
+        // RECUPARATION DE L'ITINERAIRE + REQUETE POST
         var userSteps_balises = [];
         var userSteps = [];
 
@@ -151,12 +159,35 @@ class PageTrajet extends React.Component {
                 }
             }
 
-            // requête post avec les userSteps ainsi récupérés
-            this.requestPOST(userSteps);
+            // récupération de la voiture dans le redux
+            var car = {
+                "model": "Tesla cybertruck",
+                "subscription": "",
+                "batteryType": "",
+                "maxAutonomy": 200,
+                "currentAutonomy": 50,
+                "maxWattage": 42.1,
+                "connectors": [
+                    "EF-T2",
+                    "EF"
+                ]
+            }
 
-            // DATA
-            // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS en lui transmettant les itinéraires (formatés) dans un tableau immuable
-            console.log('DATA', this.state.data);
+            // requête post avec les userSteps ainsi récupérés (si présents)
+            if (userSteps.length > 0) {
+                this.getRoutes("trip", "fastest", car, userSteps);
+            }
+
+            // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
+            if (this.state.data) {
+                this.setState({ isLoading: true });
+                this.props.navigation.navigate('Resultats',
+                    {
+                        itineraires: this.state.data // transmission des itinéraires
+                    }
+                );
+            }
+
         }
     }
 
@@ -175,10 +206,9 @@ class PageTrajet extends React.Component {
                 </View>
                 <RouteForm
                     onSubmit={(values) => {
-                        console.log("Itinéraire envoyé");
-                        //console.log(values);
-                        this.recupereItineraire(values);
+                        this.recupereItineraire(values)
                     }} />
+                {this.afficheLoading()}
             </View>
         );
     }
@@ -209,6 +239,15 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontStyle: 'italic',
     },
+    loading_container: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 100,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 })
 
 export default PageTrajet
