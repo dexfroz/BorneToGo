@@ -21,7 +21,7 @@ class ItineraireInfo extends PureComponent {
             item.isStation ?
                 <View style={styles.bouton_borne}>
                     <TouchableOpacity
-                        key={`Bouton Statistique`}
+                        key={`Bouton-Borne-${item.idStation}`}
                         onPress={() => propsnavigation.navigation.navigate('Station', {
                             station: item.data,
                         })}
@@ -124,7 +124,8 @@ class ItineraireInfo extends PureComponent {
     renderEtapeStation(stations_etapes, propsnavigation, hauteur, legs) {
         return (
             stations_etapes.map(item =>
-                <View>
+                <View
+                    key={`Etape-Station-${item.idStation}`}>
                     <View style={styles.vue_trajet}>
                         <View style={{ flex: 1 }}>
                             <Image
