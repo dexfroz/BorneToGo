@@ -2,14 +2,14 @@
 
 Backend for the BorneToGo ISEN's project, an app whose purpose is to help finding where to charge electric cars.
 
-Concretely, given an user request of either recharging his electric car, or planing a trip, the backend must find the route of lower duration and cost, and return the result to the frontend, for it to be shown to the user. Said backend is provided with an asynchronous REST API. It uses the docker image Payara Micro, and Jakarta EE.
+Concretely, given an user request of either recharging his electric car, or planing a trip, the backend must find the route of lower duration and cost, and return the result to the frontend, for it to be shown to the user. Said backend is provided with an asynchronous REST API. It uses a docker image of Payara Micro, an open-source application server which is Jakarta EE compliant.
 
 
 ## Installation (Linux)
 
-Install docker, java 1.8 (jdk + jre), and maven 3.6.3. Don't forget to export the JAVA_HOME and M2_HOME environment variables, and if under a proxy to properly setup the setting.xml file, which must be placed in the ```~/.m2``` directory.
+Install Java 1.8 (JDK + JRE), and maven 3.6.3. Don't forget to export the JAVA_HOME and M2_HOME environment variables, and if under a proxy to properly setup the ``` setting.xml ``` file, which must be placed in the ```~/.m2``` directory. Finally, install [Docker](https://docs.docker.com/engine/install) and [Docker Compose.](https://docs.docker.com/compose/install)
 
-The docker image used will be downloaded automatically, however it can still be found at <https://hub.docker.com/r/payara/micro>
+The docker image used will be downloaded automatically, however it can still be found [here.](https://hub.docker.com/r/payara/micro)
 
 Finally, an API key for the service <https://developer.mapquest.com> must be generated, and stored in a file:
 
@@ -24,9 +24,9 @@ Compile the project by running: ``` sh build.sh ```
 
 To start using the API, start the docker process with: ``` sudo systemctl start docker ```
 
-Then run: ``` sudo sh deploy.sh ```
+To build the docker image, run ``` sudo docker-compose build ```. Note that this step should be done after each compilation.
 
-Note that after each update to the code, the build and deploy scripts need to be rerun.
+Then launch a container with: ``` sudo docker-compose up -d ```
 
 To obtain a path from the backend, send a POST request containing the user given steps in a json file, like below:
 
@@ -50,16 +50,16 @@ Similarly, to get the list of all supported cars, use the link:
 http://localhost:4321/bornetogo/backend/cars
 ```
 
-Finally, note that the port 4321 used can be configured in the deploy.sh script.
+Finally, note that the port 4321 used can be configured in the docker-compose.yml file.
 
 
 ## Deployment:
 
-Once the project is done, and needs to be deployed e.g on a server, java and maven need not to be reinstalled there again! Indeed, the docker image contains a java JRE. Therefore, the only files necessary for this to run are:
+Once the project is done, and needs to be deployed e.g on a web server, java and maven need not to be reinstalled there again! Indeed, the docker image contains a java JRE. Therefore, the only files necessary for this to run are:
 
 - This README
 - Dockerfile
-- deploy.sh
+- docker-compose.yml
 - The target/ directory containing only the .war file.
 
 
