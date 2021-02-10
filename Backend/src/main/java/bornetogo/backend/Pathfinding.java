@@ -6,9 +6,9 @@ import java.util.*;
 
 public class Pathfinding
 {
-	private static final double distBoundCoeff = 1.5; // unitless.
+	private static final double distBoundCoeff = 2.0; // unitless.
 	private static final double ellipseRatio = 1.2; // unitless, must be > 1.
-	private static final double rangeMargin = 10.; // in km
+	private static final double rangeMargin = 20.; // in km
 	private static final int minimalSafetyStationsNumber = 1; // Must be > 0.
 
 
@@ -122,7 +122,7 @@ public class Pathfinding
 		path.add(nextStep);
 		car.setCurrentAutonomy(car.getCurrentAutonomy() - legLength);
 
-		if (nextStep.isStation()) { // This cannot be used for now, waypoints should be scrutinized first...
+		if (nextStep.isStation()) {
 			System.out.println("\nLucky one!");
 			car.setCurrentAutonomy(car.getMaxAutonomy());
 		}
@@ -182,7 +182,7 @@ public class Pathfinding
 
 		Boolean singleWaypoint = waypoints.size() == 1;
 
-		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'zone' filtering!
+		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'area' filtering!
 
 		if (! singleWaypoint) {
 			relevantStations = areaFiltering(relevantStations, waypoints);
@@ -279,11 +279,11 @@ public class Pathfinding
 		Car car = new Car("Tesla cybertruck", 200, 50, "None");
 
 		ArrayList<Coord> waypoints = new ArrayList<Coord>();
-		waypoints.add(new Coord(43.124228, 5.928, "Toulon", ""));
-		waypoints.add(new Coord(43.296482, 5.36978, "Marseille", ""));
-		waypoints.add(new Coord(45.76404, 4.83566, "Lyon", ""));
-		waypoints.add(new Coord(47.34083, 5.05015, "Dijon", ""));
-		waypoints.add(new Coord(48.85661, 2.3499, "Paris", ""));
+		waypoints.add(new Coord(43.124228, 5.928, "A", "Toulon"));
+		waypoints.add(new Coord(43.296482, 5.36978, "B", "Marseille"));
+		waypoints.add(new Coord(45.76404, 4.83566, "C", "Lyon"));
+		waypoints.add(new Coord(47.34083, 5.05015, "D", "Dijon"));
+		waypoints.add(new Coord(48.85661, 2.3499, "E", "Paris"));
 
 		ArrayList<Double> legsLengths = mockLegsLengths(waypoints); // mocks API queries.
 

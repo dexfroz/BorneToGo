@@ -50,12 +50,12 @@ Similarly, to get the list of all supported cars, use the link:
 http://localhost:4321/bornetogo/backend/cars
 ```
 
-Finally, note that the port 4321 used can be configured in the docker-compose.yml file.
+Finally, note that the port 4321 used can be configured in the ``` docker-compose.yml ``` file.
 
 
 ## Deployment:
 
-Once the project is done, and needs to be deployed e.g on a web server, java and maven need not to be reinstalled there again! Indeed, the docker image contains a java JRE. Therefore, the only files necessary for this to run are:
+Once the project is done, and needs to be deployed e.g on a web server, java and maven need not to be reinstalled there again! Indeed, the docker image contains a java JRE. Therefore, only Docker and Docker Compose are to be installed, and the only files necessary for this to run are:
 
 - This README
 - Dockerfile
@@ -74,6 +74,7 @@ Once the project is done, and needs to be deployed e.g on a web server, java and
 - Generate statistics about the found path.
 - (Optional) add a timeout to all API queries.
 - (Optional) add a logger, to better trace the failures of the whole app.
+- (Future) query temperature data for the next few hours on a region/country level, use it in the autonomy left computation, and modify the pathfinding accordingly.
 
 
 ## Possible optimizations:

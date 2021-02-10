@@ -75,6 +75,7 @@ public class Output
 
 			long endTime = System.nanoTime();
 			double processingTime = (endTime - startTime) / 1e9; // in seconds.
+			processingTime = Math.round(processingTime * 1000.) / 1000.; // rounding to 3 decimal places.
 
 			JsonObject output = Json.createObjectBuilder()
 				.add("type", "output")

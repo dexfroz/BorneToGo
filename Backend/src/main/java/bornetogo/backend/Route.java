@@ -7,6 +7,11 @@ import jakarta.json.*;
 
 public class Route
 {
+	public enum AddingData {
+		OFF,
+		ON
+	}
+
 	private double length; // in km
 	private double duration; // in sec
 	private double cost; // in euros
@@ -116,8 +121,8 @@ public class Route
 	}
 
 
-	// Will complete the received waypoints with previous metadata, and replace Coords with
-	// Stations where needed. Note that received name and coordinates will be kept over the input ones!
+	// Will complete the received waypoints with input name and address, and replace Coords with
+	// Stations where needed. Note that received coordinates will be kept over the input ones!
 	private void completedWaypoints(ArrayList<Coord> path)
 	{
 		for (int i = 0; i < path.size(); ++i)
@@ -128,11 +133,8 @@ public class Route
 			}
 
 			Coord waypoint = this.waypoints.get(i);
-			waypoint.setAddress(coord.getAddress()); // a received waypoint have no address.
-
-			if (waypoint.getName().equals("")) {
-				waypoint.setName(coord.getName());
-			}
+			waypoint.setName(coord.getName()); // keeping input name.
+			waypoint.setAddress(coord.getAddress()); // a received waypoint have no address anyway.
 		}
 	}
 
@@ -188,10 +190,9 @@ public class Route
 	}
 
 
-	// Returns null on failure.
-	// To complete the route with additional data, i.e station status, route duration,
-	// route cost and autonomy left, give the found path as arg. Else, left it to null.
-	public static Route getFromJson(JsonObject json, Car car, ArrayList<Coord> path)
+	// Returns null on failure. To complete the route with additional data,
+	// i.e route duration, route cost and autonomy left, pass AddingData.ON as mode.
+	public static Route getFromJson(JsonObject json, Car car, ArrayList<Coord> path, AddingData mode)
 	{
 		try
 		{
@@ -215,6 +216,7 @@ public class Route
 				String foundName = waypoint.getString("name");
 				JsonArray coordJson = waypoint.getJsonArray("location");
 				Coord foundCoord = Coord.getFromJsonArray(coordJson, foundName, "", Coord.Format.LONG_LAT);
+				// N.B: no address received.
 				route.waypoints.add(foundCoord);
 
 				if (foundCoord == null) {
@@ -255,14 +257,14 @@ public class Route
 				// cost and autonomyLeft are left to default values.
 			}
 
-			if (path != null)
-			{
-				if (route.waypoints.size() != path.size()) {
-					System.err.println("\nDifferent number of waypoints in route creation!\n");
-					return null;
-				}
+			if (route.waypoints.size() != path.size()) {
+				System.err.println("\nDifferent number of waypoints in route creation!\n");
+				return null;
+			}
 
-				route.completedWaypoints(path); // to be done first!
+			route.completedWaypoints(path); // to be done before the following:
+
+			if (mode == AddingData.ON) {
 				route.computeDuration(car);
 				route.computeCost(car);
 				route.computeAutonomyLeft(car);
@@ -296,7 +298,7 @@ public class Route
 			return;
 		}
 
-		Route route = Route.getFromJson(routeQuery, car, path);
+		Route route = Route.getFromJson(routeQuery, car, path, AddingData.ON);
 
 		if (route == null) {
 			System.err.println("\nError while parsing 'routeQuery'.\n");

@@ -57,20 +57,20 @@ public class Station extends Coord
 	public static ArrayList<Station> mock()
 	{
 		ArrayList<Station> allStations = new ArrayList<Station>();
-		allStations.add(new Station(43.183331, 5.71667, "Station", "Saint Cyr-sur-Mer"));
-		allStations.add(new Station(43.52916, 5.43638, "Station", "Aix-en-Provence"));
-		allStations.add(new Station(43.96512, 4.81899, "Station", "Avignon"));
-		allStations.add(new Station(44.54774, 4.78249, "Station", "Montélimar"));
-		allStations.add(new Station(44.95311, 4.90094, "Station", "Valence"));
-		allStations.add(new Station(45.36394, 4.83675, "Station", "Roussillon"));
-		allStations.add(new Station(46.29772, 4.84272, "Station", "Mâcon"));
-		allStations.add(new Station(47.04845, 4.81543, "Station", "Beaune"));
-		allStations.add(new Station(47.58339, 5.20597, "Station", "Selongey"));
-		allStations.add(new Station(47.86140, 5.34153, "Station", "Langres"));
-		allStations.add(new Station(48.31764, 4.12017, "Station", "Troyes"));
-		allStations.add(new Station(48.19592, 3.28644, "Station", "Sens"));
-		allStations.add(new Station(48.37708, 3.00335, "Station", "Montereau"));
-		allStations.add(new Station(48.53482, 2.66751, "Station", "Melun"));
+		allStations.add(new Station(43.18333, 5.71667, "Station 0", "Saint Cyr-sur-Mer"));
+		allStations.add(new Station(43.52916, 5.43638, "Station 1", "Aix-en-Provence"));
+		allStations.add(new Station(43.96512, 4.81899, "Station 2", "Avignon"));
+		allStations.add(new Station(44.54774, 4.78249, "Station 3", "Montélimar"));
+		allStations.add(new Station(44.95311, 4.90094, "Station 4", "Valence"));
+		allStations.add(new Station(45.36394, 4.83675, "Station 5", "Roussillon"));
+		allStations.add(new Station(46.29772, 4.84272, "Station 6 ", "Mâcon"));
+		allStations.add(new Station(47.04845, 4.81543, "Station 7", "Beaune"));
+		allStations.add(new Station(47.58339, 5.20597, "Station 8", "Selongey"));
+		allStations.add(new Station(47.86140, 5.34153, "Station 9", "Langres"));
+		allStations.add(new Station(48.31764, 4.12017, "Station 10", "Troyes"));
+		allStations.add(new Station(48.19592, 3.28644, "Station 11", "Sens"));
+		allStations.add(new Station(48.37708, 3.00335, "Station 12", "Montereau"));
+		allStations.add(new Station(48.53482, 2.66751, "Station 13", "Melun"));
 		return allStations;
 	}
 
@@ -90,7 +90,7 @@ public class Station extends Coord
 		{
 			double randomLat = latMin + (latMax - latMin) * r.nextDouble();
 			double randomLong = longMin + (longMax - longMin) * r.nextDouble();
-			allStations.add(new Station(randomLat, randomLong, String.valueOf(i), ""));
+			allStations.add(new Station(randomLat, randomLong, "Station " + i, "Somewhere " + i));
 		}
 
 		return allStations;
