@@ -91,6 +91,7 @@ class PageTrajet extends React.Component {
                         position_name = j;
                     }
                 }
+
                 if (position_address != -1 && position_name != -1) {
                     userSteps.push(
                         {
@@ -150,6 +151,7 @@ class PageTrajet extends React.Component {
 
             // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
             if (this.state.data) {
+                console.log("Waypoints", this.state.data[0].waypoints);
                 var data = this.state.data;
                 this.setState({ isLoading: false, data: null });
                 this.props.navigation.navigate('Resultats',

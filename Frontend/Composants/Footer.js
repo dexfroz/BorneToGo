@@ -67,15 +67,6 @@ class Footer extends React.Component {
                             ),
                         }}
                     />
-                    <Tab.Screen
-                        name="Resultat"
-                        component={PageMapResultat}
-                        options={{
-                            tabBarIcon: ({ color, size }) => (
-                                <MaterialCommunityIcons name="tree" size={size} color={color} />
-                            ),
-                        }}
-                    />
                 </Tab.Navigator>
             </View>
         )
