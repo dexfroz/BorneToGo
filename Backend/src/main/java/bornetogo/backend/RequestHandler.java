@@ -142,4 +142,20 @@ public class RequestHandler
 				.entity("Wrong request.").build();
 		}
 	}
+
+
+	@GET
+	@Path("database")
+	public Response testDatabaseConnectivity()
+	{
+		try
+		{
+			String result = DatabaseConnector.connect();
+			return Response.ok(result).build();
+		}
+		catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity("Error while trying to connect to the database.").build();
+		}
+	}
 }

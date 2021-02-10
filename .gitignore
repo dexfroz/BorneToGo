@@ -38,6 +38,7 @@ buildNumber.properties
 # Secret files, API keys...
 #
 secret/
+secret.cnf
 
 # Frontend things:
 Frontend/node_modules/**/*
@@ -53,3 +54,6 @@ Frontend/web-build/
 
 # macOS
 .DS_Store
+
+# Database:
+.data/

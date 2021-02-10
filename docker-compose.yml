@@ -1,0 +1,38 @@
+version: '3.2'
+
+services:
+
+  myapp:
+    image: bornetogo-backend:1.0
+    container_name: bornetogo-backend
+    restart: "no"
+    build: ./Backend
+    ports:
+      - 4321:8080 # host:container
+    networks:
+      - mynetwork
+
+  mydb:
+    image: mydb:1.0
+    container_name: mydb
+    restart: "no"
+    build: ./newBDD
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
+    ports:
+      - 3306:3306
+    # expose:
+    #   - '3306'
+    volumes:
+      - ./newBDD/.data:/var/lib/mysql
+    environment:
+      # MYSQL_DATABASE: 'BorneToGo'
+      # MYSQL_USER: 'user'
+      # MYSQL_PASSWORD: '123'
+      MYSQL_ROOT_PASSWORD: aaa # To change this, remove the .data dir.
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:

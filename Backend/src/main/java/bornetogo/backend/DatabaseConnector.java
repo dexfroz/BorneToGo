@@ -59,34 +59,60 @@ public class DatabaseConnector
 	}
 
 
-	public static void connect()
+	public static String connect()
 	{
 		Connection conn = null;
 		Statement stat = null;
 		ResultSet res = null;
 
-		try
-		{
-			int port = 3306;
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:" + port + "/BorneToGo", "root", "");
-			stat = conn.createStatement();
-			res = stat.executeQuery("select idStation from Station");
+		ArrayList<String> ipCandidates = new ArrayList<String>();
+		ipCandidates.add("localhost");
+		ipCandidates.add("127.0.0.1");
+		ipCandidates.add("0.0.0.0");
+		ipCandidates.add("mydb"); // from the container
 
-			while (res.next()) {
-				System.out.println(res.getInt(1));
+		String successfulIP = "";
+
+		String start = "jdbc:mysql://"; // ok
+		// String start = "http://"; // nope
+
+		int port = 3306;
+		String user = "root";
+		String pwd = "aaa";
+
+		for (String ip : ipCandidates)
+		{
+			try
+			{
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				conn = DriverManager.getConnection(start + ip + ":" + port + "/BorneToGo", user, pwd);
+				stat = conn.createStatement();
+				res = stat.executeQuery("select idStation from Station order by idStation");
+
+				System.out.println("\nidStation(s):\n");
+
+				while (res.next()) {
+					System.out.println(res.getInt(1));
+					break;
+				}
+				conn.close();
+
+				System.out.println("\nWorked with IP: " + ip + "\n");
+				successfulIP += ip + ", ";
 			}
-			conn.close();
+			catch (Exception e) {
+				// e.printStackTrace();
+				System.err.println("\nCannot connect to the database (IP: " + ip + ").\n");
+			}
 		}
-		catch (Exception e) {
-			// e.printStackTrace();
-			System.err.println("\nCannot connect to the database.\n");
-		}
+
+		return successfulIP;
 	}
 
 
 	public static void main(String[] args)
 	{
-		connect();
+		String result = connect();
+		System.out.println(result);
 	}
 }
