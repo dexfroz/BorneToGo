@@ -204,9 +204,7 @@ class RouteForm extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
-
                 {this.renderEtapes()}
-
             </SafeAreaView>
         );
     }

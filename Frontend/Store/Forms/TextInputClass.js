@@ -1,6 +1,5 @@
 // Store/Forms/TextInput
 
-import Style from 'ol/style/Style';
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements'
@@ -10,20 +9,20 @@ class TextInputClass extends React.Component {
       render() {
 
             const { input, ...inputProps } = this.props;
-		return (
-            <FieldWrapper {...this.props}>
-                <Input
-                    {...inputProps}
-                    style={styles.textInput}
-                    placeholder={input.label}
-                    onChangeText={input.onChange}
-                    onBlur={input.onBlur}
-                    onFocus={input.onFocus}
-                    value={input.value.toString()}
-                />
-            </FieldWrapper>
-		);
-    }
+
+            return (
+                  <FieldWrapper {...this.props}>
+                        <Input
+                              {...inputProps}
+                              placeholder={input.label}
+                              onChangeText={input.onChange}
+                              onBlur={input.onBlur}
+                              onFocus={input.onFocus}
+                              value={input.value.toString()}
+                        />
+                  </FieldWrapper>
+            );
+      }
 }
 const styles = StyleSheet.create({
       textInput: {

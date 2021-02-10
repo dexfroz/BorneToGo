@@ -207,19 +207,18 @@ class PageTrajet extends React.Component {
 
             // requête post avec les userSteps ainsi récupérés (si présents)
             if (userSteps.length > 0) {
-                //this.getRoutes("trip", "fastest", car, userSteps);
+                this.getRoutes("trip", "fastest", car, userSteps);
             }
 
             // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
             if (this.state.data) {
-                //console.log("Waypoints", this.state.data[0].waypoints);
                 var data = this.state.data;
                 this.setState({ isLoading: false, data: null });
-                /*this.props.navigation.navigate('Resultats',
+                this.props.navigation.navigate('Resultats',
                     {
                         itineraires: data // transmission des itinéraires
                     }
-                );*/
+                );
             }
 
         }
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        top: 100,
+        top: 0,
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'

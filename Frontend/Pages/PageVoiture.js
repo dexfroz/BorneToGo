@@ -21,8 +21,8 @@ class PageVoiture extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            modeleSelected: {id : 0, model: 'Voiture'},
-            modeles: [{id: 0, model: 'Voiture'},],
+            modeleSelected: { id: 0, model: 'Voiture' },
+            modeles: [{ id: 0, model: 'Voiture' },],
             nombreVoiture: 0,
             //testModel: this.loadModelesVehicules()
         }
@@ -38,28 +38,28 @@ class PageVoiture extends React.Component {
         { id: 0, model: 'Voiture' },
     ];
 
-    loadAncientModeles(){
+    loadAncientModeles() {
         var modelesVoituresCree = [];
         this.modelesVoitures.map((modeleVoiture) => (
-           modelesVoituresCree.push(<Picker.Item label={modeleVoiture.model} value={modeleVoiture} key={this.state.nombreVoiture++} />)
+            modelesVoituresCree.push(<Picker.Item label={modeleVoiture.model} value={modeleVoiture} key={this.state.nombreVoiture++} />)
         ));
         console.log("tab ancientModele : ", modelesVoituresCree);
-        modelesVoituresCree.map( (voiture) => (console.log("VoitureAncient : ", voiture)))
+        modelesVoituresCree.map((voiture) => (console.log("VoitureAncient : ", voiture)))
         this.state.modeles = modelesVoituresCree;
         this.state.modeleSelected = modelesVoituresCree[0].props.value;
     }
 
     async loadModelesVehicules() {
         var testVoitures = [];
-        testVoitures = await this.testMap(this.getRequest("http://192.168.1.59:4321/bornetogo/backend/cars"));
-        testVoitures.map( (voiture) => (console.log("Voiture : ", voiture)));
-        this.setState( {modeles : testVoitures, modeleSelected : testVoitures[0].props.value} );
+        testVoitures = await this.testMap(this.getRequest("http://192.168.1.32:4321/bornetogo/backend/cars"));
+        testVoitures.map((voiture) => (console.log("Voiture : ", voiture)));
+        this.setState({ modeles: testVoitures, modeleSelected: testVoitures[0].props.value });
     }
 
     trouverModeleChoisi(modeleChoisi) {
-        console.log("modeles : ",this.state.modeles)
-        for(var i = 0 ; i < this.state.modeles.length ; i++){
-            if(this.state.modeles[i].props.value.model == modeleChoisi.model){
+        console.log("modeles : ", this.state.modeles)
+        for (var i = 0; i < this.state.modeles.length; i++) {
+            if (this.state.modeles[i].props.value.model == modeleChoisi.model) {
                 return i;
             }
         }
@@ -78,30 +78,30 @@ class PageVoiture extends React.Component {
         )
     }
 
-    async getRequest(url){
+    async getRequest(url) {
         let cars;
         console.log("Envoi de la requête :", url);
-        await fetch( url, {
+        await fetch(url, {
             method: "GET"
         })
-        .then( (response) => response.json())
-        .then( (reponseJson) => cars = reponseJson)
-        .catch( (error) => {console.log("Error in requesting http get :", url, " with error :", error );})
-        ;
+            .then((response) => response.json())
+            .then((reponseJson) => cars = reponseJson)
+            .catch((error) => { console.log("Error in requesting http get :", url, " with error :", error); })
+            ;
         console.log("Requête GET terminée :", url);
         return cars.cars;
     }
 
-    async testMap(allCars){
+    async testMap(allCars) {
         var tabCars = [];
         var bigtabCars = [];
         var i = 0;
 
-        bigtabCars = await allCars.then( 
+        bigtabCars = await allCars.then(
             function (cars) {
-                cars.map( 
+                cars.map(
                     function (voiture) {
-                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} /> )
+                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} />)
                         i = i + 1
                         return tabCars
                     }
@@ -131,12 +131,12 @@ class PageVoiture extends React.Component {
 
     }*/
 
-    displayForm(data){
+    displayForm(data) {
         console.log('data : ', data)
         console.log('Donnees voiture : modele ', data.modele, ' | capacite ', data.capacite, ' | type de prise ', data.typeprise)
     }
 
-    handleCarSelected(data){
+    handleCarSelected(data) {
         console.log('data : ', data)
         const action = { type: 'CAR_PICKED_BY_USER', value: data }
         this.props.dispatch(action)
@@ -146,11 +146,11 @@ class PageVoiture extends React.Component {
         return (
 
             <View style={styles.mainContainer}>
-                
+
                 <View style={styles.pickCarContainer}>
                     <Text style={styles.titleStyle}>Choisissez votre modèle de voiture</Text>
                     <View style={styles.menuDeroulant}>
-                        <FontAwesome name="car" size={24} color="#70B445"/>
+                        <FontAwesome name="car" size={24} color="#70B445" />
                         <Picker
                             selectedValue={this.state.modeleSelected}
                             style={{ height: 50, width: 200 }}
@@ -163,7 +163,7 @@ class PageVoiture extends React.Component {
                         {this.renderVoitureChoisie(this.state.modeleSelected)}
                     </View>
                     <View style={styles.buttonSelectionner}>
-                        <Button color='#70B445' title ="Sélectionner" onPress={() => this.handleCarSelected(this.state.modeleSelected)} />
+                        <Button color='#70B445' title="Sélectionner" onPress={() => this.handleCarSelected(this.state.modeleSelected)} />
                     </View>
                 </View>
                 <View style={styles.describeCarContainer}>
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     describeCarContainer: {
-        flex:2,
+        flex: 2,
         paddingTop: 40,
         alignItems: "center",
         flexDirection: "column",
@@ -209,15 +209,15 @@ const styles = StyleSheet.create({
         flex: 1
     },
     form: {
-        flex:2,
+        flex: 2,
         backgroundColor: 'white',
         paddingVertical: 20,
         paddingHorizontal: 60,
         margin: 10,
         borderRadius: 10
     },
-    buttonSelectionner:{
-        width:width-20,
+    buttonSelectionner: {
+        width: width - 20,
     }
 })
 

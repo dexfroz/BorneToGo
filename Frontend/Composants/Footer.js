@@ -13,7 +13,7 @@ import PageAPropos from '../Pages/PageAPropos';
 import PageTrajet from '../Pages/PageTrajet'
 import PageVoiture from '../Pages/PageVoiture'
 import PageMap from '../Pages/PageMap';
-import PageMapResultat from '../Pages/PageMapResultat';
+import PageBorne from '../Pages/PageBorne';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,21 +40,20 @@ class Footer extends React.Component {
                         }}
                     />
                     <Tab.Screen
-                        name="Map"
-                        component={PageMap}
-                        options={{
-                            tabBarLabel: "Borne",
-                            tabBarIcon: ({ color, size }) => (
-                                <Feather name="battery-charging" size={size} color={color} />
-                            ),
-                        }}
-                    />
-                    <Tab.Screen
                         name="Itinéraire"
                         component={PageTrajet}
                         options={{
                             tabBarIcon: ({ color, size }) => (
                                 <AntDesign name="enviromento" size={size} color={color} />
+                            ),
+                        }}
+                    />
+                    <Tab.Screen
+                        name="Borne"
+                        component={PageBorne}
+                        options={{
+                            tabBarIcon: ({ color, size }) => (
+                                <Feather name="battery-charging" size={size} color={color} />
                             ),
                         }}
                     />
