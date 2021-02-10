@@ -1,7 +1,6 @@
 #
 # Standard Maven .gitignore
 #
-node_modules
 target/
 pom.xml.tag
 pom.xml.releaseBackup

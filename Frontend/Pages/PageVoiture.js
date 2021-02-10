@@ -31,16 +31,11 @@ class PageVoiture extends React.Component {
     }
 
     componentDidMount() {
-        console.log("JE SUIS LA !!!!!! ");
         this.loadModelesVehicules();
     }
-   /* async componentWillMount() {
-        await this.loadModelesVehicules();
-    }*/
 
     modelesVoitures = [
         { id: 0, model: 'Voiture' },
-        { id: 1, model: 'Voiture1' },
     ];
 
     loadAncientModeles(){
@@ -62,19 +57,16 @@ class PageVoiture extends React.Component {
     }
 
     trouverModeleChoisi(modeleChoisi) {
-        console.log("ON Y EST");
         console.log("modeles : ",this.state.modeles)
         for(var i = 0 ; i < this.state.modeles.length ; i++){
-            console.log("GROS TEST", this.state.modeles[i])
             if(this.state.modeles[i].props.value.model == modeleChoisi.model){
-                console.log("YOUPI");
                 return i;
             }
         }
     }
 
     renderVoitureChoisie(modeleChoisi) {
-        console.log("modeleCHoisi : ", modeleChoisi)
+        console.log("modeleChoisi : ", modeleChoisi)
         var idModel = this.trouverModeleChoisi(modeleChoisi);
         var modele = this.state.modeles[idModel];
         console.log("Modele : ", modele)
