@@ -234,17 +234,8 @@ class ItineraireInfo extends PureComponent {
         if (stations_etapes.length == 0) {
             haut = (10 / 12) * height - (2 / 12) * height - 175;
         }
-        else if (stations_etapes.length > 0 && stations_etapes.length <= 2) {
-            haut = (stations_etapes.length + 1) * height / 12 - 250;
-        }
-        else if (stations_etapes.length > 2 && stations_etapes.length <= 5) {
-            haut = (stations_etapes.length + 1) * height / 12 - 300;
-        }
-        else if (stations_etapes.length > 5 && stations_etapes.length <= 7) {
-            haut = (stations_etapes.length + 1) * height / 12 - 350;
-        }
-        else if (stations_etapes.length > 7) {
-            haut = (stations_etapes.length + 1) * height / 12 - 400;
+        else if (stations_etapes.length > 0) {
+            haut = (stations_etapes.length + 1) * height / 12 - 275;
         }
         hauteur = haut.toString();
 

@@ -77,6 +77,10 @@ class PageTrajet extends React.Component {
                     return unique.includes(item) ? unique : [...unique, item]
                 }, []);
 
+            var userSteps_depart = [];
+            var userSteps_arrivee = [];
+            var userSteps_etapes = [];
+
             // On récupère les champs address et name pour chaque balise
             for (var i = 0; i < userSteps_balises_reduce.length; i++) {
                 var position_address = - 1;
@@ -93,42 +97,99 @@ class PageTrajet extends React.Component {
                 }
 
                 if (position_address != -1 && position_name != -1) {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": valuesTableau[position_address][1].toString(),
-                            "name": valuesTableau[position_name][1].toString(),
-                        }
-                    )
+                    if (userSteps_balises_reduce[i] == "arrivee") {
+                        userSteps_arrivee.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else if (userSteps_balises_reduce[i] == "depart") {
+                        userSteps_depart.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else {
+                        userSteps_etapes.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
                 }
                 else if (position_address == -1 && position_name != -1) {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": "",
-                            "name": valuesTableau[position_name][1].toString(),
-                        }
-                    )
+                    if (userSteps_balises_reduce[i] == "arrivee") {
+                        userSteps_arrivee.push(
+                            {
+                                "location": [],
+                                "address": "",
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else if (userSteps_balises_reduce[i] == "depart") {
+                        userSteps_depart.push(
+                            {
+                                "location": [],
+                                "address": "",
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else {
+                        userSteps_etapes.push(
+                            {
+                                "location": [],
+                                "address": "",
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
                 }
                 else if (position_address != -1 && position_name == -1) {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": valuesTableau[position_address][1].toString(),
-                            "name": "",
-                        }
-                    )
-                }
-                else {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": "",
-                            "name": "",
-                        }
-                    )
+                    if (userSteps_balises_reduce[i] == "arrivee") {
+                        userSteps_arrivee.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": "",
+                            }
+                        )
+                    }
+                    else if (userSteps_balises_reduce[i] == "depart") {
+                        userSteps_depart.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": "",
+                            }
+                        )
+                    }
+                    else {
+                        userSteps_etapes.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": "",
+                            }
+                        )
+                    }
                 }
             }
+
+            // On ordonne les étapes dans l'ordre etape-1, etape-2, etC.
+            userSteps_etapes.sort();
+
+            // On concatène tous les tableaux pour obtenir le trajet complet
+            userSteps = userSteps_depart.concat(userSteps_etapes, userSteps_arrivee);
 
             // récupération de la voiture dans le redux
             var car = {
@@ -146,19 +207,19 @@ class PageTrajet extends React.Component {
 
             // requête post avec les userSteps ainsi récupérés (si présents)
             if (userSteps.length > 0) {
-                this.getRoutes("trip", "fastest", car, userSteps);
+                //this.getRoutes("trip", "fastest", car, userSteps);
             }
 
             // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
             if (this.state.data) {
-                console.log("Waypoints", this.state.data[0].waypoints);
+                //console.log("Waypoints", this.state.data[0].waypoints);
                 var data = this.state.data;
                 this.setState({ isLoading: false, data: null });
-                this.props.navigation.navigate('Resultats',
+                /*this.props.navigation.navigate('Resultats',
                     {
                         itineraires: data // transmission des itinéraires
                     }
-                );
+                );*/
             }
 
         }
