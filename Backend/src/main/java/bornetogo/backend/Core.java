@@ -74,7 +74,7 @@ public class Core
 				return null;
 			}
 
-			Route firstDraw = Route.getFromJson(firstQuery, car, null);
+			Route firstDraw = Route.getFromJson(firstQuery, car, userSteps, Route.AddingData.OFF);
 
 			if (firstDraw == null) {
 				System.err.println("\nError while parsing 'firstQuery'.\n");
@@ -112,7 +112,7 @@ public class Core
 
 		// Building the final route:
 
-		Route foundRoute = Route.getFromJson(secondQuery, car, path);
+		Route foundRoute = Route.getFromJson(secondQuery, car, path, Route.AddingData.ON);
 
 		if (foundRoute == null) {
 			System.err.println("\nIncorrect found route.\n");

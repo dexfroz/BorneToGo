@@ -147,7 +147,7 @@ public class Coord
 			return new Coord(latitude, longitude, name, address);
 		}
 		catch (Exception e) {
-			System.err.println("\nError while parsing a json: could not extract a Coord.\n");
+			System.err.println("\nWarning: could not extract a Coord from a json.\n");
 			return null;
 		}
 	}
@@ -190,10 +190,10 @@ public class Coord
 
 	public static void main(String[] args)
 	{
-		Coord coordMarseille = new Coord(43.296482, 5.36978, "Marseille", "");
+		Coord coordMarseille = new Coord(43.296482, 5.36978, "Vieux-Port", "Marseille");
 		System.out.println("\n" + coordMarseille.toString());
 
-		Coord coordToulon = new Coord(43.124228, 5.928, "Toulon", "");
+		Coord coordToulon = new Coord(43.124228, 5.928, "Un endroit", "Toulon");
 		System.out.println("\n" + coordToulon.toString());
 
 		double dist = distance(coordMarseille, coordToulon);

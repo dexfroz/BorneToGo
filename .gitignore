@@ -1,4 +1,11 @@
 #
+# Standard Java .gitignore
+#
+*.class
+*.jar
+*.war
+
+#
 # Standard Maven .gitignore
 #
 target/
@@ -30,7 +37,7 @@ buildNumber.properties
 #
 # Secret files, API keys...
 #
-src/main/resources/secret/
+secret/
 
 # Frontend things:
 Frontend/node_modules/**/*
