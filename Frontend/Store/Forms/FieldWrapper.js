@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
 	inputContainer: {
 		marginTop: 5,
 		marginBottom: 5,
+		height: 20,
 		//flex: 1
 	},
 	inputContainerInvalid: {

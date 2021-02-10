@@ -10,37 +10,26 @@ class TextInputClass extends React.Component {
       render() {
 
             const { input, ...inputProps } = this.props;
-            //console.log('input : ');
-            //console.log(input);
-            //console.log('props : ')
-            //console.log(this.props);
-            return (
-                  <FieldWrapper {...this.props}>
-                        <Input
-                              {...inputProps}
-                              placeholder={input.label}
-                              onChangeText={input.onChange}
-                              onBlur={input.onBlur}
-                              onFocus={input.onFocus}
-                              value={input.value.toString()}
-                        />
-                  </FieldWrapper>
-                  //       <TextInput 
-                  //             style={styles.textInput} 
-                  //             placeholder={this.props.label} 
-                  //             onChangeText={input.onChange} 
-                  //             value={input.value} 
-                  //             {...inputProps} 
-                  //       />
-            );
-      }
+		return (
+            <FieldWrapper {...this.props}>
+                <Input
+                    {...inputProps}
+                    style={styles.textInput}
+                    placeholder={input.label}
+                    onChangeText={input.onChange}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                    value={input.value.toString()}
+                />
+            </FieldWrapper>
+		);
+    }
 }
 const styles = StyleSheet.create({
       textInput: {
-            borderColor: 'black',
+            flex:1,
+            borderColor: '#70B445',
             borderWidth: 1,
-            height: 37,
-            width: 250
       },
 })
 

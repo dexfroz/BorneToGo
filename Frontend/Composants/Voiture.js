@@ -1,7 +1,9 @@
 // Composants/Voiture.js
 
 import React, { PureComponent } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
+
+const { width, height } = Dimensions.get('window');
 
 class Voiture extends PureComponent{
 
@@ -13,10 +15,22 @@ class Voiture extends PureComponent{
     render(){
         return (
             <View style={styles.container}>
-                <Text>Modele : {this.props.modele}</Text>
-                <Text>Autonomie : {this.props.autonomie} km restants</Text>
-                <Text>Capacite : {this.props.capacite} km</Text>
-                <Text>Type de prise : {this.props.typePrise}</Text>
+                <View style={styles.sousContainer}>
+                    <Text style={styles.title}>Modele</Text> 
+                    <Text>{this.props.model}</Text>
+                </View>
+                <View style={styles.sousContainer}>
+                    <Text style={styles.title}>Autonomie</Text> 
+                    <Text>{this.props.currentAutonomy} km restants</Text>
+                </View>
+                <View style={styles.sousContainer}>
+                    <Text style={styles.title}>Capacite</Text> 
+                    <Text>{this.props.maxAutonomy} km</Text>
+                </View>
+                <View style={styles.sousContainer}>
+                    <Text style={styles.title}>Type de prise</Text> 
+                    <Text>{this.props.batteryType}</Text>
+                </View>
             </View>
         )
     }
@@ -25,6 +39,18 @@ class Voiture extends PureComponent{
 const styles = StyleSheet.create({
     container:{
         flex:1,
+        flexDirection:"row",
+        width: width,
+        alignItems: "center",
+        backgroundColor: '#fff'
+    },
+    sousContainer:{
+        flex:1,
+        flexDirection:"column",
+    },
+    title:{
+        fontWeight: "bold", 
+        textDecorationLine: "underline"
     },
 });
 

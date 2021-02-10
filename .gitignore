@@ -1,6 +1,7 @@
 #
 # Standard Maven .gitignore
 #
+node_modules
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -30,9 +31,10 @@ buildNumber.properties
 #
 # Secret files, API keys...
 #
-src/main/resources/secret/
+secret/
 
 # Frontend things:
+package-lock.json
 Frontend/node_modules/**/*
 Frontend/.expo/*
 Frontend/npm-debug.*

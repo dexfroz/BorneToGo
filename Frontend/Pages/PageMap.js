@@ -338,7 +338,7 @@ class PageMap extends React.Component {
             var duree = formaterDuree(getDuree(this.state.data[id - 1]));
 
             // DISTANCE
-            var distance = formaterDistance(getDistance(this.state.data[id - 1]));
+            //var distance = formaterDistance(getDistance(this.state.data[id - 1]));
 
             // On change le state
             this.setState({
@@ -467,7 +467,7 @@ class PageMap extends React.Component {
         stations_etapes = getStationsEtapes(data[0].routes[0]);
         // Distance et durée formatée
         duree = formaterDuree(getDuree(data[0].routes[0]));
-        distance = formaterDistance(getDistance(data[0].routes[0]));
+        //distance = formaterDistance(getDistance(data[0].routes[0]));
     }
 
     requestPOST(value) {
