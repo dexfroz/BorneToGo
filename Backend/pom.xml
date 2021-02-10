@@ -12,7 +12,7 @@
 	<properties>
 		<!-- Which source file to be considered as main, when no API is used. -->
 		<!-- Package name starts with 'main.java' for better integration with Eclipse IDE: -->
-		<myMainClass>main.java.bornetogo.backend.Core</myMainClass>
+		<myMainClass>main.java.bornetogo.backend.Bdd_connector</myMainClass>
 
 		<!-- Targeted java JDK and JRE version: -->
 		<java.version>1.8</java.version>
@@ -77,6 +77,14 @@
 			<artifactId>jakarta.json</artifactId>
 			<version>2.0.0</version>
 		</dependency>
+		
+		<dependency>
+		    	<groupId>mysql</groupId>
+		    	<artifactId>mysql-connector-java</artifactId>
+		    	<version>8.0.22</version>
+		</dependency>
+
+
 
 	</dependencies>
 
