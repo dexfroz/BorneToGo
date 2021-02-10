@@ -80,6 +80,8 @@ class StationMapNonSelectionable extends PureComponent {
             "longitude": marker.location.longitude ? marker.location.longitude : 0,
         }
 
+        var title = marker.name + "\n" + marker.address;
+
         return (
             <Marker
                 coordinate={{
@@ -87,7 +89,7 @@ class StationMapNonSelectionable extends PureComponent {
                     longitude: marker.data.longitude ? marker.location.longitude : 0,
                 }}
                 ref={(ref) => this.markerRef = ref}
-                title={marker.data.adresse}
+                title={title}
                 pinColor={depart ? 'green' : arrivee ? 'green' : 'green'}
                 key={`Station-${marker.data.idStation}-${depart ? 'depart' : ''}${arrivee ? 'arrivee' : ''}`}
             >

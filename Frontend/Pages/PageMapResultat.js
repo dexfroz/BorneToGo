@@ -14,8 +14,7 @@ import MarkerItineraire from '../Composants/MarkerItineraire';
 import ItineraireMap from '../Composants/ItineraireMap';
 import StationMapNonSelectionnable from '../Composants/StationMapNonSelectionnable';
 import { formaterDuree, formaterDistance } from '../Fonctions/Format'
-import { getItineraires, getDepart, getArrivee, getDistance, getDuree, getStationsEtapes } from '../Fonctions/Itineraire'
-import data from '../Fichiers/input'
+import { getDepart, getArrivee, getDistance, getDuree, getStationsEtapes } from '../Fonctions/Itineraire'
 
 // Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
@@ -32,8 +31,11 @@ class PageMapResultat extends React.Component {
     constructor(props) {
         super(props);
         this.mapRef = null;
+        const { itineraires } = props.route.params;
+
+        // Définition du state
         this.state = {
-            data_test: '',
+            // Région
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -42,14 +44,14 @@ class PageMapResultat extends React.Component {
             },
             // Itinéraire
             idRouteCourant: 0,
-            itineraires: getItineraires(data[0].routes),
+            itineraires: itineraires,
             // Markers
-            depart: getDepart(data[0].routes[0]),
-            arrivee: getArrivee(data[0].routes[0]),
-            stations_etapes: getStationsEtapes(data[0].routes[0]),
+            depart: getDepart(itineraires[0]),
+            arrivee: getArrivee(itineraires[0]),
+            stations_etapes: getStationsEtapes(itineraires[0]),
             // Distance et durée formatée
-            duree: formaterDuree(getDuree(data[0].routes[0])),
-            distance: formaterDistance(getDistance(data[0].routes[0])),
+            duree: formaterDuree(getDuree(itineraires[0])),
+            distance: formaterDistance(getDistance(itineraires[0])),
         };
     }
 
@@ -59,17 +61,30 @@ class PageMapResultat extends React.Component {
     }
 
     renderMarkerDepart() {
+        var stationPleine = false;
+        if (this.state.depart.isStation && Object.keys(this.state.depart.data).length > 0) {
+            stationPleine = true;
+        }
+
         // DEPART
         return (
-            this.state.depart.isStation
-                ?
-                <StationMapNonSelectionnable
-                    key={`Depart-Station-${this.state.idRouteCourant}-${this.state.depart.location.latitude}-${this.state.depart.location.longitude}`}
-                    marker={this.state.depart}
-                    depart={true}
-                    arrivee={false}
-                    propsnavigation={this.props}
-                />
+            this.state.depart.isStation ?
+                stationPleine ?
+                    <StationMapNonSelectionnable
+                        key={`Depart-Station-${this.state.idRouteCourant}-${this.state.depart.location.latitude}-${this.state.depart.location.longitude}`}
+                        marker={this.state.depart}
+                        depart={true}
+                        arrivee={false}
+                        propsnavigation={this.props}
+                    />
+                    :
+                    <MarkerItineraire
+                        key={`Depart-${this.state.idRouteCourant}-${this.state.depart.location.latitude}-${this.state.depart.location.longitude}`}
+                        marker={this.state.depart}
+                        depart={true}
+                        arrivee={false}
+                        propsnavigation={this.props}
+                    />
                 :
                 <MarkerItineraire
                     key={`Depart-${this.state.idRouteCourant}-${this.state.depart.location.latitude}-${this.state.depart.location.longitude}`}
@@ -82,17 +97,29 @@ class PageMapResultat extends React.Component {
     }
 
     renderMarkerArrivee() {
+        var stationPleine = false;
+        if (this.state.arrivee.isStation && Object.keys(this.state.arrivee.data).length > 0) {
+            stationPleine = true;
+        }
         // ARRIVEE
         return (
-            this.state.arrivee.isStation
-                ?
-                <StationMapNonSelectionnable
-                    key={`Arrivee-Station-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
-                    marker={this.state.arrivee}
-                    depart={false}
-                    arrivee={true}
-                    propsnavigation={this.props}
-                />
+            this.state.arrivee.isStation ?
+                stationPleine ?
+                    <StationMapNonSelectionnable
+                        key={`Arrivee-Station-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
+                        marker={this.state.arrivee}
+                        depart={false}
+                        arrivee={true}
+                        propsnavigation={this.props}
+                    />
+                    :
+                    <MarkerItineraire
+                        key={`Arrivee-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
+                        marker={this.state.arrivee}
+                        depart={false}
+                        arrivee={true}
+                        propsnavigation={this.props}
+                    />
                 :
                 <MarkerItineraire
                     key={`Arrivee-${this.state.idRouteCourant}-${this.state.arrivee.location.latitude}-${this.state.arrivee.location.longitude}`}
@@ -109,13 +136,22 @@ class PageMapResultat extends React.Component {
         return (
             this.state.stations_etapes.map(item =>
                 item.isStation ?
-                    <StationMapNonSelectionnable
-                        key={`Station-${this.state.idRouteCourant}-${item.idStation}-${item.location.latitude}-${item.location.longitude}`}
-                        marker={item}
-                        depart={false}
-                        arrivee={false}
-                        propsnavigation={this.props}
-                    />
+                    Object.keys(this.state.arrivee.data).length > 0 ?
+                        <StationMapNonSelectionnable
+                            key={`Station-${this.state.idRouteCourant}-${item.idStation}-${item.location.latitude}-${item.location.longitude}`}
+                            marker={item}
+                            depart={false}
+                            arrivee={false}
+                            propsnavigation={this.props}
+                        />
+                        :
+                        <MarkerItineraire
+                            key={`Station-${this.state.idRouteCourant}-${item.location.latitude}-${item.location.longitude}`}
+                            marker={item}
+                            depart={false}
+                            arrivee={false}
+                            propsnavigation={this.props}
+                        />
                     :
                     <MarkerItineraire
                         key={`Station-${this.state.idRouteCourant}-${item.location.latitude}-${item.location.longitude}`}
@@ -247,24 +283,7 @@ class PageMapResultat extends React.Component {
         )
     }
 
-    //exp://192.168.1.32:19001
-    getData() {
-        fetch('http://192.168.1.32:4321/bornetogo/backend/cars')
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson);
-                this.setState({
-                    data_test: responseJson
-                })
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
     render() {
-        console.log("RENDER");
-        console.log('DATA TEST', this.state.data_test);
         return (
             <View style={styles.container}>
                 <MapView
@@ -288,7 +307,6 @@ class PageMapResultat extends React.Component {
                         itineraire={this.state.itineraires[this.state.idRouteCourant]}
                         propsnavigation={this.props}
                     />
-
                     {this.renderMarkerDepart()}
                     {this.renderMarkersStationsEtapes()}
                     {this.renderMarkerArrivee()}
@@ -298,9 +316,14 @@ class PageMapResultat extends React.Component {
         );
     }
 
+    /*
+    
+                    
+                    
+    */
+
 
     componentDidMount() {
-        this.getData();
         // Permet d'ajuster la vue autour des coordonnées`
         try {
             this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {

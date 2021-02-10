@@ -19,3 +19,20 @@ export function setJsonInputBackend(useCase, optimOption, car, userSteps) {
     }
     return json;
 }
+
+export function getRoutesFromAPI(useCase, optimOption, car, userSteps) {
+    var requestOptions = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(setJsonInputBackend(useCase, optimOption, car, userSteps))
+    };
+
+    return fetch('http://192.168.1.32:4321/bornetogo/backend/path', requestOptions)
+        .then((response) => response.json())
+        .catch((error) => {
+            console.error(error);
+        });
+}

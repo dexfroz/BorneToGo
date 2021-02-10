@@ -33,16 +33,16 @@ buildNumber.properties
 src/main/resources/secret/
 
 # Frontend things:
-node_modules/**/*
-.expo/*
-npm-debug.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-web-build/
+Frontend/node_modules/**/*
+Frontend/.expo/*
+Frontend/npm-debug.*
+Frontend/*.jks
+Frontend/*.p8
+Frontend/*.p12
+Frontend/*.key
+Frontend/*.mobileprovision
+Frontend/*.orig.*
+Frontend/web-build/
 
 # macOS
 .DS_Store

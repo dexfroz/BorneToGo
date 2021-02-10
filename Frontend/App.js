@@ -8,6 +8,7 @@ import Footer from './Composants/Footer';
 import { Provider } from 'react-redux';
 import Store from './Store/configureStore';
 import PageItineraire from './Pages/PageItineraire';
+import PageMapResultat from './Pages/PageMapResultat';
 
 
 const Stack = createStackNavigator();
@@ -22,18 +23,11 @@ export default class App extends React.Component {
             <Stack.Screen name="BorneToGo" component={Footer} />
             <Stack.Screen name="Station" component={PageStation} />
             <Stack.Screen name="Informations" component={PageItineraire} />
+            <Stack.Screen name="Resultats" component={PageMapResultat} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
     )
   }
 }
-
-/*
-const styles = StyleSheet.create({
-  container: {
-
-  },
-});
-*/
 

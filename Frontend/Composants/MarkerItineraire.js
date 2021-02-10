@@ -18,6 +18,7 @@ class MarkerItineraire extends PureComponent {
     render() {
         const { marker, depart, arrivee, propsnavigation } = this.props;
 
+        var title = marker.name + "\n" + marker.address;
         return (
             <Marker
                 coordinate={{
@@ -25,7 +26,7 @@ class MarkerItineraire extends PureComponent {
                     longitude: marker.location.longitude ? marker.location.longitude : 0,
                 }}
                 pinColor={depart ? 'tomato' : arrivee ? 'teal' : 'linen'}
-                title={marker.address}
+                title={title}
                 key={`Marker-${marker.location.latitude}-${marker.location.longitude}-${depart ? 'depart' : ''}${arrivee ? 'arrivee' : ''}`}
             />
         );
