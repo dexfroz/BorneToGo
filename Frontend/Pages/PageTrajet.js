@@ -39,36 +39,6 @@ class PageTrajet extends React.Component {
         })
     }
 
-    async requestPOST(userSteps) {
-
-
-        // ecriture du json à envoyer
-        var requestOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(setJsonInputBackend("trip", "fastest", car, userSteps))
-        };
-
-        // envoi du json par requête POST avec récupération du résultat
-        fetch('http://192.168.1.32:4321/bornetogo/backend/path', requestOptions)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({
-                    data: responseJson
-                })
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        if (this.state.data) {
-            this.formaterResultat(this.state.data);
-        }
-    }
-
     recupereItineraire(values) {
         // LOADING
         this.setState({ isLoading: true })
@@ -116,11 +86,11 @@ class PageTrajet extends React.Component {
                     if (valuesTableau[j][0] == userSteps_balises_reduce[i] + "_address") {
                         position_address = j;
                     }
-                    else if (valuesTableau[j][0] == userSteps_balises_reduce[i] + "_name") {
+
+                    if (valuesTableau[j][0] == userSteps_balises_reduce[i] + "_name") {
                         position_name = j;
                     }
                 }
-
                 if (position_address != -1 && position_name != -1) {
                     userSteps.push(
                         {
@@ -139,7 +109,7 @@ class PageTrajet extends React.Component {
                         }
                     )
                 }
-                else if (position_address == -1 && position_name != -1) {
+                else if (position_address != -1 && position_name == -1) {
                     userSteps.push(
                         {
                             "location": [],
@@ -180,10 +150,11 @@ class PageTrajet extends React.Component {
 
             // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
             if (this.state.data) {
-                this.setState({ isLoading: true });
+                var data = this.state.data;
+                this.setState({ isLoading: false, data: null });
                 this.props.navigation.navigate('Resultats',
                     {
-                        itineraires: this.state.data // transmission des itinéraires
+                        itineraires: data // transmission des itinéraires
                     }
                 );
             }

@@ -17,23 +17,38 @@ class ItineraireInfo extends PureComponent {
     }
 
     renderBorne(item, propsnavigation) {
+        var stationPleine = false;
+        if (item.isStation && Object.keys(item.data).length > 0) {
+            stationPleine = true;
+        }
+
         return (
             item.isStation ?
-                <View style={styles.bouton_borne}>
-                    <TouchableOpacity
-                        key={`Bouton-Borne-${item.idStation}`}
-                        onPress={() => propsnavigation.navigation.navigate('Station', {
-                            station: item.data,
-                        })}
-                    >
+                stationPleine ?
+                    <View style={styles.bouton_borne}>
+                        <TouchableOpacity
+                            key={`Bouton-Borne-${item.idStation}`}
+                            onPress={() => propsnavigation.navigation.navigate('Station', {
+                                station: item.data,
+                            })}
+                        >
+                            <View >
+                                <Image
+                                    style={styles.image_borne}
+                                    source={require('../Images/borne_icone.png')}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    :
+                    <View style={styles.bouton_borne}>
                         <View >
                             <Image
                                 style={styles.image_borne}
                                 source={require('../Images/borne_icone.png')}
                             />
                         </View>
-                    </TouchableOpacity>
-                </View>
+                    </View>
                 :
                 <View></View>
         )
@@ -125,7 +140,7 @@ class ItineraireInfo extends PureComponent {
         return (
             stations_etapes.map(item =>
                 <View
-                    key={`Etape-Station-${item.idStation}`}>
+                    key={`Item-${item.name}-${item.address}`}>
                     <View style={styles.vue_trajet}>
                         <View style={{ flex: 1 }}>
                             <Image
@@ -218,10 +233,18 @@ class ItineraireInfo extends PureComponent {
 
         if (stations_etapes.length == 0) {
             haut = (10 / 12) * height - (2 / 12) * height - 175;
-
         }
-        else {
-            haut = (stations_etapes.length + 1) * height / 12 - 10;
+        else if (stations_etapes.length > 0 && stations_etapes.length <= 2) {
+            haut = (stations_etapes.length + 1) * height / 12 - 250;
+        }
+        else if (stations_etapes.length > 2 && stations_etapes.length <= 5) {
+            haut = (stations_etapes.length + 1) * height / 12 - 300;
+        }
+        else if (stations_etapes.length > 5 && stations_etapes.length <= 7) {
+            haut = (stations_etapes.length + 1) * height / 12 - 350;
+        }
+        else if (stations_etapes.length > 7) {
+            haut = (stations_etapes.length + 1) * height / 12 - 400;
         }
         hauteur = haut.toString();
 

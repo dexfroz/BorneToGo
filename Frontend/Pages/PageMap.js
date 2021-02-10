@@ -17,6 +17,7 @@ import StationMap from '../Composants/StationMap';
 import { connect } from 'react-redux';
 import RadioForm from 'react-native-simple-radio-button';
 import { setJsonInputBackend } from '../Fonctions/HTTPRequestjson'
+import { getItineraires, getDepart, getArrivee, getDistance, getDuree, getStationsEtapes } from '../Fonctions/Itineraire'
 
 // Dimensions de l'écran
 const { width, height } = Dimensions.get('window');
