@@ -1,0 +1,11 @@
+version: '3.2'
+
+services:
+
+  myapp:
+    image: bornetogo-backend:1.0
+    container_name: bornetogo-backend
+    restart: "no"
+    build: .
+    ports:
+      - 4321:8080 # host:container

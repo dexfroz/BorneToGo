@@ -3,6 +3,8 @@ package main.java.bornetogo.backend;
 import java.io.*;
 import java.util.*;
 
+import java.sql.*;
+
 
 public class DatabaseConnector
 {
@@ -57,8 +59,34 @@ public class DatabaseConnector
 	}
 
 
+	public static void connect()
+	{
+		Connection conn = null;
+		Statement stat = null;
+		ResultSet res = null;
+
+		try
+		{
+			int port = 3306;
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:" + port + "/BorneToGo", "root", "");
+			stat = conn.createStatement();
+			res = stat.executeQuery("select idStation from Station");
+
+			while (res.next()) {
+				System.out.println(res.getInt(1));
+			}
+			conn.close();
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nCannot connect to the database.\n");
+		}
+	}
+
+
 	public static void main(String[] args)
 	{
-		;
+		connect();
 	}
 }
