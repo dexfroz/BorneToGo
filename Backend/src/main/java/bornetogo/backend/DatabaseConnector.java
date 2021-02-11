@@ -70,6 +70,7 @@ public class DatabaseConnector
 		ipCandidates.add("127.0.0.1");
 		ipCandidates.add("0.0.0.0");
 		ipCandidates.add("mydb"); // from the container
+		ipCandidates.add("host.docker.internal");
 
 		String successfulIP = "";
 

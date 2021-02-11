@@ -10,7 +10,7 @@ services:
     ports:
       - 4321:8080 # host:container
     networks:
-      - mynetwork
+      - my-network
 
   mydb:
     image: mydb:1.0
@@ -21,7 +21,8 @@ services:
     #   context: .
     #   dockerfile: ./Dockerfile
     ports:
-      - 3306:3306
+      # - 3306:3306
+      - "0.0.0.0:3306:3306"
     # expose:
     #   - '3306'
     volumes:
@@ -31,8 +32,11 @@ services:
       # MYSQL_USER: 'user'
       # MYSQL_PASSWORD: '123'
       MYSQL_ROOT_PASSWORD: aaa # To change this, remove the .data dir.
+    # env_file:
+    #   - .mydb.env
     networks:
-      - mynetwork
+      - my-network
 
 networks:
-  mynetwork:
+  my-network:
+    # driver: bridge
