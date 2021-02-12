@@ -42,13 +42,26 @@ class Station extends PureComponent {
 
     render() {
         const { station, propsnavigation } = this.props;
+        // Création de deux tableaux : un pour les bornes disponibles, un autre pour les bornes non disponibles
+        var bornesDispo = [];
+        var bornesNonDispo = [];
+
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(station.bornes).length;
         var nbDispo = 0;
-        for (const obj of station.bornes) {
-            if (obj.status)
-                nbDispo++;
+        if (nbTotal > 0) {
+            for (const obj of station.bornes) {
+                if (obj.status) {
+                    nbDispo++;
+                    bornesDispo.push(obj);
+                }
+                else {
+                    bornesNonDispo.push(obj);
+                }
+            }
         }
+
+        var allBornes = bornesDispo.concat(bornesNonDispo);
 
         return (
             <View>
@@ -74,7 +87,7 @@ class Station extends PureComponent {
                     <FlatList
                         nestedScrollEnabled
                         vertical
-                        data={station.bornes}
+                        data={allBornes}
                         renderItem={(item) => this.renderBorne(item, station, propsnavigation)}
                         keyExtractor={(item) => `Borne-${station.idStation}-${item.idBorne}`}
                     />
@@ -83,7 +96,6 @@ class Station extends PureComponent {
         );
     }
 }
-
 
 const styles = StyleSheet.create({
     header: {
