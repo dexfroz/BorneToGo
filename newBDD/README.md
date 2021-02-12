@@ -26,3 +26,7 @@ To:
 'True' -> TRUE
 'False' -> FALSE
 ```
+
+## Creating a new table StationBorne:
+
+The Borne table had 27522 entries, however 99% of it were duplicates, after cleaning only 295 entries remained. This change implied creating a new table, and modifying the Borne and Station tables.
