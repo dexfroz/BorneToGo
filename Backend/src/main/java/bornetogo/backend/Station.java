@@ -7,7 +7,8 @@ import jakarta.json.*;
 
 public class Station extends Coord
 {
-	// TODO: must contain a list of charging points, and other stats.
+	private String paymentStatus = "";
+	private ArrayList<Integer> chargingPointsID; // more memory efficient to store IDs.
 
 
 	public Station(double latitude, double longitude, String name, String address)
@@ -24,11 +25,57 @@ public class Station extends Coord
 	}
 
 
-	// TODO: add stations specific data:
+	public String getPaymentStatus()
+	{
+		return this.paymentStatus;
+	}
+
+
+	public ArrayList<ChargingPoint> getChargingPoints()
+	{
+		ArrayList<ChargingPoint> allChargingPoints = DatabaseConnector.getChargingPoints();
+		ArrayList<ChargingPoint> chargingPoints = new ArrayList<ChargingPoint>();
+
+		if (allChargingPoints == null) {
+			System.err.println("\nCould not get the charging points of a station: database loading failed.\n");
+			return chargingPoints;
+		}
+
+		for (int id : this.chargingPointsID)
+		{
+			// This does not assume any good property on IDs.
+
+			for (ChargingPoint c : allChargingPoints)
+			{
+				if (c.getID() == id) {
+					chargingPoints.add(c);
+					break;
+				}
+			}
+
+			// // Assuming IDs starts from 1 and have no gaps... 
+
+			// if (id < 1 || id > allChargingPoints.size()) {
+			// 	System.err.println("\nIncorrect charging point ID.\n");
+			// 	break;
+			// }
+
+			// chargingPoints.add(allChargingPoints.get(id - 1));
+		}
+
+		if (chargingPoints.size() != this.chargingPointsID.size()) {
+			System.err.println("\nSome charging point IDs where invalid.\n");
+		}
+
+		return chargingPoints;
+	}
+
+
+	// TODO: in station data (json), return all compatible stations (available or not).
 	public JsonObject getJsonData()
 	{
 		return Json.createObjectBuilder()
-			// .add("things", 0) // add this station data...
+			.add("paymentStatus", this.paymentStatus)
 			.build();
 	}
 

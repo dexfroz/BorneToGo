@@ -15,25 +15,20 @@ public class Coord
 	private static final double MEAN_EARTH_DIAMETER = 12742.0016; // in km
 	private static final double EPSILON = 0.0001; // max error: 11.11 m
 
+	protected String name;
+	protected String address;
+	protected Boolean isStation; // only Stations have this true. Do _not_ add a setter to modify it!
+
 	// In decimal degrees:
 	protected double latitude;
 	protected double longitude;
 
-	// In radians:
-	private double latRadian;
-	private double longRadian;
-
-	protected Boolean isStation; // only Stations have this true. Do _not_ add a setter to modify it!
-	protected String name;
-	protected String address;
-
 
 	public Coord(double latitude, double longitude, String name, String address)
 	{
-		this.isStation = false;
 		this.name = name;
 		this.address = address;
-
+		this.isStation = false;
 		this.move(latitude, longitude);
 	}
 
@@ -48,26 +43,6 @@ public class Coord
 	{
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.latRadian = DEG_TO_RAD * latitude;
-		this.longRadian = DEG_TO_RAD * longitude;
-	}
-
-
-	public double getLatitude()
-	{
-		return this.latitude;
-	}
-
-
-	public double getLongitude()
-	{
-		return this.longitude;
-	}
-
-
-	public Boolean isStation()
-	{
-		return this.isStation;
 	}
 
 
@@ -80,6 +55,24 @@ public class Coord
 	public String getAddress()
 	{
 		return this.address;
+	}
+
+
+	public Boolean isStation()
+	{
+		return this.isStation;
+	}
+
+
+	public double getLatitude()
+	{
+		return this.latitude;
+	}
+
+
+	public double getLongitude()
+	{
+		return this.longitude;
 	}
 
 
@@ -120,9 +113,9 @@ public class Coord
 	// Great-circle distance between two points on the Earth, using the Haversine formula:
 	public static double distance(Coord coord_1, Coord coord_2)
 	{
-		double a = Math.sin((coord_1.latRadian - coord_2.latRadian) / 2.);
-		double b = Math.sin((coord_1.longRadian - coord_2.longRadian) / 2.);
-		double c = Math.cos(coord_1.latRadian) * Math.cos(coord_2.latRadian);
+		double a = Math.sin((coord_1.latitude - coord_2.latitude) * DEG_TO_RAD / 2.);
+		double b = Math.sin((coord_1.longitude - coord_2.longitude) * DEG_TO_RAD / 2.);
+		double c = Math.cos(coord_1.latitude * DEG_TO_RAD) * Math.cos(coord_2.latitude * DEG_TO_RAD);
 		double h = a * a + c * b * b; // 0 <= h <= 1
 		return MEAN_EARTH_DIAMETER * Math.asin(Math.sqrt(h));
 	}

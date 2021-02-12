@@ -2,7 +2,6 @@ package main.java.bornetogo.backend;
 
 import java.io.*;
 import java.util.*;
-
 import java.sql.*;
 
 
@@ -11,6 +10,7 @@ public class DatabaseConnector
 	// Those will be kept in memory:
 	private static ArrayList<Car> cars = loadCars();
 	private static ArrayList<Station> stations = loadStations();
+	private static ArrayList<ChargingPoint> chargingPoints = loadChargingPoints();
 
 
 	public static ArrayList<Car> getCars()
@@ -33,6 +33,16 @@ public class DatabaseConnector
 	}
 
 
+	public static ArrayList<ChargingPoint> getChargingPoints()
+	{
+		if (chargingPoints == null) {
+			System.err.println("\nStatic resource 'chargingPoints' could not be loaded.\n");
+		}
+
+		return chargingPoints;
+	}
+
+
 	private static ArrayList<Car> loadCars()
 	{
 		// TODO!
@@ -49,6 +59,14 @@ public class DatabaseConnector
 		// For testing:
 		// return Station.mock();
 		return Station.bigMock();
+	}
+
+
+	private static ArrayList<ChargingPoint> loadChargingPoints()
+	{
+		// TODO!
+
+		return null;
 	}
 
 
@@ -72,7 +90,7 @@ public class DatabaseConnector
 		ipCandidates.add("mydb"); // from the container
 		ipCandidates.add("host.docker.internal");
 
-		String successfulIP = "";
+		String successfulIPs = "";
 
 		String start = "jdbc:mysql://"; // ok
 		// String start = "http://"; // nope
@@ -99,7 +117,7 @@ public class DatabaseConnector
 				conn.close();
 
 				System.out.println("\nWorked with IP: " + ip + "\n");
-				successfulIP += ip + ", ";
+				successfulIPs += ip + ", ";
 			}
 			catch (Exception e) {
 				// e.printStackTrace();
@@ -107,7 +125,7 @@ public class DatabaseConnector
 			}
 		}
 
-		return successfulIP;
+		return "Worked: " + successfulIPs;
 	}
 
 

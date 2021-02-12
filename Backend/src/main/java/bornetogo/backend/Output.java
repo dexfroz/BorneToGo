@@ -88,6 +88,7 @@ public class Output
 			return output;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			System.err.println("\nError while building the output json.\n");
 			return null;
 		}

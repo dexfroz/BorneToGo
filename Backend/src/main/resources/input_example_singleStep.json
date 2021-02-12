@@ -7,7 +7,7 @@
 	{
 		"model": "Tesla cybertruck",
 		"subscription": "",
-		"batteryType": "",
+		"capacity": 42.0,
 		"maxAutonomy": 200,
 		"currentAutonomy": 50,
 		"maxWattage": 42.1,
