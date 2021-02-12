@@ -1,11 +1,12 @@
 // Store/Forms/RouteForm
 
 import React from 'react'
-import { StyleSheet, FlatList, Image, View, Button, Text, SafeAreaView } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, FlatList, Image, View, Button, Text, SafeAreaView, Dimensions, } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { reduxForm, Field } from "redux-form";
 import TextInputClass from './TextInputClass'
 
+const { width, height } = Dimensions.get('window');
 
 class RouteForm extends React.Component {
 
@@ -38,16 +39,6 @@ class RouteForm extends React.Component {
         array.push(item);
         this.state.etapes = array;
         this.setState({ etapes: this.state.etapes });
-    }
-
-    renderAjouteEtape() {
-        return (
-            <Button title="AddStep"
-            //onPress={this.ajouteEtape()}
-            >
-                <Text>Ajouter une étape</Text>
-            </Button>
-        )
     }
 
     retireEtape(item) {
@@ -122,15 +113,14 @@ class RouteForm extends React.Component {
             <View>
                 {this.renderBoutonAjout()}
                 {this.renderEtape("arrivee", "Arrivée")}
-                <View style={styles.valider}>
-                    <Button
-                        title="Valider"
-                        onPress={this.props.handleSubmit}
-
-                        color="#70B445"
-                    >
-                        <Text>Valider l'itinéraire</Text>
-                    </Button>
+                <View style={styles.center}>
+                    <View style={styles.valider}>
+                        <Button
+                            title="Valider"
+                            onPress={this.props.handleSubmit}
+                            color="#70B445"
+                        />
+                    </View>
                 </View>
             </View>
         )
@@ -243,7 +233,12 @@ const styles = StyleSheet.create({
         color: '#70B445',
     },
     valider: {
-        marginHorizontal: 24,
+        width: width - 34,
+        marginTop: 10,
+    },
+    center: {
+        justifyContent: "center",
+        alignItems: "center",
     },
     // Bouton ajout
     vue_bouton_ajout: {

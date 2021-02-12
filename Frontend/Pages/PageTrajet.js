@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     },
     titre: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
     },
     info_titre: {

@@ -1,12 +1,12 @@
 // Store/Forms/BorneForm
 
 import React from 'react'
-import { StyleSheet, FlatList, Image, View, Button, Text, SafeAreaView } from 'react-native'
+import { StyleSheet, Dimensions, View, Button, Text } from 'react-native'
 import { reduxForm, Field } from "redux-form";
 import TextInputClass from './TextInputClass'
 import { Slider, Icon } from 'react-native-elements';
-import FieldWrapper from './FieldWrapper';
 
+const { width, height } = Dimensions.get('window');
 
 class BorneForm extends React.Component {
 
@@ -106,14 +106,15 @@ class BorneForm extends React.Component {
                 <View>
                     {this.renderUserPosition()}
                 </View>
-                <View style={styles.valider}>
-                    <Button
-                        title="Valider"
-                        onPress={this.props.handleSubmit}
-                        color="#70B445"
-                    >
-                        <Text>Valider l'itinéraire</Text>
-                    </Button>
+
+                <View style={styles.center}>
+                    <View style={styles.valider}>
+                        <Button
+                            title="Valider"
+                            onPress={this.props.handleSubmit}
+                            color="#70B445"
+                        />
+                    </View>
                 </View>
             </View>
         );
@@ -152,8 +153,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     valider: {
-        marginHorizontal: 24,
+        width: width - 34,
         marginTop: 10,
+    },
+    center: {
+        justifyContent: "center",
+        alignItems: "center",
     },
 })
 

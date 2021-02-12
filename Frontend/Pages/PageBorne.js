@@ -10,7 +10,7 @@ import BorneForm from '../Store/Forms/BorneForm'
 import { Slider, Icon } from 'react-native-elements';
 import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
 import { getItineraires } from '../Fonctions/Itineraire';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class PageBorne extends React.Component {
 
@@ -146,7 +146,7 @@ class PageBorne extends React.Component {
                 <View style={styles.titre}>
                     <Image
                         style={styles.image}
-                        source={require('../Images/itineraire.png')}
+                        source={require('../Images/borne.png')}
                     />
                     <View style={styles.info_titre}>
                         <Text style={styles.title}>Rendez-vous à une borne</Text>
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     },
     titre: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
     },
     info_titre: {
