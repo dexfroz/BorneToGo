@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { StyleSheet, View, Text, Dimensions, Button } from 'react-native'
+import { StyleSheet, View, ScrollView, Text, Dimensions, Button } from 'react-native'
 import { Picker } from '@react-native-community/picker'
 import { FontAwesome } from '@expo/vector-icons'
 import Voiture from '../Composants/Voiture'
@@ -163,7 +163,11 @@ class PageVoiture extends React.Component {
                         {this.renderVoitureChoisie(this.state.modeleSelected)}
                     </View>
                     <View style={styles.buttonSelectionner}>
-                        <Button color='#70B445' title="Sélectionner" onPress={() => this.handleCarSelected(this.state.modeleSelected)} />
+                        <Button
+                            color='#70B445'
+                            title="Sélectionner"
+                            width={width}
+                            onPress={() => this.handleCarSelected(this.state.modeleSelected)} />
                     </View>
                 </View>
                 <View style={styles.describeCarContainer}>
@@ -171,7 +175,6 @@ class PageVoiture extends React.Component {
                     <View style={styles.form}>
                         <CarForm onSubmit={(values) => this.displayForm(values)} />
                     </View>
-
                 </View>
             </View>
         );
@@ -190,35 +193,34 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     pickCarContainer: {
-        flex: 1,
+        flex: 2,
         alignItems: "center",
         flexDirection: "column",
     },
     menuDeroulant: {
-        flex: 1,
+        flex: 2,
         alignItems: "center",
         flexDirection: "row",
     },
+    voitureInfos: {
+        flex: 3,
+        padding: 10,
+        width: width - 24,
+    },
+    buttonSelectionner: {
+        width: width - 34,
+        marginTop: 10,
+    },
     describeCarContainer: {
-        flex: 2,
-        paddingTop: 40,
+        flex: 3,
+        marginTop : 15,
         alignItems: "center",
         flexDirection: "column",
     },
-    voitureInfos: {
-        flex: 1
-    },
     form: {
-        flex: 2,
-        backgroundColor: 'white',
-        paddingVertical: 20,
-        paddingHorizontal: 60,
-        margin: 10,
-        borderRadius: 10
+        flex: 1,
+        paddingVertical: 10,
     },
-    buttonSelectionner: {
-        width: width - 20,
-    }
 })
 
 const mapStateToProps = (state) => {

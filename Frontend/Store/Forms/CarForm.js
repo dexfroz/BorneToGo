@@ -1,10 +1,11 @@
 // Store/Forms/CarForm
 
 import React from 'react'
-import {View, Button, StyleSheet, Text} from 'react-native'
+import { View, Button, StyleSheet, Dimensions, Text } from 'react-native'
 import { reduxForm, Field } from "redux-form";
 import TextInputClass from './TextInputClass'
 
+const { width, height } = Dimensions.get('window');
 
 class CarForm extends React.Component {
 	render() {
@@ -20,9 +21,7 @@ class CarForm extends React.Component {
 						autoCapitalize="none"
 						component={TextInputClass}
 					/>
-				</View>
-				<View style={styles.rowForm}>
-					<Field 
+					<Field
 						name="typeprise"
 						label="Type de Prise"
 						textContentType="none"
@@ -30,7 +29,9 @@ class CarForm extends React.Component {
 						autoCapitalize="none"
 						component={TextInputClass}
 					/>
-					<Field 
+				</View>
+				<View style={styles.rowForm}>
+					<Field
 						name="maxWattage"
 						label="Puissance maximale autorisée"
 						textContentType="none"
@@ -48,7 +49,7 @@ class CarForm extends React.Component {
 						autoCapitalize="none"
 						component={TextInputClass}
 					/>
-					<Field 
+					<Field
 						name="autonomie"
 						label="Autonomie Restante"
 						textContentType="none"
@@ -57,20 +58,32 @@ class CarForm extends React.Component {
 						component={TextInputClass}
 					/>
 				</View>
-				<Button color='#70B445' title ="Valider" onPress={this.props.handleSubmit} />
+				<View style={styles.center}>
+					<View style={styles.valider}>
+						<Button color='#70B445' title="Valider" onPress={this.props.handleSubmit} />
+					</View>
+				</View>
 			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	formContainer:{
-		flexDirection:"column",
+	formContainer: {
+		flexDirection: "column",
 	},
-	rowForm:{
-		flexDirection:"row",
-		justifyContent:"space-between",
-		alignSelf:"center",
+	rowForm: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignSelf: "center",
+	},
+	valider: {
+		width: width - 34,
+		marginTop: 10,
+	},
+	center: {
+		justifyContent: "center",
+		alignItems: "center",
 	},
 })
 
