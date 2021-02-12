@@ -18,7 +18,7 @@
 
 
 SECRET="./secret.cnf"
-# TABLES="./tables.sql"
+TABLES="./tables.sql"
 SCRIPTS_DIR="./sql-scripts/"
 
 #IP=localhost
@@ -39,9 +39,15 @@ importFile()
 	mysql --defaults-extra-file=$SECRET -h $IP -P $PORT $PROTOCOL < $1
 }
 
+##########################################
 
-BIG_FILE="./bigScript.sql"
+# BIG_FILE="./bigScript.sql" # ok
+BIG_FILE="./newBigScript.sql"
+
 importFile $BIG_FILE
+
+##########################################
+# Does not work as of now:
 
 # importFile $TABLES
 
@@ -54,6 +60,11 @@ importFile $BIG_FILE
 # importFile "$SCRIPTS_DIR"borne.sql
 # importFile "$SCRIPTS_DIR"voiture.sql
 # importFile "$SCRIPTS_DIR"vcc.sql
+
+##########################################
+# Does not work as of now:
+
+# importFile $TABLES
 
 # for FILE in $(ls "$SCRIPTS_DIR"*.sql); do
 # 	echo $FILE
