@@ -2,7 +2,7 @@
 
 # Note: this script may fail the first time it is run...
 # Use what's below for not breaking:
-# time sh deploy.sh
+# time sh fill.sh
 
 # To check on the port:
 # sudo ss -tulpn | grep :3306
