@@ -235,7 +235,7 @@ class ItineraireInfo extends PureComponent {
             haut = (10 / 12) * height - (2 / 12) * height - 175;
         }
         else if (stations_etapes.length > 0) {
-            haut = (stations_etapes.length + 1) * height / 12 - 275;
+            haut = (2 / 12) * height;
         }
         hauteur = haut.toString();
 
