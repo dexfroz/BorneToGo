@@ -31,15 +31,6 @@ class Footer extends React.Component {
             <View style={styles.footer}>
                 <Tab.Navigator>
                     <Tab.Screen
-                        name="Voiture"
-                        component={PageVoiture}
-                        options={{
-                            tabBarIcon: ({ color, size }) => (
-                                <FontAwesome name="car" size={size} color={color} />
-                            ),
-                        }}
-                    />
-                    <Tab.Screen
                         name="Itinéraire"
                         component={PageTrajet}
                         options={{

@@ -24,6 +24,8 @@ class PageVoiture extends React.Component {
     }
 
     render() {
+        console.log("NAVIGATION AVANT", this.props.navigation);
+
         return (
             <View style={styles.mainContainer}>
                 <View style={styles.titre}>
@@ -37,9 +39,10 @@ class PageVoiture extends React.Component {
                     </View>
                 </View>
                 <ScrollView>
-                    <SelectionVoiture />
+                    <SelectionVoiture
+                        propsnavigation={this.props}
+                    />
                 </ScrollView>
-
             </View>
         );
     }

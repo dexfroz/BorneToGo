@@ -42,8 +42,8 @@ class SelectionVoiture extends React.Component {
         this.modelesVoitures.map((modeleVoiture) => (
             modelesVoituresCree.push(<Picker.Item label={modeleVoiture.model} value={modeleVoiture} key={this.state.nombreVoiture++} />)
         ));
-        console.log("tab ancientModele : ", modelesVoituresCree);
-        modelesVoituresCree.map((voiture) => (console.log("VoitureAncient : ", voiture)))
+        //console.log("tab ancientModele : ", modelesVoituresCree);
+        //modelesVoituresCree.map((voiture) =>(console.log("VoitureAncient : ", voiture)))
         this.state.modeles = modelesVoituresCree;
         this.state.modeleSelected = modelesVoituresCree[0].props.value;
     }
@@ -56,7 +56,7 @@ class SelectionVoiture extends React.Component {
     }
 
     trouverModeleChoisi(modeleChoisi) {
-        console.log("modeles : ", this.state.modeles)
+        //console.log("modeles : ", this.state.modeles)
         for (var i = 0; i < this.state.modeles.length; i++) {
             if (this.state.modeles[i].props.value.model == modeleChoisi.model) {
                 return i;
@@ -65,10 +65,10 @@ class SelectionVoiture extends React.Component {
     }
 
     renderVoitureChoisie(modeleChoisi) {
-        console.log("modeleChoisi : ", modeleChoisi)
+        //console.log("modeleChoisi : ", modeleChoisi)
         var idModel = this.trouverModeleChoisi(modeleChoisi);
         var modele = this.state.modeles[idModel];
-        console.log("Modele : ", modele)
+        //console.log("Modele : ", modele)
         return (
             <View>
                 <Voiture {...modele.props.value} />
@@ -132,17 +132,24 @@ class SelectionVoiture extends React.Component {
     }*/
 
     displayForm(data) {
-        console.log('data : ', data)
-        console.log('Donnees voiture : modele ', data.modele, ' | capacite ', data.capacite, ' | type de prise ', data.typeprise)
+        //console.log('data : ', data)
+        //console.log('Donnees voiture : modele ', data.modele, ' | capacite ', data.capacite, ' | type de prise ', data.typeprise)
     }
 
-    handleCarSelected(data) {
+    handleCarSelected(data, propsnavigation) {
         //console.log('data : ', data)
         const action = { type: 'CAR_PICKED_BY_USER', value: data }
         this.props.dispatch(action)
+
+        // Passage à la vue suivante
+        propsnavigation.navigation.navigate('BorneToGo');
     }
 
     render() {
+        console.log("NAVIGATION", this.props.navigation);
+
+        const { propsnavigation } = this.props;
+
         return (
 
             <View style={styles.mainContainer}>
@@ -167,7 +174,7 @@ class SelectionVoiture extends React.Component {
                             color='#70B445'
                             title="Sélectionner"
                             width={width}
-                            onPress={() => this.handleCarSelected(this.state.modeleSelected)} />
+                            onPress={() => this.handleCarSelected(this.state.modeleSelected, propsnavigation)} />
                     </View>
                 </View>
                 <View style={styles.describeCarContainer}>
