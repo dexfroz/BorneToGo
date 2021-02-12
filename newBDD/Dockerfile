@@ -1,7 +1,7 @@
 # Derived from official mysql image (our base image)
 FROM mysql:8.0
 
-EXPOSE 3306
+# EXPOSE 3306
 
 
 # COPY ./fill.sh ./var/lib/mysql

@@ -11,20 +11,24 @@ services:
       - 4321:8080 # host:container
     networks:
       - my-network
+      # my-network:
+      #   aliases:
 
   mydb:
     image: mydb:1.0
+    # image: mysql:8.0
     container_name: mydb
     restart: "no"
     build: ./newBDD
     # build:
     #   context: .
     #   dockerfile: ./Dockerfile
+    # hostname: mydb
     ports:
-      # - 3306:3306
-      - "0.0.0.0:3306:3306"
+      - 3306:3306
     # expose:
     #   - '3306'
+    #   # - "3306/tcp"
     volumes:
       - ./newBDD/.data:/var/lib/mysql
     environment:
@@ -36,6 +40,9 @@ services:
     #   - .mydb.env
     networks:
       - my-network
+      # my-network:
+      #   aliases:
+      #     - mydb
 
 networks:
   my-network:

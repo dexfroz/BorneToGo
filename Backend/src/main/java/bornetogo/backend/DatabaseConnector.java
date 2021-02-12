@@ -79,23 +79,23 @@ public class DatabaseConnector
 
 	public static String connect()
 	{
-		Connection conn = null;
-		Statement stat = null;
-		ResultSet res = null;
-
 		ArrayList<String> ipCandidates = new ArrayList<String>();
 		ipCandidates.add("localhost");
 		ipCandidates.add("127.0.0.1");
 		ipCandidates.add("0.0.0.0");
 		ipCandidates.add("mydb"); // from the container
-		ipCandidates.add("host.docker.internal");
+		// ipCandidates.add("host.docker.internal");
+		// ipCandidates.add("");
 
 		String successfulIPs = "";
 
-		String start = "jdbc:mysql://"; // ok
-		// String start = "http://"; // nope
+		String start = "jdbc:mysql://";
+
+		// String end = "";
+		String end = "?useSSL=false";
 
 		int port = 3306;
+		String database = "BorneToGo";
 		String user = "root";
 		String pwd = "aaa";
 
@@ -103,10 +103,12 @@ public class DatabaseConnector
 		{
 			try
 			{
+				String url = start + ip + ":" + port + "/" + database + end;
+				System.out.println("-> Trying: " + url);
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				conn = DriverManager.getConnection(start + ip + ":" + port + "/BorneToGo", user, pwd);
-				stat = conn.createStatement();
-				res = stat.executeQuery("select idStation from Station order by idStation");
+				Connection conn = DriverManager.getConnection(url, user, pwd);
+				Statement stat = conn.createStatement();
+				ResultSet res = stat.executeQuery("select idStation from Station order by idStation;");
 
 				System.out.println("\nidStation(s):\n");
 
@@ -125,7 +127,7 @@ public class DatabaseConnector
 			}
 		}
 
-		return "Worked: " + successfulIPs;
+		return "Result: " + successfulIPs;
 	}
 
 
