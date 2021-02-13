@@ -67,7 +67,6 @@ class PageMapResultat extends React.Component {
         const { itineraires } = props.route.params;
 
         var array = getLatitudeLongitude(itineraires[0].fullPath.geometry.coordinates);
-        console.log(array);
 
         var latitudeD = 0;
         var longitudeD = 0;

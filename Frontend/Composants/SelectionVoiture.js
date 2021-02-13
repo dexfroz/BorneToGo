@@ -146,8 +146,6 @@ class SelectionVoiture extends React.Component {
     }
 
     render() {
-        console.log("NAVIGATION", this.props.navigation);
-
         const { propsnavigation } = this.props;
 
         return (
@@ -180,7 +178,11 @@ class SelectionVoiture extends React.Component {
                 <View style={styles.describeCarContainer}>
                     <Text style={styles.titleStyle}>Ou décrivez votre modèle de voiture :</Text>
                     <View style={styles.form}>
-                        <CarForm onSubmit={(values) => this.displayForm(values)} />
+                        <CarForm onSubmit={(values) => {
+                            this.displayForm(values);
+                            // passage à la partie suivante
+                        }
+                        } />
                     </View>
                 </View>
             </View>

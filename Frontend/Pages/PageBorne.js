@@ -4,11 +4,11 @@
  * Page permettant d'indiquer sa localisation et le use case : fastest, cheapest de la borne recherchée
  */
 
-import React from 'react'
-import { StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native'
-import BorneForm from '../Store/Forms/BorneForm'
+import React from 'react';
+import { StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native';
+import BorneForm from '../Store/Forms/BorneForm';
 import { Slider, Icon } from 'react-native-elements';
-import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
+import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson';
 import { getItineraires } from '../Fonctions/Itineraire';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -20,7 +20,8 @@ class PageBorne extends React.Component {
             data: null,
             value: 0,
             text_value: "La plus proche",
-            isLoading: false
+            isLoading: false,
+            userSteps: [],
         }
     }
 
@@ -34,13 +35,40 @@ class PageBorne extends React.Component {
         }
     }
 
-    getRoutes(useCase, optimOption, car, userSteps) {
-        getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
-            var routes = getItineraires(data.routes);
-            this.setState({
-                data: routes
-            });
-        })
+    async getRoutes(useCase, optimOption, car, userSteps) {
+        // requête post avec les userSteps ainsi récupérés (si présents)
+        if (userSteps.length > 0) {
+            getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
+                if (data) {
+                    if (data.routes && Object.keys(data).length > 0) {
+                        var routes = getItineraires(data.routes);
+                        this.state.data = routes;
+                        this.afficherResultat();
+                    }
+                    else {
+                        // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                        console.log("Pas d'itinéraire trouvé");
+                    }
+                }
+                else {
+                    // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                    console.log("Pas d'itinéraire trouvé");
+                }
+            })
+        }
+    }
+
+    afficherResultat() {
+        // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
+        if (this.state.data) {
+            var data = this.state.data;
+            this.setState({ isLoading: false, data: null });
+            this.props.navigation.navigate('Resultats',
+                {
+                    itineraires: data // transmission des itinéraires
+                }
+            );
+        }
     }
 
     recupereItineraire(values) {
@@ -52,57 +80,40 @@ class PageBorne extends React.Component {
 
         if (Object.keys(values).length > 0) {
             // On transforme la sortie du formulaire en tableau avec la localisation de l'utilisateur
-            userSteps.push(
-                {
-                    "location": [],
-                    "address": values.depart_address,
-                    "name": values.depart_name,
-                }
-            )
-
-            // récupération de la voiture dans le redux
-            var car = {
-                "model": "Tesla cybertruck",
-                "subscription": "",
-                "batteryType": "",
-                "maxAutonomy": 200,
-                "currentAutonomy": 50,
-                "maxWattage": 42.1,
-                "connectors": [
-                    "EF-T2",
-                    "EF"
-                ]
-            }
-
-            // On récupère le useCase
-            var useCase = "fastest";
-            if (this.state.text_value == "La plus proche") {
-                useCase = "fastest";
-            }
-            else {
-                //useCase = "cheapest"; - PAS ENCORE DISPONIBLE
-            }
-
-            // requête post avec les userSteps ainsi récupérés (si présents)
-            if (userSteps.length > 0) {
-                this.getRoutes("refill", useCase, car, userSteps);
-            }
-
-            // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
-            if (this.state.data) {
-                console.log("Waypoints", this.state.data[0].waypoints);
-                var data = this.state.data;
-                this.setState({ isLoading: false, data: null });
-                this.props.navigation.navigate('Resultats',
+            if (values.depart_address && values.depart_name) {
+                userSteps.push(
                     {
-                        itineraires: data // transmission des itinéraires
+                        "location": [],
+                        "address": values.depart_address,
+                        "name": values.depart_name,
                     }
-                );
+                )
+            }
+            else if (values.depart_address && !values.depart_name) {
+                userSteps.push(
+                    {
+                        "location": [],
+                        "address": values.depart_address,
+                        "name": "",
+                    }
+                )
+            }
+            else if (!values.depart_address && values.depart_name) {
+                userSteps.push(
+                    {
+                        "location": [],
+                        "address": "",
+                        "name": values.depart_name,
+                    }
+                )
             }
         }
         else {
             // Toast diant : METTEZ QUELQUE CHOSE PUTAIN ! mais poliement
+            console.log("Pas de localisation renseignée");
         }
+
+        this.state.userSteps = userSteps;
     }
 
     renderSlider() {
@@ -140,7 +151,29 @@ class PageBorne extends React.Component {
     }
 
     render() {
-        console.log(this.state.data);
+        // récupération de la voiture dans le redux
+        var car = {
+            "model": "Tesla cybertruck",
+            "subscription": "",
+            "batteryType": "",
+            "maxAutonomy": 200,
+            "currentAutonomy": 50,
+            "maxWattage": 42.1,
+            "connectors": [
+                "EF-T2",
+                "EF"
+            ]
+        }
+
+        // On récupère le useCase
+        var useCase = "fastest";
+        if (this.state.text_value == "La plus proche") {
+            useCase = "fastest";
+        }
+        else {
+            //useCase = "cheapest"; - PAS ENCORE DISPONIBLE
+        }
+
         return (
             <View style={styles.main_container}>
                 <View style={styles.titre}>
@@ -162,6 +195,7 @@ class PageBorne extends React.Component {
                     <BorneForm
                         onSubmit={(values) => {
                             this.recupereItineraire(values);
+                            this.getRoutes("refill", useCase, car, this.state.userSteps);
                         }} />
                     {this.afficheLoading()}
                 </ScrollView>

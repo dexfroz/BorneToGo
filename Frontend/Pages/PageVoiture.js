@@ -5,14 +5,9 @@
  */
 
 import React from 'react'
-import { StyleSheet, View, ScrollView, Image, Text, Dimensions, Button } from 'react-native'
-import { Picker } from '@react-native-community/picker'
-import { FontAwesome } from '@expo/vector-icons'
-import Voiture from '../Composants/Voiture'
-import CarForm from '../Store/Forms/CarForm'
-import { connect } from 'react-redux';
-import { InputAccessoryView } from 'react-native'
+import { StyleSheet, View, Image, Text, Dimensions } from 'react-native'
 import SelectionVoiture from '../Composants/SelectionVoiture'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,8 +19,6 @@ class PageVoiture extends React.Component {
     }
 
     render() {
-        console.log("NAVIGATION AVANT", this.props.navigation);
-
         return (
             <View style={styles.mainContainer}>
                 <View style={styles.titre}>

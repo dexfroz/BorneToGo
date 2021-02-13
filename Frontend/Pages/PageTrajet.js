@@ -7,8 +7,8 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native'
 import RouteForm from '../Store/Forms/RouteForm'
-import { setJsonInputBackend, getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
-import { getItineraires } from '../Fonctions/Itineraire';
+import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
+import { getItineraires } from '../Fonctions/Itineraire'
 
 class PageTrajet extends React.Component {
 
@@ -16,7 +16,8 @@ class PageTrajet extends React.Component {
         super(props);
         this.state = {
             data: null,
-            isLoading: false
+            isLoading: false,
+            userSteps: [],
         }
     }
 
@@ -30,13 +31,41 @@ class PageTrajet extends React.Component {
         }
     }
 
-    getRoutes(useCase, optimOption, car, userSteps) {
-        getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
-            var routes = getItineraires(data.routes);
-            this.setState({
-                data: routes
-            });
-        })
+    async getRoutes(useCase, optimOption, car, userSteps) {
+        // requête post avec les userSteps ainsi récupérés (si présents)
+        if (userSteps.length > 0) {
+            getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
+                if (data) {
+                    if (data.routes && Object.keys(data).length > 0) {
+                        var routes = getItineraires(data.routes);
+                        this.state.data = routes;
+                        this.afficherResultat();
+                    }
+                    else {
+                        // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                        console.log("Pas d'itinéraire trouvé");
+                    }
+                }
+                else {
+                    // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                    console.log("Pas d'itinéraire trouvé");
+                }
+            })
+        }
+    }
+
+    afficherResultat() {
+        // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
+        //Object.keys(this.state.depart.data).length > 0
+        if (this.state.data && Object.keys(this.state.data).length > 0) {
+            var data = this.state.data;
+            this.setState({ isLoading: false, data: null });
+            this.props.navigation.navigate('Resultats',
+                {
+                    itineraires: data // transmission des itinéraires
+                }
+            );
+        }
     }
 
     recupereItineraire(values) {
@@ -53,8 +82,9 @@ class PageTrajet extends React.Component {
         });
 
         // On récupère les userSteps
-        if (valuesTableau.length == 0) {
+        if (valuesTableau.length == 0 && Object.keys(values).length <= 0) {
             // FORMULAIRE VIDE => TOAST
+            console.log("Pas d'itinéraire renseigné");
         }
         else {
             // On regarde dans le tableau et on récupère la balise de chaque étape
@@ -191,40 +221,27 @@ class PageTrajet extends React.Component {
             // On concatène tous les tableaux pour obtenir le trajet complet
             userSteps = userSteps_depart.concat(userSteps_etapes, userSteps_arrivee);
 
-            // récupération de la voiture dans le redux
-            var car = {
-                "model": "Tesla cybertruck",
-                "subscription": "",
-                "batteryType": "",
-                "maxAutonomy": 200,
-                "currentAutonomy": 50,
-                "maxWattage": 42.1,
-                "connectors": [
-                    "EF-T2",
-                    "EF"
-                ]
-            }
-
-            // requête post avec les userSteps ainsi récupérés (si présents)
-            if (userSteps.length > 0) {
-                this.getRoutes("trip", "fastest", car, userSteps);
-            }
-
-            // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
-            if (this.state.data) {
-                var data = this.state.data;
-                this.setState({ isLoading: false, data: null });
-                this.props.navigation.navigate('Resultats',
-                    {
-                        itineraires: data // transmission des itinéraires
-                    }
-                );
-            }
+            this.state.userSteps = userSteps;
 
         }
     }
 
     render() {
+
+        // récupération de la voiture dans le redux
+        var car = {
+            "model": "Tesla cybertruck",
+            "subscription": "",
+            "batteryType": "",
+            "maxAutonomy": 200,
+            "currentAutonomy": 50,
+            "maxWattage": 42.1,
+            "connectors": [
+                "EF-T2",
+                "EF"
+            ]
+        }
+
         return (
             <View style={styles.main_container}>
                 <View style={styles.titre}>
@@ -239,11 +256,19 @@ class PageTrajet extends React.Component {
                 </View>
                 <RouteForm
                     onSubmit={(values) => {
-                        this.recupereItineraire(values)
+                        this.recupereItineraire(values);
+                        this.getRoutes("trip", "fastest", car, this.state.userSteps);
                     }} />
                 {this.afficheLoading()}
             </View>
         );
+    }
+
+    componentDidUpdate() {
+
+    }
+
+    componentDidMount() {
     }
 }
 

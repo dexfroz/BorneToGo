@@ -3,8 +3,7 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Marker, Callout } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car un bug de react native fait que les images de react-native ne s'affichent pas (sauf dans un <Text></Text> mais cela ajoute des marges et compliquent la mise en forme)
+import { Svg, Image as ImageSvg } from 'react-native-svg';
 import { connect } from 'react-redux';
 
 
@@ -18,7 +17,7 @@ class StationMap extends PureComponent {
     changerStationActive(id) {
         const TIME_FOR_ANIMATION = 0;
         const action = { type: 'BORNE_ACTIVE_MODIFIEE', value: id }
-        this.props.dispatch(action)
+        this.props.dispatch(action);
         setTimeout(() => {
             this.markerRef.showCallout();
         }, TIME_FOR_ANIMATION);
