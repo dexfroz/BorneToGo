@@ -1,3 +1,6 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
+
 INSERT INTO BorneToGo.StationBorne (idStationBorne, idStation, idBorne) VALUES ('1', '1', '235');
 INSERT INTO BorneToGo.StationBorne (idStationBorne, idStation, idBorne) VALUES ('2', '2', '188');
 INSERT INTO BorneToGo.StationBorne (idStationBorne, idStation, idBorne) VALUES ('3', '3', '233');

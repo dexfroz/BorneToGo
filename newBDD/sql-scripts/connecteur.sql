@@ -1,3 +1,5 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
 
 INSERT INTO BorneToGo.Connecteur (idConnecteur, Titre, Name) VALUES ('7','Avcon Connector','Avcon SAE J1772-2001');
 INSERT INTO BorneToGo.Connecteur (idConnecteur, Titre, Name) VALUES ('4','Blue Commando (2P+E)','None');

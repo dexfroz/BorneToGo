@@ -1,3 +1,5 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
 
 INSERT INTO BorneToGo.VCC (idVCC,idVoiture,idConnecteur,idCourant,Puissance) VALUES ('1','1','25','20','22');
 INSERT INTO BorneToGo.VCC (idVCC,idVoiture,idConnecteur,idCourant,Puissance) VALUES ('2','1','33','30','50');

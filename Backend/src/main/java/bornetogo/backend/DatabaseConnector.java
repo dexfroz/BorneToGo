@@ -115,6 +115,46 @@ public class DatabaseConnector
 	}
 
 
+	// Returns an empty string for default values:
+	public static String cleaned(String field)
+	{
+		if (field.equals("0") || field.equals("-1")) {
+			return "";
+		}
+
+		return field;
+	}
+
+
+	// Returns a string containing the list of tables:
+	public static String getTables()
+	{
+		String query = "SHOW TABLES;";
+		String result = "Tables:\n\n";
+
+		try
+		{
+			Connection connection = getConnection();
+
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next()) {
+				result += answer.getString(1) + "\n";
+			}
+
+			connection.close();
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			result = "\nNo tables found.\n";
+			System.err.println("\n" + result + "\n");
+		}
+
+		return result;
+	}
+
+
 	// Returns the number of entries in the given table:
 	public static String getTableSize(String table)
 	{
@@ -130,7 +170,6 @@ public class DatabaseConnector
 
 			while (answer.next()) {
 				result += String.valueOf(answer.getInt(1));
-				break;
 			}
 
 			connection.close();
@@ -145,9 +184,46 @@ public class DatabaseConnector
 	}
 
 
+	// Parses the Station table:
+	public static void getStationsContent()
+	{
+		String query = "SELECT * FROM Station;";
+
+		try
+		{
+			Connection connection = getConnection();
+
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next()) {
+				int idStation = answer.getInt("idStation");
+				int idPaiement = answer.getInt("idPaiement");
+				String titre = cleaned(answer.getString("Titre"));
+				double latitude = answer.getDouble("Latitude");
+				double longitude = answer.getDouble("Longitude");
+				String adresse = cleaned(answer.getString("Adresse"));
+				String ville = cleaned(answer.getString("Ville"));
+				String codepostal = cleaned(answer.getString("Codepostal"));
+
+				String row = "-> " + idStation + ", " + idPaiement + ", " + titre + ", " + latitude +
+					", " + longitude + ", " + adresse + ", " + ville + ", " + codepostal;
+				System.out.println(row);
+			}
+
+			connection.close();
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+	}
+
+
 	public static void main(String[] args)
 	{
-		String result = getTableSize("Station");
-		System.out.println(result);
+		System.out.println(getTables());
+		System.out.println(getTableSize("Station"));
+		// getStationsContent();
 	}
 }

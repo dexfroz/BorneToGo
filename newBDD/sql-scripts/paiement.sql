@@ -1,3 +1,5 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
 
 INSERT INTO BorneToGo.Paiement (idPaiement, Titre, IsPayAtLocation, IsMembershipRequired, IsAccessKeyRequired) VALUES ('0','(Unknown)','None','None','None');
 INSERT INTO BorneToGo.Paiement (idPaiement, Titre, IsPayAtLocation, IsMembershipRequired, IsAccessKeyRequired) VALUES ('6','Private - For Staff, Visitors or Customers',FALSE,FALSE,FALSE);

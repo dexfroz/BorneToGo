@@ -1,3 +1,5 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
 
 INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('1','52','390');
 INSERT INTO BorneToGo.Batterie (idBatterie, Capacite, Autonomie) VALUES ('2','41','325');

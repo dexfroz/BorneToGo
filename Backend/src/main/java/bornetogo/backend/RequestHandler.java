@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.*;
 public class RequestHandler
 {
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response helloWorld()
 	{
 		JsonObject obj = Json.createObjectBuilder().add("hello", "world").build();
@@ -22,6 +23,7 @@ public class RequestHandler
 
 	@GET
 	@Path("get/{param}")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response answerGETrequest(@PathParam("param") String request)
 	{
 		String answer = "GET answer: " + request;
@@ -31,8 +33,8 @@ public class RequestHandler
 
 	@POST
 	@Path("post")
-	// @Consumes(MediaType.TEXT_PLAIN)
-	// @Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response answerPOSTrequest(String request)
 	{
 		String answer = "POST answer: " + request;
@@ -42,6 +44,7 @@ public class RequestHandler
 
 	@GET
 	@Path("file")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response answerFileRequest()
 	{
 		String filename = "some_text_file.txt";
@@ -58,6 +61,7 @@ public class RequestHandler
 
 	@GET
 	@Path("cars")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCars()
 	{
 		try
@@ -92,6 +96,7 @@ public class RequestHandler
 
 	@GET
 	@Path("mockpath")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response mockOutput()
 	{
 		try
@@ -145,7 +150,25 @@ public class RequestHandler
 
 
 	@GET
+	@Path("tables")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response answerGetTables()
+	{
+		try
+		{
+			String result = DatabaseConnector.getTables();
+			return Response.ok(result).build();
+		}
+		catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity("Error while trying to connect to the database.").build();
+		}
+	}
+
+
+	@GET
 	@Path("tableSize/{param}")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response answerGetTableSize(@PathParam("param") String table)
 	{
 		try

@@ -1,32 +1,19 @@
-# Changes...
+# Containerized database:
 
-... from ``` ../BDD/BDDScript/BDDScript3.sql ```:
 
-## Disabling SQL strict mode (for mysql 8.0):
-```
--- Strict SQL mode disabled:
-SET sql_mode = '';
-```
-
-## Fixing coordinates sign and decimal places:
+To fill the database:
 
 ```
-From:
-`Latitude` DECIMAL(8 , 6 ) UNSIGNED ZEROFILL,
-`Longitude` DECIMAL(9 , 6 ) UNSIGNED ZEROFILL,
-
-To:
-`Latitude` DECIMAL(9, 6),
-`Longitude` DECIMAL(9, 6),
+time sh fill.sh
 ```
 
-## Fixing some type errors:
+To access the database from CLI:
 
 ```
-'True' -> TRUE
-'False' -> FALSE
+mysql -h 127.0.0.1 -P 3306 --protocol=tcp -u root -p
 ```
 
-## Creating a new table StationBorne:
+Issues:
 
-The Borne table had 27522 entries, however 99% of it were duplicates, after cleaning only 295 entries remained. This change implied creating a new table, and modifying the Borne and Station tables.
+- Database filling crash whennot using 'time' before the command (runtime too long).
+- Database only filled via another mysql next to the docker one: use the container instead? Or instead create another image/container, as to have one for the filling, and the other used as mysql server?

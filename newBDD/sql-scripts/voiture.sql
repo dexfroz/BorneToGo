@@ -1,3 +1,5 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
 
 INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('1','1','Renault ZOE R135','100');
 INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('2','1','Renault ZOE R110','100');

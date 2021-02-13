@@ -1,3 +1,6 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
+
 INSERT INTO BorneToGo.Borne (idBorne, idConnecteur, idCourant, idStatus, Puissance) VALUES ('1', '0', '-1', '-1', '3.0');
 INSERT INTO BorneToGo.Borne (idBorne, idConnecteur, idCourant, idStatus, Puissance) VALUES ('2', '0', '-1', '-1', '350.0');
 INSERT INTO BorneToGo.Borne (idBorne, idConnecteur, idCourant, idStatus, Puissance) VALUES ('3', '0', '-1', '0', '-1.0');
