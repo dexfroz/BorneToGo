@@ -145,12 +145,12 @@ public class RequestHandler
 
 
 	@GET
-	@Path("database")
-	public Response testDatabaseConnectivity()
+	@Path("tableSize/{param}")
+	public Response answerGetTableSize(@PathParam("param") String table)
 	{
 		try
 		{
-			String result = DatabaseConnector.connect();
+			String result = DatabaseConnector.getTableSize(table);
 			return Response.ok(result).build();
 		}
 		catch (Exception e) {

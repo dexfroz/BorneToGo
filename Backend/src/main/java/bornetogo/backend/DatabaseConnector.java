@@ -77,63 +77,77 @@ public class DatabaseConnector
 	}
 
 
-	public static String connect()
+	// The result of this function should be closed at its end life.
+	public static Connection getConnection()
 	{
-		ArrayList<String> ipCandidates = new ArrayList<String>();
-		ipCandidates.add("localhost");
-		ipCandidates.add("127.0.0.1");
-		ipCandidates.add("0.0.0.0");
-		ipCandidates.add("mydb"); // from the container
-		// ipCandidates.add("host.docker.internal");
-		// ipCandidates.add("");
-
-		String successfulIPs = "";
-
-		String start = "jdbc:mysql://";
-
-		// String end = "";
-		String end = "?useSSL=false";
-
-		int port = 3306;
 		String database = "BorneToGo";
 		String user = "root";
-		String pwd = "aaa";
+		String pwd = "aaa"; // this could be dehardcoded.
+
+		int port = 3306;
+		String protocol = "jdbc:mysql://";
+		String options = "?useSSL=false"; // necessary for requesting from the container.
+
+		ArrayList<String> ipCandidates = new ArrayList<String>();
+		ipCandidates.add("mydb"); // container IP. Always checked first.
+		ipCandidates.add("localhost"); // host IP.
+
+		Connection connection = null;
 
 		for (String ip : ipCandidates)
 		{
+			String url = protocol + ip + ":" + port + "/" + database + options;
+
 			try
 			{
-				String url = start + ip + ":" + port + "/" + database + end;
-				System.out.println("-> Trying: " + url);
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(url, user, pwd);
-				Statement stat = conn.createStatement();
-				ResultSet res = stat.executeQuery("select idStation from Station order by idStation;");
-
-				System.out.println("\nidStation(s):\n");
-
-				while (res.next()) {
-					System.out.println(res.getInt(1));
-					break;
-				}
-				conn.close();
-
-				System.out.println("\nWorked with IP: " + ip + "\n");
-				successfulIPs += ip + ", ";
+				connection = DriverManager.getConnection(url, user, pwd); // Will raise an exception on failure!
+				System.out.println("\nSuccessful connection to the database with URL: " + url + "\n");
+				break;
 			}
 			catch (Exception e) {
 				// e.printStackTrace();
-				System.err.println("\nCannot connect to the database (IP: " + ip + ").\n");
+				System.err.println("\nFailed connection to the database with URL: " + url + "\n");
 			}
 		}
 
-		return "Result: " + successfulIPs;
+		return connection;
+	}
+
+
+	// Returns the number of entries in the given table:
+	public static String getTableSize(String table)
+	{
+		String query = "SELECT COUNT(*) AS entriesNumber FROM " + table + ";";
+		String result = "Number of entries in table '" + table + "': ";
+
+		try
+		{
+			Connection connection = getConnection();
+
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next()) {
+				result += String.valueOf(answer.getInt(1));
+				break;
+			}
+
+			connection.close();
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			result = "No table '" + table + "' found.";
+			System.err.println("\n" + result + "\n");
+		}
+
+		return result;
 	}
 
 
 	public static void main(String[] args)
 	{
-		String result = connect();
+		String result = getTableSize("Station");
 		System.out.println(result);
 	}
 }
