@@ -9,6 +9,7 @@ import { StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native'
 import RouteForm from '../Store/Forms/RouteForm'
 import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
 import { getItineraires } from '../Fonctions/Itineraire'
+import Toast from 'react-native-simple-toast';
 
 class PageTrajet extends React.Component {
 
@@ -43,12 +44,16 @@ class PageTrajet extends React.Component {
                     }
                     else {
                         // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                        Toast.showWithGravity("Nous n'avons pas pu trouver d'itinéraire correspondant à votre recherche.", Toast.LONG, Toast.BOTTOM);
                         console.log("Pas d'itinéraire trouvé");
+                        this.setState({ isLoading: false, data: null });
                     }
                 }
                 else {
                     // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                    Toast.showWithGravity("Nous n'avons pas pu trouver d'itinéraire correspondant à votre recherche.", Toast.LONG, Toast.BOTTOM);
                     console.log("Pas d'itinéraire trouvé");
+                    this.setState({ isLoading: false, data: null });
                 }
             })
         }
@@ -84,7 +89,9 @@ class PageTrajet extends React.Component {
         // On récupère les userSteps
         if (valuesTableau.length == 0 && Object.keys(values).length <= 0) {
             // FORMULAIRE VIDE => TOAST
+            Toast.showWithGravity("Vous n'avez pas renseigné d'itinéraire.", Toast.LONG, Toast.BOTTOM);
             console.log("Pas d'itinéraire renseigné");
+            this.setState({ isLoading: false, data: null });
         }
         else {
             // On regarde dans le tableau et on récupère la balise de chaque étape

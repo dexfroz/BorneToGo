@@ -11,6 +11,7 @@ import { Slider, Icon } from 'react-native-elements';
 import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson';
 import { getItineraires } from '../Fonctions/Itineraire';
 import { ScrollView } from 'react-native-gesture-handler';
+import Toast from 'react-native-simple-toast';
 
 class PageBorne extends React.Component {
 
@@ -47,12 +48,16 @@ class PageBorne extends React.Component {
                     }
                     else {
                         // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                        Toast.showWithGravity("Nous n'avons pas pu trouver d'itinéraire correspondant à votre recherche.", Toast.LONG, Toast.BOTTOM);
                         console.log("Pas d'itinéraire trouvé");
+                        this.setState({ isLoading: false, data: null });
                     }
                 }
                 else {
                     // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                    Toast.showWithGravity("Nous n'avons pas pu trouver d'itinéraire correspondant à votre recherche.", Toast.LONG, Toast.BOTTOM);
                     console.log("Pas d'itinéraire trouvé");
+                    this.setState({ isLoading: false, data: null });
                 }
             })
         }
@@ -109,8 +114,10 @@ class PageBorne extends React.Component {
             }
         }
         else {
-            // Toast diant : METTEZ QUELQUE CHOSE PUTAIN ! mais poliement
+            // FORMULAIRE VIDE => TOAST
+            Toast.showWithGravity("Vous n'avez pas renseigné d'itinéraire.", Toast.LONG, Toast.BOTTOM);
             console.log("Pas de localisation renseignée");
+            this.setState({ isLoading: false, data: null });
         }
 
         this.state.userSteps = userSteps;
