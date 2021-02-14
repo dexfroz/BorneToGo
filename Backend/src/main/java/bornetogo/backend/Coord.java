@@ -1,6 +1,7 @@
 package main.java.bornetogo.backend;
 
 import java.io.*;
+import java.util.*;
 import jakarta.json.*;
 
 
@@ -17,18 +18,21 @@ public class Coord
 
 	protected String name;
 	protected String address;
-	protected Boolean isStation; // only Stations have this true. Do _not_ add a setter to modify it!
 
 	// In decimal degrees:
 	protected double latitude;
 	protected double longitude;
+
+	// Fields related to Stations. Do _not_ add setters for them!
+	protected Boolean isStation = false;
+	protected String paymentStatus = "";
+	protected ArrayList<Integer> chargingPointsID = null; // more memory efficient to store IDs.
 
 
 	public Coord(double latitude, double longitude, String name, String address)
 	{
 		this.name = name;
 		this.address = address;
-		this.isStation = false;
 		this.move(latitude, longitude);
 	}
 

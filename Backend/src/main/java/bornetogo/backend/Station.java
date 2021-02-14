@@ -7,21 +7,26 @@ import jakarta.json.*;
 
 public class Station extends Coord
 {
-	private String paymentStatus = "";
-	private ArrayList<Integer> chargingPointsID; // more memory efficient to store IDs.
-
-
-	public Station(double latitude, double longitude, String name, String address)
+	public Station(double latitude, double longitude, String name, String address,
+		String paymentStatus, ArrayList<Integer> chargingPointsID)
 	{
 		super(latitude, longitude, name, address);
 		this.isStation = true;
+		this.paymentStatus = paymentStatus;
+		this.chargingPointsID = chargingPointsID;
+	}
+
+
+	// For testing. Real stations come from the database.
+	public Station(double latitude, double longitude, String name, String address)
+	{
+		this(latitude, longitude, name, address, "", new ArrayList<Integer>());
 	}
 
 
 	public Station(Coord coord)
 	{
-		super(coord.latitude, coord.longitude, coord.name, coord.address);
-		this.isStation = true;
+		this(coord.latitude, coord.longitude, coord.name, coord.address, coord.paymentStatus, coord.chargingPointsID);
 	}
 
 

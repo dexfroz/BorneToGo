@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
 
-  myapp:
+  backend:
     image: bornetogo-backend:1.0
     container_name: bornetogo-backend
     restart: "no"
@@ -12,10 +12,10 @@ services:
     networks:
       - my-network
 
-  mydb:
-    # image: mysql:8.0
-    image: mydb:1.0
-    container_name: mydb
+  database:
+    image: mysql:8.0
+    # image: bornetogo-database:1.0
+    container_name: bornetogo-database
     restart: "no"
     build: ./newBDD
     ports:
@@ -25,7 +25,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: aaa # To change this, remove the .data dir.
     # env_file:
-    #   - ./.mydb.env
+    #   - ./newBDD/secret.cnf
     networks:
       - my-network
 

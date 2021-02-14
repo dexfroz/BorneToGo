@@ -9,10 +9,10 @@ public class Car
 {
 	private String model;
 	private String subscription;
-	private double capacity;
 	private double maxAutonomy; // in km
 	private double currentAutonomy; // in km
 	private double maxWattage; // in kW
+	private double capacity; // in kWh
 	private ArrayList<String> connectors;
 	private ArrayList<String> currents;
 
@@ -21,10 +21,11 @@ public class Car
 	{
 		this.model = model;
 		this.subscription = subscription;
-		this.capacity = 0.;
 		this.maxAutonomy = maxAutonomy;
 		this.currentAutonomy = currentAutonomy;
+
 		this.maxWattage = 0.;
+		this.capacity = 0.;
 		this.connectors = new ArrayList<String>();
 		this.currents = new ArrayList<String>();
 
@@ -51,12 +52,6 @@ public class Car
 	}
 
 
-	public double getCapacity()
-	{
-		return this.capacity;
-	}
-
-
 	public double getMaxAutonomy()
 	{
 		return this.maxAutonomy;
@@ -72,6 +67,12 @@ public class Car
 	public double getMaxWattage()
 	{
 		return this.maxWattage;
+	}
+
+
+	public double getCapacity()
+	{
+		return this.capacity;
 	}
 
 
@@ -95,10 +96,10 @@ public class Car
 
 	public String toString()
 	{
-		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nBattery type: " + this.capacity +
-			"\nMax autonomy: " + this.maxAutonomy + " km\nCurrent autonomy: " + this.currentAutonomy +
-			" km\nmaxWattage: " + this.maxWattage + " kW\nConnectors number: " + this.connectors.size() +
-			"\nCurrents number : " + this.currents.size();
+		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nMax autonomy: " + this.maxAutonomy +
+			" km\nCurrent autonomy: " + this.currentAutonomy + " km\nmaxWattage: " + this.maxWattage +
+			" kW\nCapacity: " + this.capacity + " kWh\nConnectors number: " + this.connectors.size() +
+			"\nCurrents number: " + this.currents.size();
 	}
 
 
@@ -120,8 +121,8 @@ public class Car
 			double currentAutonomy = carJson.getJsonNumber​("currentAutonomy").doubleValue(); // in km
 
 			// TODO: update the constructor to add those:
-			double capacity = carJson.getJsonNumber​("capacity").doubleValue();
 			double maxWattage = carJson.getJsonNumber​("maxWattage").doubleValue(); // in kW
+			double capacity = carJson.getJsonNumber​("capacity").doubleValue(); // in kWh
 			// ArrayList<String> connectors = carJson.getString("connectors"); // TODO
 			// ArrayList<String> currents = carJson.getString("currents"); // TODO
 
@@ -157,10 +158,10 @@ public class Car
 		return Json.createObjectBuilder()
 			.add("model", this.model)
 			.add("subscription", this.subscription)
-			.add("capacity", this.capacity)
 			.add("maxAutonomy", this.maxAutonomy)
 			.add("currentAutonomy", this.currentAutonomy)
 			.add("maxWattage", this.maxWattage)
+			.add("capacity", this.capacity)
 			.add("connectors", connectorsArray)
 			.add("currents", currentsArray)
 			.build();

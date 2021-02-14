@@ -89,7 +89,7 @@ public class DatabaseConnector
 		String options = "?useSSL=false"; // necessary for requesting from the container.
 
 		ArrayList<String> ipCandidates = new ArrayList<String>();
-		ipCandidates.add("mydb"); // container IP. Always checked first.
+		ipCandidates.add("database"); // service name = container IP. Always checked first.
 		ipCandidates.add("localhost"); // host IP.
 
 		Connection connection = null;

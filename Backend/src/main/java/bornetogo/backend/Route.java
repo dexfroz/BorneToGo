@@ -128,6 +128,8 @@ public class Route
 		for (int i = 0; i < path.size(); ++i)
 		{
 			Coord coord = path.get(i);
+
+			// Adding proper Stations to the received waypoints:
 			if (coord.isStation()) {
 				this.waypoints.set(i, new Station(this.waypoints.get(i)));
 			}
