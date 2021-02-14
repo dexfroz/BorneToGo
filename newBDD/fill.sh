@@ -2,8 +2,7 @@
 
 # Filling script.
 
-# Note: this script may fail the first time it is run...
-# Use what's below for not breaking:
+# Start the filling:
 # time sh fill.sh
 
 # To access the database from CLI:
