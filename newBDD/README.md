@@ -28,9 +28,8 @@ mysql -h 127.0.0.1 -P 3306 --protocol=tcp -u root -p
 
 The fix was to change from docker image, from ``` mysql:8.0 ``` to ``` mysql:5.7 ```, or even better ``` mariadb:10.5 ```. What follows is a comparison between those docker images for our database:
 
-<center>
+
 |            | Mysql 8.0 | Mysql 5.7 | MariaDB 10.5
 :----------: | :-------: | :-------: | :----------:
 Filling time | 4min 30s  | 1min 40s  | 50 s
 Disk space   | ~ 220 Mb  | ~ 220 Mb  | ~ 150 Mb
-</center>
