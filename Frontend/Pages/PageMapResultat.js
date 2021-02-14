@@ -295,7 +295,9 @@ class PageMapResultat extends React.Component {
                         <View>
                             <TouchableOpacity
                                 key={`Bouton Statistique`}
-                            //onPress={ }
+                                onPress={() => this.props.navigation.navigate('Statistiques', {
+                                    itineraire: this.state.itineraires[this.state.idRouteCourant],
+                                })}
                             >
                                 <View style={styles.bouton_stat}>
                                     <Image

@@ -179,7 +179,7 @@ class ItineraireInfo extends PureComponent {
         )
     }
 
-    renderFooter(duree, distance) {
+    renderFooter(duree, distance, propsnavigation) {
         return (
             <View style={styles.footer}>
                 <View style={styles.duree_distance}>
@@ -189,7 +189,9 @@ class ItineraireInfo extends PureComponent {
                 <View style={styles.vue_bouton_stat}>
                     <TouchableOpacity
                         key={`Bouton Statistique`}
-                    //onPress={ }
+                        onPress={() => propsnavigation.navigation.navigate('Statistiques', {
+                            itineraire: this.state.itineraires[this.state.idRouteCourant],
+                        })}
                     >
                         <View style={styles.bouton_stat}>
                             <Image
@@ -261,7 +263,7 @@ class ItineraireInfo extends PureComponent {
                     {this.renderTrajet(stations_etapes, propsnavigation, hauteur, legs)}
                     {this.renderArrivee(arrivee, propsnavigation, hauteur)}
                 </ScrollView>
-                {this.renderFooter(duree, distance)}
+                {this.renderFooter(duree, distance, propsnavigation)}
             </View>
         );
     }
