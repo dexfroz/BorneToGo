@@ -14,6 +14,9 @@ public class Station extends Coord
 		this.isStation = true;
 		this.paymentStatus = paymentStatus;
 		this.chargingPointsID = chargingPointsID;
+
+		// TODO: fetch payment data from the id stored as a string in paymentStatus.
+		// Note that this is useless as of now, since the 'Paiement' table contains nothing useful.
 	}
 
 

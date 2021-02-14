@@ -13,15 +13,15 @@ services:
       - my-network
 
   database:
-    image: mysql:8.0
+    # image: mysql:8.0 # bugged!
+    # image: mysql:5.7
+    image: mariadb:10.5
     # image: bornetogo-database:1.0
     container_name: bornetogo-database
     restart: "no"
     # build: ./newBDD
     ports:
       - 3306:3306
-    # expose:
-    #   - '3306'
     volumes:
       - ./newBDD/.data:/var/lib/mysql
     environment:

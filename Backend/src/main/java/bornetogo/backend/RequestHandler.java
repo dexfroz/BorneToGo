@@ -69,8 +69,9 @@ public class RequestHandler
 			ArrayList<Car> allCars = DatabaseConnector.getCars();
 
 			if (allCars == null) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Cars could not be loaded by the backend.").build();
+				JsonObject obj = Json.createObjectBuilder()
+					.add("Error", "Cars could not be loaded by the backend.").build();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
 			JsonArrayBuilder carsBuilder = Json.createArrayBuilder();
@@ -88,9 +89,9 @@ public class RequestHandler
 			return Response.ok(carsJson).build();
 		}
 		catch (Exception e) {
-			JsonObject obj = Json.createObjectBuilder().add("Error", "Could not output the cars list.").build();
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity(obj).build();
+			JsonObject obj = Json.createObjectBuilder()
+				.add("Error", "Could not output the cars list.").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 		}
 	}
 
@@ -109,16 +110,17 @@ public class RequestHandler
 			JsonObject output = Core.core(input);
 
 			if (output == null) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Core program failed to output a path.").build();
+				JsonObject obj = Json.createObjectBuilder()
+					.add("Error", "Core program failed to output a path.").build();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
 			return Response.ok(output).build();
 		}
 		catch (Exception e) {
-			JsonObject obj = Json.createObjectBuilder().add("Error", "Could not output the mock path.").build();
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity(obj).build();
+			JsonObject obj = Json.createObjectBuilder()
+				.add("Error", "Could not output the mock path.").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 		}
 	}
 
@@ -138,16 +140,17 @@ public class RequestHandler
 			JsonObject output = Core.core(input);
 
 			if (output == null) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Core program failed to output a path.").build();
+				JsonObject obj = Json.createObjectBuilder()
+					.add("Error", "Core program failed to output a path.").build();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
 			return Response.ok(output).build();
 		}
 		catch (Exception e) {
-			JsonObject obj = Json.createObjectBuilder().add("Error", "Wrong request for a path.").build();
-			return Response.status(Response.Status.BAD_REQUEST)
-				.entity(obj).build();
+			JsonObject obj = Json.createObjectBuilder()
+				.add("Error", "Wrong request for a path.").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
 		}
 	}
 

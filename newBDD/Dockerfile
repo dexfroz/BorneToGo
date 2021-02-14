@@ -1,5 +1,7 @@
 # Derived from official mysql image (our base image)
-FROM mysql:8.0
+#FROM mysql:8.0 # bugged!
+#FROM mysql:5.7
+FROM mariadb:10.5
 
 # EXPOSE 3306
 
