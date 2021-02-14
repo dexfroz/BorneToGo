@@ -7,30 +7,36 @@ import jakarta.json.*;
 
 public class Car
 {
-	private String model;
-	private String subscription;
+	private String model = "";
+	private String subscription = "";
 	private double maxAutonomy; // in km
 	private double currentAutonomy; // in km
 	private double maxWattage; // in kW
 	private double capacity; // in kWh
-	private ArrayList<String> connectors;
-	private ArrayList<String> currents;
+	private ArrayList<String> connectors = new ArrayList<String>();
+	private ArrayList<String> currents = new ArrayList<String>();
+	private int idCar;
+	private int idBattery;
 
 
+	public Car(String model, int idCar, int idBattery)
+	{
+		this.model = model;
+		this.idCar = idCar;
+		this.idBattery = idBattery;
+
+		// TODO: fill the empty fields with the following function:
+		DatabaseConnector.fetchData(this);
+	}
+
+
+	// For testing. Real cars come from the database.
 	public Car(String model, double maxAutonomy, double currentAutonomy, String subscription)
 	{
 		this.model = model;
 		this.subscription = subscription;
 		this.maxAutonomy = maxAutonomy;
 		this.currentAutonomy = currentAutonomy;
-
-		this.maxWattage = 0.;
-		this.capacity = 0.;
-		this.connectors = new ArrayList<String>();
-		this.currents = new ArrayList<String>();
-
-		// TODO: fill the empty fields with the following function:
-		DatabaseConnector.fetchData(this);
 	}
 
 

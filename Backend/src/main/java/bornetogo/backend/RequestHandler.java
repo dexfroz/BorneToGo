@@ -88,8 +88,9 @@ public class RequestHandler
 			return Response.ok(carsJson).build();
 		}
 		catch (Exception e) {
+			JsonObject obj = Json.createObjectBuilder().add("Error", "Could not output the cars list.").build();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity("Unknown error.").build();
+				.entity(obj).build();
 		}
 	}
 
@@ -97,7 +98,7 @@ public class RequestHandler
 	@GET
 	@Path("mockpath")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response mockOutput()
+	public Response getMockPath()
 	{
 		try
 		{
@@ -115,8 +116,9 @@ public class RequestHandler
 			return Response.ok(output).build();
 		}
 		catch (Exception e) {
+			JsonObject obj = Json.createObjectBuilder().add("Error", "Could not output the mock path.").build();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity("Unknown error.").build();
+				.entity(obj).build();
 		}
 	}
 
@@ -125,7 +127,7 @@ public class RequestHandler
 	@Path("path")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response backendOutput(String stringQuery)
+	public Response getPaths(String stringQuery)
 	{
 		try
 		{
@@ -143,8 +145,9 @@ public class RequestHandler
 			return Response.ok(output).build();
 		}
 		catch (Exception e) {
+			JsonObject obj = Json.createObjectBuilder().add("Error", "Wrong request for a path.").build();
 			return Response.status(Response.Status.BAD_REQUEST)
-				.entity("Wrong request.").build();
+				.entity(obj).build();
 		}
 	}
 
@@ -152,7 +155,7 @@ public class RequestHandler
 	@GET
 	@Path("tables")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response answerGetTables()
+	public Response getTables()
 	{
 		try
 		{
@@ -169,7 +172,7 @@ public class RequestHandler
 	@GET
 	@Path("tableSize/{param}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response answerGetTableSize(@PathParam("param") String table)
+	public Response getTableSize(@PathParam("param") String table)
 	{
 		try
 		{

@@ -7,16 +7,20 @@ import java.sql.*;
 
 public class DatabaseConnector
 {
+	private static Boolean areCarsLoaded = false;
+	private static Boolean areStationsLoaded = false;
+	private static Boolean areChargingPointsLoaded = false;
+
 	// Those will be kept in memory:
-	private static ArrayList<Car> cars = loadCars();
-	private static ArrayList<Station> stations = loadStations();
-	private static ArrayList<ChargingPoint> chargingPoints = loadChargingPoints();
+	private static ArrayList<Car> cars = null;
+	private static ArrayList<Station> stations = null;
+	private static ArrayList<ChargingPoint> chargingPoints = null;
 
 
 	public static ArrayList<Car> getCars()
 	{
-		if (cars == null) {
-			System.err.println("\nStatic resource 'cars' could not be loaded.\n");
+		if (! areCarsLoaded) {
+			loadCars();
 		}
 
 		return cars;
@@ -25,8 +29,8 @@ public class DatabaseConnector
 
 	public static ArrayList<Station> getStations()
 	{
-		if (stations == null) {
-			System.err.println("\nStatic resource 'stations' could not be loaded.\n");
+		if (! areStationsLoaded) {
+			loadStations();
 		}
 
 		return stations;
@@ -35,50 +39,16 @@ public class DatabaseConnector
 
 	public static ArrayList<ChargingPoint> getChargingPoints()
 	{
-		if (chargingPoints == null) {
-			System.err.println("\nStatic resource 'chargingPoints' could not be loaded.\n");
+		if (! areChargingPointsLoaded) {
+			loadChargingPoints();
 		}
 
 		return chargingPoints;
 	}
 
 
-	private static ArrayList<Car> loadCars()
-	{
-		// TODO!
-
-		// For testing:
-		return Car.mock();
-	}
-
-
-	private static ArrayList<Station> loadStations()
-	{
-		// TODO!
-
-		// For testing:
-		// return Station.mock();
-		return Station.bigMock();
-	}
-
-
-	private static ArrayList<ChargingPoint> loadChargingPoints()
-	{
-		// TODO!
-
-		return null;
-	}
-
-
-	// Must fetch the car battery type and connector from its model:
-	public static void fetchData(Car car)
-	{
-		return; // TODO!
-	}
-
-
 	// The result of this function should be closed at its end life.
-	public static Connection getConnection()
+	private static Connection getConnection()
 	{
 		String database = "BorneToGo";
 		String user = "root";
@@ -116,7 +86,7 @@ public class DatabaseConnector
 
 
 	// Returns an empty string for default values:
-	public static String cleaned(String field)
+	private static String cleaned(String field)
 	{
 		if (field.equals("0") || field.equals("-1")) {
 			return "";
@@ -135,7 +105,6 @@ public class DatabaseConnector
 		try
 		{
 			Connection connection = getConnection();
-
 			Statement statement = connection.createStatement();
 			ResultSet answer = statement.executeQuery(query);
 
@@ -164,7 +133,6 @@ public class DatabaseConnector
 		try
 		{
 			Connection connection = getConnection();
-
 			Statement statement = connection.createStatement();
 			ResultSet answer = statement.executeQuery(query);
 
@@ -184,39 +152,107 @@ public class DatabaseConnector
 	}
 
 
-	// Parses the Station table:
-	public static void getStationsContent()
+	private static void loadCars()
 	{
+		cars = new ArrayList<Car>();
+		String query = "SELECT * FROM Voiture;";
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next()) {
+				String model = cleaned(answer.getString("Modele"));
+				int idCar = answer.getInt("idVoiture");
+				int idBattery = answer.getInt("idBatterie");
+				// 'Chargement' useless.
+
+				// String row = "-> " + model + ", " + idCar + ", " + idBattery;
+				// System.out.println(row);
+
+				Car car = new Car(model, idCar, idBattery);
+				cars.add(car);
+			}
+
+			connection.close();
+			areCarsLoaded = true;
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		if (cars.size() == 0) {
+			System.err.println("\nCould not get real cars, using mock data...\n");
+			areCarsLoaded = false;
+			cars = Car.mock();
+		}
+	}
+
+
+	private static void loadStations()
+	{
+		stations = new ArrayList<Station>();
 		String query = "SELECT * FROM Station;";
 
 		try
 		{
 			Connection connection = getConnection();
-
 			Statement statement = connection.createStatement();
 			ResultSet answer = statement.executeQuery(query);
 
 			while (answer.next()) {
 				int idStation = answer.getInt("idStation");
 				int idPaiement = answer.getInt("idPaiement");
-				String titre = cleaned(answer.getString("Titre"));
+				String name = cleaned(answer.getString("Titre"));
 				double latitude = answer.getDouble("Latitude");
 				double longitude = answer.getDouble("Longitude");
-				String adresse = cleaned(answer.getString("Adresse"));
-				String ville = cleaned(answer.getString("Ville"));
-				String codepostal = cleaned(answer.getString("Codepostal"));
+				String address = cleaned(answer.getString("Adresse"));
+				String city = cleaned(answer.getString("Ville"));
+				String zipCode = cleaned(answer.getString("Codepostal"));
 
-				String row = "-> " + idStation + ", " + idPaiement + ", " + titre + ", " + latitude +
-					", " + longitude + ", " + adresse + ", " + ville + ", " + codepostal;
-				System.out.println(row);
+				// String row = "-> " + idStation + ", " + idPaiement + ", " + name + ", " + latitude +
+				// 	", " + longitude + ", " + address + ", " + city + ", " + zipCode;
+				// System.out.println(row);
+
+				String fullAddress = address + " " + city + " " + zipCode;
+				Station station = new Station(latitude, longitude, name, fullAddress,
+					String.valueOf(idPaiement), new ArrayList<Integer>());
+
+				stations.add(station);
 			}
 
 			connection.close();
+			areStationsLoaded = true;
 		}
 		catch (Exception e) {
 			// e.printStackTrace();
 			System.err.println("\nInvalid SQL query: '" + query + "'\n");
 		}
+
+		if (stations.size() == 0) {
+			System.err.println("\nCould not get real stations, using mock data...\n");
+			areStationsLoaded = false;
+			// stations = Station.mock();
+			stations = Station.bigMock();
+		}
+	}
+
+
+	private static void loadChargingPoints()
+	{
+		// TODO!
+
+		chargingPoints = new ArrayList<ChargingPoint>();
+	}
+
+
+	// Must fetch the car battery type and connector from its model:
+	public static void fetchData(Car car)
+	{
+		return; // TODO!
 	}
 
 
@@ -224,6 +260,7 @@ public class DatabaseConnector
 	{
 		System.out.println(getTables());
 		System.out.println(getTableSize("Station"));
-		// getStationsContent();
+		System.out.println("Cars number: " + getCars().size());
+		System.out.println("Stations number: " + getStations().size());
 	}
 }
