@@ -504,4 +504,1734 @@
     }],
     "Modele":"Renault Twizy 80",
     "Chargement":100
+},{
+    "IDVoiture":30,
+    "BatterieInfo":{
+        "ID":25,
+        "Capacite":64,
+        "Autonomie":455
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":77
+    }],
+    "Modele":"Kia e-Niro 64",
+    "Chargement":100
+},{
+    "IDVoiture":31,
+    "BatterieInfo":{
+        "ID":26,
+        "Capacite":39.2,
+        "Autonomie":289
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":77
+    }],
+    "Modele":"Kia e-Niro 39",
+    "Chargement":100
+},{
+    "IDVoiture":32,
+    "BatterieInfo":{
+        "ID":27,
+        "Capacite":5.5,
+        "Autonomie":70
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":23,
+        "IDCourant":10,
+        "PuissanceMAX":1.8
+    }],
+    "Modele":"Citroën Ami",
+    "Chargement":100
+},{
+    "IDVoiture":33,
+    "BatterieInfo":{
+        "ID":28,
+        "Capacite":72.5,
+        "Autonomie":505
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":250
+    }],
+    "Modele":"Tesla Model Y Grande Autonomie",
+    "Chargement":100
+},{
+    "IDVoiture":34,
+    "BatterieInfo":{
+        "ID":29,
+        "Capacite":72.5,
+        "Autonomie":480
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":250
+    }],
+    "Modele":"Tesla Model Y Performance",
+    "Chargement":100
+},{
+    "IDVoiture":35,
+    "BatterieInfo":{
+        "ID":30,
+        "Capacite":93.4,
+        "Autonomie":450
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":270
+    }],
+    "Modele":"Porsche Taycan Turbo",
+    "Chargement":100
+},{
+    "IDVoiture":36,
+    "BatterieInfo":{
+        "ID":31,
+        "Capacite":93.4,
+        "Autonomie":412
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":270
+    }],
+    "Modele":"Porsche Taycan Turbo S",
+    "Chargement":100
+},{
+    "IDVoiture":37,
+    "BatterieInfo":{
+        "ID":32,
+        "Capacite":71,
+        "Autonomie":407
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":270
+    }],
+    "Modele":"Porsche Taycan 4S",
+    "Chargement":100
+},{
+    "IDVoiture":38,
+    "BatterieInfo":{
+        "ID":33,
+        "Capacite":83.7,
+        "Autonomie":462
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":270
+    }],
+    "Modele":"Porsche Taycan 4S Plus",
+    "Chargement":100
+},{
+    "IDVoiture":39,
+    "BatterieInfo":{
+        "ID":34,
+        "Capacite":64,
+        "Autonomie":484
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.2
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":77
+    }],
+    "Modele":"Hyundai Kona électrique 64",
+    "Chargement":100
+},{
+    "IDVoiture":40,
+    "BatterieInfo":{
+        "ID":26,
+        "Capacite":39.2,
+        "Autonomie":289
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.2
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":77
+    }],
+    "Modele":"Hyundai Kona électrique 39",
+    "Chargement":100
+},{
+    "IDVoiture":41,
+    "BatterieInfo":{
+        "ID":35,
+        "Capacite":86,
+        "Autonomie":362
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Audi e-tron S",
+    "Chargement":100
+},{
+    "IDVoiture":42,
+    "BatterieInfo":{
+        "ID":36,
+        "Capacite":64.7,
+        "Autonomie":339
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Audi e-tron 50 Quattro",
+    "Chargement":100
+},{
+    "IDVoiture":43,
+    "BatterieInfo":{
+        "ID":37,
+        "Capacite":86.5,
+        "Autonomie":436
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Audi e-tron 55 Quattro",
+    "Chargement":100 
+},{
+    "IDVoiture":44,
+    "BatterieInfo":{
+        "ID":36,
+        "Capacite":95,
+        "Autonomie":547
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":16.5
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Tesla Model X Plaid",
+    "Chargement":100 
+},{
+    "IDVoiture":45,
+    "BatterieInfo":{
+        "ID":37,
+        "Capacite":72.5,
+        "Autonomie":375
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":16.5
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Tesla Model X Autonomie Standard",
+    "Chargement":100 
+},{
+    "IDVoiture":46,
+    "BatterieInfo":{
+        "ID":39,
+        "Capacite":95,
+        "Autonomie":580
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":16.5
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Tesla Model X Grande Autonomie",
+    "Chargement":100
+},{
+    "IDVoiture":47,
+    "BatterieInfo":{
+        "ID":40,
+        "Capacite":95,
+        "Autonomie":487
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":30,
+        "IDCourant":20,
+        "PuissanceMAX":16.5
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Tesla Model X Performance",
+    "Chargement":100
+},{
+    "IDVoiture":48,
+    "BatterieInfo":{
+        "ID":41,
+        "Capacite":35.5,
+        "Autonomie":222
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Honda e Base",
+    "Chargement":100
+},{
+    "IDVoiture":49,
+    "BatterieInfo":{
+        "ID":42,
+        "Capacite":35.5,
+        "Autonomie":200
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Honda e Advance",
+    "Chargement":100
+},{
+    "IDVoiture":50,
+    "BatterieInfo":{
+        "ID":43,
+        "Capacite":78,
+        "Autonomie":414
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":30,
+        "IDCourant":30,
+        "PuissanceMAX":110
+    }],
+    "Modele":"Mercedes EQC 400 4MATIC",
+    "Chargement":100
+},{
+    "IDVoiture":51,
+    "BatterieInfo":{
+        "ID":44,
+        "Capacite":21.3,
+        "Autonomie":190
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    }],
+    "Modele":"Renault Twingo électrique",
+    "Chargement":100
+},{
+    "IDVoiture":52,
+    "BatterieInfo":{
+        "ID":45,
+        "Capacite":50,
+        "Autonomie":320
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"DS 3 Crossback E-tense",
+    "Chargement":100
+},{
+    "IDVoiture":53,
+    "BatterieInfo":{
+        "ID":46,
+        "Capacite":60,
+        "Autonomie":385
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Nissan Leaf 62",
+    "Chargement":100
+},{
+    "IDVoiture":54,
+    "BatterieInfo":{
+        "ID":47,
+        "Capacite":38.4,
+        "Autonomie":270
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Nissan Leaf 40",
+    "Chargement":100
+},{
+    "IDVoiture":55,
+    "BatterieInfo":{
+        "ID":48,
+        "Capacite":46,
+        "Autonomie":320
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Peugeot e-2008",
+    "Chargement":100
+},{
+    "IDVoiture":56,
+    "BatterieInfo":{
+        "ID":49,
+        "Capacite":28.9,
+        "Autonomie":234
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Mini Cooper SE",
+    "Chargement":100
+},{
+    "IDVoiture":58,
+    "BatterieInfo":{
+        "ID":50,
+        "Capacite":46,
+        "Autonomie":337
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Opel Corsa électrique",
+    "Chargement":100
+},{
+    "IDVoiture":59,
+    "BatterieInfo":{
+        "ID":51,
+        "Capacite":75.7,
+        "Autonomie":440
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":115
+    }],
+    "Modele":"Ford Mustang Mach-E RWD 76",
+    "Chargement":100
+},{
+    "IDVoiture":60,
+    "BatterieInfo":{
+        "ID":52,
+        "Capacite":98.8,
+        "Autonomie":610
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Ford Mustang Mach-E RWD 99",
+    "Chargement":100
+},{
+    "IDVoiture":61,
+    "BatterieInfo":{
+        "ID":53,
+        "Capacite":75.7,
+        "Autonomie":400
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":115
+    }],
+    "Modele":"Ford Mustang Mach-E AWD 76",
+    "Chargement":100
+},{
+    "IDVoiture":62,
+    "BatterieInfo":{
+        "ID":54,
+        "Capacite":98.8,
+        "Autonomie":540
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Ford Mustang Mach-E AWD 99",
+    "Chargement":100
+},{
+    "IDVoiture":63,
+    "BatterieInfo":{
+        "ID":55,
+        "Capacite":98.8,
+        "Autonomie":500
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Ford Mustang Mach-E GT",
+    "Chargement":100
+},{
+    "IDVoiture":64,
+    "BatterieInfo":{
+        "ID":56,
+        "Capacite":17.6,
+        "Autonomie":135
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":4.6
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    }],
+    "Modele":"Smart Fortwo Electric Drive/EQ 81",
+    "Chargement":100
+},{
+    "IDVoiture":65,
+    "BatterieInfo":{
+        "ID":57,
+        "Capacite":17.6,
+        "Autonomie":118
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    }],
+    "Modele":"Smart Fortwo Electric Drive/EQ 75",
+    "Chargement":100
+},{
+    "IDVoiture":66,
+    "BatterieInfo":{
+        "ID":58,
+        "Capacite":13.5,
+        "Autonomie":122
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Peugeot iOn",
+    "Chargement":100
+},{
+    "IDVoiture":67,
+    "BatterieInfo":{
+        "ID":59,
+        "Capacite":33,
+        "Autonomie":220
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    }],
+    "Modele":"Renault Kangoo électrique",
+    "Chargement":100
+},{
+    "IDVoiture":68,
+    "BatterieInfo":{
+        "ID":60,
+        "Capacite":33.2,
+        "Autonomie":260
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Volkswagen e-UP 36",
+    "Chargement":100
+},{
+    "IDVoiture":69,
+    "BatterieInfo":{
+        "ID":61,
+        "Capacite":16,
+        "Autonomie":130
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Volkswagen e-UP 18",
+    "Chargement":100
+},{
+    "IDVoiture":70,
+    "BatterieInfo":{
+        "ID":62,
+        "Capacite":38.3,
+        "Autonomie":294
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.2
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":44
+    }],
+    "Modele":"Hyundai Ioniq électrique 38",
+    "Chargement":100
+},{
+    "IDVoiture":71,
+    "BatterieInfo":{
+        "ID":63,
+        "Capacite":28,
+        "Autonomie":228
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":77
+    }],
+    "Modele":"Hyundai Ioniq électrique 28",
+    "Chargement":100
+},{
+    "IDVoiture":72,
+    "BatterieInfo":{
+        "ID":64,
+        "Capacite":30,
+        "Autonomie":163
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    }],
+    "Modele":"Citroën e-Méhari",
+    "Chargement":100
+},{
+    "IDVoiture":73,
+    "BatterieInfo":{
+        "ID":65,
+        "Capacite":36.8,
+        "Autonomie":265
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":40
+    }],
+    "Modele":"Skoda Citigo électrique",
+    "Chargement":100
+},{
+    "IDVoiture":74,
+    "BatterieInfo":{
+        "ID":66,
+        "Capacite":84.7,
+        "Autonomie":480
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Jaguar I-Pace EV400",
+    "Chargement":100
+},{
+    "IDVoiture":75,
+    "BatterieInfo":{
+        "ID":67,
+        "Capacite":84.7,
+        "Autonomie":470
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Jaguar I-Pace EV320",
+    "Chargement":100
+},{
+    "IDVoiture":76,
+    "BatterieInfo":{
+        "ID":68,
+        "Capacite":77,
+        "Autonomie":520
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Volkswagen ID4 Pro Performance",
+    "Chargement":100
+},{
+    "IDVoiture":77,
+    "BatterieInfo":{
+        "ID":69,
+        "Capacite":52,
+        "Autonomie":345
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.2
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Volkswagen ID4 Pure Performance",
+    "Chargement":100
+},{
+    "IDVoiture":78,
+    "BatterieInfo":{
+        "ID":69,
+        "Capacite":52,
+        "Autonomie":345
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.2
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Volkswagen ID4 Pure",
+    "Chargement":100
+},{
+    "IDVoiture":79,
+    "BatterieInfo":{
+        "ID":70,
+        "Capacite":86.5,
+        "Autonomie":444
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Audi e-tron Sportback 55 quattro",
+    "Chargement":100
+},{
+    "IDVoiture":80,
+    "BatterieInfo":{
+        "ID":71,
+        "Capacite":64.7,
+        "Autonomie":345
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Audi e-tron Sportback 50 quattro",
+    "Chargement":100
+},{
+    "IDVoiture":81,
+    "BatterieInfo":{
+        "ID":72,
+        "Capacite":86,
+        "Autonomie":368
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Audi e-tron Sportback S",
+    "Chargement":100
+},{
+    "IDVoiture":82,
+    "BatterieInfo":{
+        "ID":73,
+        "Capacite":44.5,
+        "Autonomie":263
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":80
+    }],
+    "Modele":"MG ZS EV",
+    "Chargement":100
+},{
+    "IDVoiture":84,
+    "BatterieInfo":{
+        "ID":77,
+        "Capacite":16,
+        "Autonomie":122
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Citroën C-ZERO",
+    "Chargement":100
+},{
+    "IDVoiture":85,
+    "BatterieInfo":{
+        "ID":78,
+        "Capacite":74,
+        "Autonomie":460
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"BMW iX3",
+    "Chargement":100
+},{
+    "IDVoiture":86,
+    "BatterieInfo":{
+        "ID":79,
+        "Capacite":83,
+        "Autonomie":500
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Skoda Enyaq 83",
+    "Chargement":100
+},{
+    "IDVoiture":87,
+    "BatterieInfo":{
+        "ID":80,
+        "Capacite":51.7,
+        "Autonomie":340
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Skoda Enyaq iV 50",
+    "Chargement":100
+},{
+    "IDVoiture":88,
+    "BatterieInfo":{
+        "ID":81,
+        "Capacite":58,
+        "Autonomie":390
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Skoda Enyaq iV 60",
+    "Chargement":100
+},{
+    "IDVoiture":89,
+    "BatterieInfo":{
+        "ID":82,
+        "Capacite":77,
+        "Autonomie":510
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Skoda Enyaq iV 80",
+    "Chargement":100
+},{
+    "IDVoiture":90,
+    "BatterieInfo":{
+        "ID":83,
+        "Capacite":77,
+        "Autonomie":460
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Skoda Enyaq iV 80 4x4",
+    "Chargement":100
+},{
+    "IDVoiture":91,
+    "BatterieInfo":{
+        "ID":83,
+        "Capacite":77,
+        "Autonomie":460
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":125
+    }],
+    "Modele":"Skoda Enyaq RS iV 80",
+    "Chargement":100
+},{
+    "IDVoiture":92,
+    "BatterieInfo":{
+        "ID":84,
+        "Capacite":38.4,
+        "Autonomie":200
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Nissan e-NV200 40",
+    "Chargement":100
+},{
+    "IDVoiture":93,
+    "BatterieInfo":{
+        "ID":85,
+        "Capacite":21.3,
+        "Autonomie":138
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Nissan e-NV200 24",
+    "Chargement":100
+},{
+    "IDVoiture":94,
+    "BatterieInfo":{
+        "ID":86,
+        "Capacite":46,
+        "Autonomie":350
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Citroën ë-C4 électrique",
+    "Chargement":100
+},{
+    "IDVoiture":95,
+    "BatterieInfo":{
+        "ID":87,
+        "Capacite":30,
+        "Autonomie":163
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":4
+    }],
+    "Modele":"Bolloré Bluesummer",
+    "Chargement":100
+},{
+    "IDVoiture":96,
+    "BatterieInfo":{
+        "ID":88,
+        "Capacite":22.5,
+        "Autonomie":138
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":3.2
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Peugeot Partner Electric",
+    "Chargement":100
+},{
+    "IDVoiture":97,
+    "BatterieInfo":{
+        "ID":89,
+        "Capacite":75,
+        "Autonomie":425
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":150
+    }],
+    "Modele":"Volvo XC40 électrique",
+    "Chargement":100
+},{
+    "IDVoiture":98,
+    "BatterieInfo":{
+        "ID":90,
+        "Capacite":36.8,
+        "Autonomie":260
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":40
+    }],
+    "Modele":"Seat Mii électrique",
+    "Chargement":100
+},{
+    "IDVoiture":99,
+    "BatterieInfo":{
+        "ID":91,
+        "Capacite":27.2,
+        "Autonomie":195
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3s 94Ah",
+    "Chargement":100
+},{
+    "IDVoiture":100,
+    "BatterieInfo":{
+        "ID":92,
+        "Capacite":27.2,
+        "Autonomie":325
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3s 94Ah REX",
+    "Chargement":100
+},{
+    "IDVoiture":101,
+    "BatterieInfo":{
+        "ID":93,
+        "Capacite":37.9,
+        "Autonomie":284
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"BMW i3s 120 Ah",
+    "Chargement":100
+},{
+    "IDVoiture":102,
+    "BatterieInfo":{
+        "ID":94,
+        "Capacite":17.6,
+        "Autonomie":130
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":22
+    },{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":4.6
+    }],
+    "Modele":"Smart Forfour Electric Drive/EQ",
+    "Chargement":100
+},{
+    "IDVoiture":103,
+    "BatterieInfo":{
+        "ID":95,
+        "Capacite":35.5,
+        "Autonomie":200
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Mazda MX-30",
+    "Chargement":100
+},{
+    "IDVoiture":104,
+    "BatterieInfo":{
+        "ID":96,
+        "Capacite":46,
+        "Autonomie":322
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Opel Mokka-e",
+    "Chargement":100
+},{
+    "IDVoiture":105,
+    "BatterieInfo":{
+        "ID":97,
+        "Capacite":33,
+        "Autonomie":163
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    }],
+    "Modele":"Renault Master ZE",
+    "Chargement":100
+},{
+    "IDVoiture":106,
+    "BatterieInfo":{
+        "ID":98,
+        "Capacite":54.4,
+        "Autonomie":315
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Lexus UX 300e",
+    "Chargement":100
+},{
+    "IDVoiture":107,
+    "BatterieInfo":{
+        "ID":99,
+        "Capacite":24,
+        "Autonomie":150
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    }],
+    "Modele":"Fiat 500e électrique 24",
+    "Chargement":100
+},{
+    "IDVoiture":108,
+    "BatterieInfo":{
+        "ID":100,
+        "Capacite":37.3,
+        "Autonomie":320
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":85
+    }],
+    "Modele":"Fiat 500e électrique 42",
+    "Chargement":100
+},{
+    "IDVoiture":109,
+    "BatterieInfo":{
+        "ID":101,
+        "Capacite":23.7,
+        "Autonomie":185
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Fiat 500e électrique 23",
+    "Chargement":100
+},{
+    "IDVoiture":110,
+    "BatterieInfo":{
+        "ID":102,
+        "Capacite":14.7,
+        "Autonomie":130
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Mitsubishi i-MiEV",
+    "Chargement":100
+},{
+    "IDVoiture":111,
+    "BatterieInfo":{
+        "ID":103,
+        "Capacite":64,
+        "Autonomie":452
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":77
+    }],
+    "Modele":"Kia e-Soul 64",
+    "Chargement":100
+},{
+    "IDVoiture":112,
+    "BatterieInfo":{
+        "ID":104,
+        "Capacite":39,
+        "Autonomie":277
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":77
+    }],
+    "Modele":"Kia e-Soul 39",
+    "Chargement":100
+},{
+    "IDVoiture":113,
+    "BatterieInfo":{
+        "ID":105,
+        "Capacite":22.5,
+        "Autonomie":138
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Peugeot Partner Tepee électrique",
+    "Chargement":100
+},{
+    "IDVoiture":114,
+    "BatterieInfo":{
+        "ID":106,
+        "Capacite":38.4,
+        "Autonomie":200
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Nissan e-NV200 Evalia 38",
+    "Chargement":100
+},{
+    "IDVoiture":115,
+    "BatterieInfo":{
+        "ID":107,
+        "Capacite":21.3,
+        "Autonomie":138
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":6.6
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Nissan e-NV200 Evalia 24",
+    "Chargement":100
+},{
+    "IDVoiture":116,
+    "BatterieInfo":{
+        "ID":108,
+        "Capacite":35.8,
+        "Autonomie":141
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.2
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":40
+    }],
+    "Modele":"Volkswagen e-Crafter",
+    "Chargement":100
+},{
+    "IDVoiture":117,
+    "BatterieInfo":{
+        "ID":109,
+        "Capacite":22.5,
+        "Autonomie":138
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":1,
+        "IDCourant":10,
+        "PuissanceMAX":3.7
+    },{
+        "IDConnecteur":2,
+        "IDCourant":30,
+        "PuissanceMAX":50
+    }],
+    "Modele":"Citroën e-Berlingo Multispace",
+    "Chargement":100
+},{
+    "IDVoiture":118,
+    "BatterieInfo":{
+        "ID":110,
+        "Capacite":41.4,
+        "Autonomie":137
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7
+    }],
+    "Modele":"Mercedes eVito",
+    "Chargement":100
+},{
+    "IDVoiture":119,
+    "BatterieInfo":{
+        "ID":111,
+        "Capacite":46,
+        "Autonomie":230
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Citroën ë-SpaceTourer 50",
+    "Chargement":100
+},{
+    "IDVoiture":120,
+    "BatterieInfo":{
+        "ID":112,
+        "Capacite":75,
+        "Autonomie":330
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Citroën ë-SpaceTourer 75",
+    "Chargement":100
+},{
+    "IDVoiture":121,
+    "BatterieInfo":{
+        "ID":113,
+        "Capacite":37,
+        "Autonomie":119
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":80
+    }],
+    "Modele":"Mercedes eSprinter 41",
+    "Chargement":100
+},{
+    "IDVoiture":122,
+    "BatterieInfo":{
+        "ID":114,
+        "Capacite":47,
+        "Autonomie":157
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":80
+    }],
+    "Modele":"Mercedes eSprinter 55",
+    "Chargement":100
+},{
+    "IDVoiture":123,
+    "BatterieInfo":{
+        "ID":115,
+        "Capacite":46,
+        "Autonomie":230
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Opel Zafira-e Life 50",
+    "Chargement":100
+},{
+    "IDVoiture":124,
+    "BatterieInfo":{
+        "ID":116,
+        "Capacite":75,
+        "Autonomie":330
+    },
+    "ConnecteurCourantInfo":[{
+        "IDConnecteur":25,
+        "IDCourant":10,
+        "PuissanceMAX":7.4
+    },{
+        "IDConnecteur":25,
+        "IDCourant":20,
+        "PuissanceMAX":11
+    },{
+        "IDConnecteur":33,
+        "IDCourant":30,
+        "PuissanceMAX":100
+    }],
+    "Modele":"Opel Zafira-e Life 75",
+    "Chargement":100
 }]
