@@ -15,6 +15,8 @@ public class Car
 	private double capacity; // in kWh
 	private ArrayList<String> connectors = new ArrayList<String>();
 	private ArrayList<String> currents = new ArrayList<String>();
+
+	// In reguards to the database:
 	private int idCar;
 	private int idBattery;
 
@@ -26,7 +28,7 @@ public class Car
 		this.idBattery = idBattery;
 
 		// TODO: fill the empty fields with the following function:
-		DatabaseConnector.fetchData(this);
+		DatabaseConnector.fetchCarData(this);
 	}
 
 

@@ -150,7 +150,7 @@ public class Coord
 	}
 
 
-	public JsonObject getJsonData()
+	public JsonObject getJsonData(Car car)
 	{
 		return Json.createObjectBuilder().build(); // empty object by default.
 	}
@@ -173,14 +173,14 @@ public class Coord
 	}
 
 
-	public JsonObject toJsonFull(Format format)
+	public JsonObject toJsonFull(Format format, Car car)
 	{
 		return Json.createObjectBuilder()
 			.add("location", this.toJsonSmall(format))
 			.add("name", this.name)
 			.add("address", this.address)
 			.add("isStation", this.isStation)
-			.add("data", this.getJsonData())
+			.add("data", this.getJsonData(car))
 			.build();
 	}
 

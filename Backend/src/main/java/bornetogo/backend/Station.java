@@ -30,6 +30,7 @@ public class Station extends Coord
 	public Station(Coord coord)
 	{
 		this(coord.latitude, coord.longitude, coord.name, coord.address, coord.paymentStatus, coord.chargingPointsID);
+		// TODO: fix this! paymentStatus and chargingPointsID are always to Coord defautl values here!
 	}
 
 
@@ -39,58 +40,74 @@ public class Station extends Coord
 	}
 
 
+	// Loads on demand the charging points for this station.
+	// This is not to be kept in memory for all stations at all times.
 	public ArrayList<ChargingPoint> getChargingPoints()
 	{
 		ArrayList<ChargingPoint> allChargingPoints = DatabaseConnector.getChargingPoints();
-		ArrayList<ChargingPoint> chargingPoints = new ArrayList<ChargingPoint>();
+		ArrayList<ChargingPoint> stationChargingPoints = new ArrayList<ChargingPoint>();
+
+		if (this.chargingPointsID == null) {
+			System.err.println("\nCould not get the charging points of a station: null 'chargingPointsID'.\n");
+			return stationChargingPoints;
+		}
 
 		if (allChargingPoints == null) {
 			System.err.println("\nCould not get the charging points of a station: database loading failed.\n");
-			return chargingPoints;
+			return stationChargingPoints;
 		}
 
 		for (int id : this.chargingPointsID)
 		{
-			// This does not assume any good property on IDs.
-
+			// This does not assume any good property on IDs:
 			for (ChargingPoint c : allChargingPoints)
 			{
 				if (c.getID() == id) {
-					chargingPoints.add(c);
+					stationChargingPoints.add(c);
 					break;
 				}
 			}
-
-			// // Assuming IDs starts from 1 and have no gaps... 
-
-			// if (id < 1 || id > allChargingPoints.size()) {
-			// 	System.err.println("\nIncorrect charging point ID.\n");
-			// 	break;
-			// }
-
-			// chargingPoints.add(allChargingPoints.get(id - 1));
 		}
 
-		if (chargingPoints.size() != this.chargingPointsID.size()) {
-			System.err.println("\nSome charging point IDs where invalid.\n");
+		if (stationChargingPoints.size() != this.chargingPointsID.size()) {
+			System.err.println("\nSome charging points IDs where invalid.\n");
 		}
 
-		return chargingPoints;
+		return stationChargingPoints;
 	}
 
 
-	// TODO: in station data (json), return all compatible stations (available or not).
-	public JsonObject getJsonData()
+	public JsonObject getJsonData(Car car)
 	{
+		// The backend needs to output all compatible charging points - available or not!
+		ArrayList<ChargingPoint> compatibleChargingPoints = getCompatibleChargingPoints(car);
+
+		JsonArrayBuilder chargingPointsBuilder = Json.createArrayBuilder();
+
+		for (ChargingPoint chargingPoint : compatibleChargingPoints) {
+			chargingPointsBuilder.add(chargingPoint.toJson());
+		}
+
+		JsonArray chargingPointsArray = chargingPointsBuilder.build();
+
 		return Json.createObjectBuilder()
 			.add("paymentStatus", this.paymentStatus)
+			.add("bornes", chargingPointsArray)
 			.build();
 	}
 
 
-	public Boolean hasCompatibleChargingPoint(Car car)
+	public Boolean hasUsableCompatibleChargingPoint(Car car)
 	{
 		return true; // TODO, using the car and list of charging points.
+	}
+
+
+	// This must _not_ filter charging points on availability:
+	public ArrayList<ChargingPoint> getCompatibleChargingPoints(Car car)
+	{
+		// TODO, using the car and list of charging points.
+		return this.getChargingPoints();
 	}
 
 

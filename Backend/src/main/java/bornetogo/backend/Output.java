@@ -7,7 +7,7 @@ import jakarta.json.*;
 public class Output
 {
 	// Returns null on failure.
-	public static JsonObject build(ArrayList<Route> routes, long startTime)
+	public static JsonObject build(ArrayList<Route> routes, Car car, long startTime)
 	{
 		try
 		{
@@ -35,7 +35,7 @@ public class Output
 				JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
 
 				for (Coord coord : route.getWaypoints()) {
-					waypointsBuilder.add(coord.toJsonFull(Coord.Format.LONG_LAT));
+					waypointsBuilder.add(coord.toJsonFull(Coord.Format.LONG_LAT, car));
 				}
 
 				JsonArray waypointsArray = waypointsBuilder.build();

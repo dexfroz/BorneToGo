@@ -54,7 +54,7 @@ public class Pathfinding
 		ArrayList<Station> relevantStations = new ArrayList<Station>();
 
 		for (Station station : allStations) {
-			if (station.hasCompatibleChargingPoint(car)) {
+			if (station.hasUsableCompatibleChargingPoint(car)) {
 				relevantStations.add(station);
 			}
 		}

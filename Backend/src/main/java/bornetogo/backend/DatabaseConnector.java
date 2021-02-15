@@ -86,10 +86,21 @@ public class DatabaseConnector
 
 
 	// Returns an empty string for default values:
-	private static String cleaned(String field)
+	private static String sanitize(String field)
 	{
 		if (field.equals("0") || field.equals("-1")) {
 			return "";
+		}
+
+		return field;
+	}
+
+
+	// Returns 0. for default values:
+	private static double sanitize(double field)
+	{
+		if (field == -1.) {
+			return 0.;
 		}
 
 		return field;
@@ -163,11 +174,12 @@ public class DatabaseConnector
 			Statement statement = connection.createStatement();
 			ResultSet answer = statement.executeQuery(query);
 
-			while (answer.next()) {
-				String model = cleaned(answer.getString("Modele"));
+			while (answer.next())
+			{
+				String model = sanitize(answer.getString("Modele"));
 				int idCar = answer.getInt("idVoiture");
 				int idBattery = answer.getInt("idBatterie");
-				// 'Chargement' useless.
+				// 'Chargement' is useless.
 
 				// String row = "-> " + model + ", " + idCar + ", " + idBattery;
 				// System.out.println(row);
@@ -203,15 +215,16 @@ public class DatabaseConnector
 			Statement statement = connection.createStatement();
 			ResultSet answer = statement.executeQuery(query);
 
-			while (answer.next()) {
+			while (answer.next())
+			{
 				int idStation = answer.getInt("idStation");
 				int idPaiement = answer.getInt("idPaiement");
-				String name = cleaned(answer.getString("Titre"));
+				String name = sanitize(answer.getString("Titre"));
 				double latitude = answer.getDouble("Latitude");
 				double longitude = answer.getDouble("Longitude");
-				String address = cleaned(answer.getString("Adresse"));
-				String city = cleaned(answer.getString("Ville"));
-				String zipCode = cleaned(answer.getString("Codepostal"));
+				String address = sanitize(answer.getString("Adresse"));
+				String city = sanitize(answer.getString("Ville"));
+				String zipCode = sanitize(answer.getString("Codepostal"));
 
 				// String row = "-> " + idStation + ", " + idPaiement + ", " + name + ", " + latitude +
 				// 	", " + longitude + ", " + address + ", " + city + ", " + zipCode;
@@ -219,8 +232,7 @@ public class DatabaseConnector
 
 				String fullAddress = address + " " + city + " " + zipCode;
 				Station station = new Station(latitude, longitude, name, fullAddress,
-					String.valueOf(idPaiement), new ArrayList<Integer>());
-
+					String.valueOf(idPaiement), new ArrayList<Integer>()); // TODO: fetch the charging points ID!
 				stations.add(station);
 			}
 
@@ -243,14 +255,49 @@ public class DatabaseConnector
 
 	private static void loadChargingPoints()
 	{
-		// TODO!
-
 		chargingPoints = new ArrayList<ChargingPoint>();
+		String query = "SELECT * FROM Borne;";
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next())
+			{
+				int idChargingPoint = answer.getInt("idBorne");
+				int idConnector = answer.getInt("idConnecteur");
+				int idCurrent = answer.getInt("idCourant");
+				int idStatus = answer.getInt("idStatus");
+				double wattage = sanitize(answer.getDouble("Puissance"));
+
+				// String row = "-> " + idChargingPoint + ", " + idConnector + ", " + idCurrent + ", " +
+				// 	idStatus + ", " + wattage;
+				// System.out.println(row);
+
+				ChargingPoint chargingPoint = new ChargingPoint(idChargingPoint, idConnector,
+					idCurrent, idStatus, wattage);
+				chargingPoints.add(chargingPoint);
+			}
+
+			connection.close();
+			areChargingPointsLoaded = true;
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		if (chargingPoints.size() == 0) {
+			System.err.println("\nCould not get real charging points, using mock data...\n");
+			areChargingPointsLoaded = false;
+		}
 	}
 
 
 	// Must fetch the car battery type and connector from its model:
-	public static void fetchData(Car car)
+	public static void fetchCarData(Car car)
 	{
 		return; // TODO!
 	}
@@ -262,5 +309,6 @@ public class DatabaseConnector
 		System.out.println(getTableSize("Station"));
 		System.out.println("Cars number: " + getCars().size());
 		System.out.println("Stations number: " + getStations().size());
+		System.out.println("Charging Points number: " + getChargingPoints().size());
 	}
 }

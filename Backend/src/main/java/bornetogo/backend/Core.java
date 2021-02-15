@@ -124,7 +124,7 @@ public class Core
 
 		// Building the output:
 
-		JsonObject output = Output.build(routes, time_0);
+		JsonObject output = Output.build(routes, car, time_0);
 
 		long time_6 = System.nanoTime();
 

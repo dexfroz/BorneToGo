@@ -212,6 +212,7 @@ public class Route
 
 			JsonArray waypointsArray = json.getJsonArray("waypoints");
 
+			// N.B: Received waypoints are kept over the know steps... Change this?
 			for (int i = 0; i < waypointsArray.size(); ++i)
 			{
 				JsonObject waypoint = waypointsArray.getJsonObject(i);
@@ -311,7 +312,7 @@ public class Route
 
 		ArrayList<Route> routes = new ArrayList<Route>();
 		routes.add(route);
-		JsonObject output = Output.build(routes, startTime);
+		JsonObject output = Output.build(routes, car, startTime);
 
 		// Core.safeJsonPrinting(output); // lots of printing...
 	}
