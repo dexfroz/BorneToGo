@@ -480,6 +480,90 @@ public class DatabaseConnector
 	}
 
 
+	// TODO: use this.
+	private static void loadCurrents()
+	{
+		ArrayList<Current> currents = new ArrayList<Current>();
+		String query = "SELECT * FROM Courant;";
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next())
+			{
+				int idCurrent = answer.getInt("idCourant");
+				String name = answer.getString("Titre");
+				String description = answer.getString("Description");
+
+				// String row = "-> " + idCurrent + ", " + name + ", " + description;
+				// System.out.println(row);
+
+				Current current = new Current(idCurrent, name, description);
+				currents.add(current);
+			}
+
+			connection.close();
+			// areCurrentsLoaded = true;
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		if (currents.size() == 0) {
+			System.err.println("\nCould not load currents.\n");
+			// areCurrentsLoaded = false;
+		}
+
+		// return currents;
+	}
+
+
+	// TODO: use this.
+	private static void loadConnectors()
+	{
+		ArrayList<Connector> connectors = new ArrayList<Connector>();
+		String query = "SELECT * FROM Connecteur;";
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next())
+			{
+				int idConnector = answer.getInt("idConnecteur");
+				String title = answer.getString("Titre");
+				String name = answer.getString("Name");
+
+				// String row = "-> " + idConnector + ", " + title + ", " + name;
+				// System.out.println(row);
+
+				Connector connector = new Connector(idConnector, title, name);
+				connectors.add(connector);
+			}
+
+			connection.close();
+			// areConnectorsLoaded = true;
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		if (connectors.size() == 0) {
+			System.err.println("\nCould not load connectors.\n");
+			// areConnectorsLoaded = false;
+		}
+
+		// return connectors;
+	}
+
+
 	public static void main(String[] args)
 	{
 		long time_0 = System.nanoTime();
@@ -490,10 +574,13 @@ public class DatabaseConnector
 		System.out.println("Charging Points number: " + getChargingPoints().size());
 		System.out.println("Stations number: " + getStations().size() + "\n");
 
+		// Waiting to be properly integrated:
 		loadBatteries();
 		loadStatuses();
+		loadCurrents();
+		loadConnectors();
 
 		long time_1 = System.nanoTime();
-		Core.benchmark(time_0, time_1, "DatabaseConnector.getStations()");
+		Core.benchmark(time_0, time_1, "Loading everything.");
 	}
 }
