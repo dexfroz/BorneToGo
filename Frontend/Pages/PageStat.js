@@ -16,46 +16,26 @@ class PageStat extends React.Component {
         super(props)
     }
 
-    renderStats(stats) {
+    renderAmpoule(stats) {
+        var affichage = false;
+
         // Message ampoules
         var message = "";
+        if (stats.lightBulbsNumber && stats.wattage && stats.days) {
+            affichage = true;
 
-        if (stats.lightBulbsNumber < 2) {
-            message = " ampoule "
-        }
-        else {
-            message = " ampoules "
-        }
+            if (stats.lightBulbsNumber < 2) {
+                message = " ampoule "
+            }
+            else {
+                message = " ampoules "
+            }
 
-        message = message + " de " + stats.wattage + " Watts fonctionnant sur une durée de " + formaterDureeAmpoules(stats.days);
+            message = message + " de " + stats.wattage + " Watts fonctionnant sur une durée de " + formaterDureeAmpoules(stats.days);
+        }
 
         return (
-            <View style={styles.stat_container}>
-                <View style={styles.titre_stat_container}>
-                    <Text style={styles.titre_stat_text}>Vous avez économisé...</Text>
-                </View>
-                <View style={styles.money_container}>
-                    <View style={styles.image_container}>
-                        <Image
-                            style={styles.image_stat}
-                            source={require('../Images/money.png')}
-                        />
-                    </View>
-                    <View style={styles.sub_stat_container}>
-                        <Text style={styles.money_text}>{stats.moneySavings} €</Text>
-                    </View>
-                </View>
-                <View style={styles.emission_container}>
-                    <View style={styles.image_container}>
-                        <Image
-                            style={styles.image_stat}
-                            source={require('../Images/co2.png')}
-                        />
-                    </View>
-                    <View style={styles.sub_stat_container}>
-                        <Text style={styles.ampoule_text}>{stats.carbonEmissionSavings} kg</Text>
-                    </View>
-                </View>
+            affichage ?
                 <View style={styles.ampoule_container}>
                     <View style={styles.image_container}>
                         <Image
@@ -69,13 +49,101 @@ class PageStat extends React.Component {
                         <Text style={styles.text}>{message}</Text>
                     </View>
                 </View>
-            </View>
+                :
+                <View></View>
+        )
+    }
+
+    renderMoney(stats) {
+        var affichage = false;
+        if (stats.moneySavings) {
+            affichage = true;
+        }
+
+        return (
+            affichage ?
+                <View style={styles.money_container}>
+                    <View style={styles.image_container}>
+                        <Image
+                            style={styles.image_stat}
+                            source={require('../Images/money.png')}
+                        />
+                    </View>
+                    <View style={styles.sub_stat_container}>
+                        <Text style={styles.money_text}>{stats.moneySavings} €</Text>
+                    </View>
+                </View>
+                :
+                <View></View>
+        )
+    }
+
+    renderCO2(stats) {
+        var affichage = false;
+        if (stats.carbonEmissionSavings) {
+            affichage = true;
+        }
+        return (
+            affichage ?
+                <View style={styles.emission_container}>
+                    <View style={styles.image_container}>
+                        <Image
+                            style={styles.image_stat}
+                            source={require('../Images/co2.png')}
+                        />
+                    </View>
+                    <View style={styles.sub_stat_container}>
+                        <Text style={styles.ampoule_text}>{stats.carbonEmissionSavings} kg</Text>
+                    </View>
+                </View>
+                :
+                <View></View>
+        )
+    }
+
+    renderStats(stats, affichage) {
+        return (
+            affichage ?
+                <View style={styles.stat_container}>
+                    <View style={styles.titre_stat_container}>
+                        <Text style={styles.titre_stat_text}>Vous avez économisé...</Text>
+                    </View>
+                    {this.renderMoney(stats)}
+                    {this.renderCO2(stats)}
+                    {this.renderAmpoule(stats)}
+                </View>
+                :
+                <View style={styles.pas_de_stat_container}>
+                    <Text style={styles.pas_de_stat_text}>
+                        Pas de statistiques trouvées pour ce trajet.
+                    </Text>
+                </View>
         )
     }
 
     render() {
         // il faudra récupérer stats directement dans itinéraire
-        var stats =
+        const { itineraire } = this.props.route.params;
+        var stats = itineraire.fullPath.stats;
+
+        var affichage = false;
+        /*if (stats && Object.keys(stats).length > 0) {
+            affichage = true;
+            console.log(affichage);
+        }
+        else {
+            stats =
+            {
+                "moneySavings": 0,
+                "carbonEmissionSavings": 0,
+                "lightBulbsNumber": 0,
+                "wattage": 0,
+                "days": 0
+            };
+        }*/
+        affichage = true;
+
+        stats =
         {
             "moneySavings": 12.30,
             "carbonEmissionSavings": 0.123,
@@ -83,6 +151,7 @@ class PageStat extends React.Component {
             "wattage": 5,
             "days": 12
         };
+
 
         return (
             <View style={styles.main_container}>
@@ -96,7 +165,7 @@ class PageStat extends React.Component {
                         <Text style={styles.explication}>Vous trouverez la réduction des émissions de carbone et l'économie réalisée avec ce trajet.</Text>
                     </View>
                 </View>
-                {this.renderStats(stats)}
+                {this.renderStats(stats, affichage)}
             </View>
         );
     }
@@ -208,6 +277,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+    },
+    pas_de_stat_container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    pas_de_stat_text: {
+        color: '#70B445',
+        fontSize: 35,
+        fontWeight: 'bold',
+        textAlign: 'center',
     }
 })
 
