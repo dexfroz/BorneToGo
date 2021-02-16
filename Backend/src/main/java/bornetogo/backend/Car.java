@@ -105,6 +105,12 @@ public class Car
 	}
 
 
+	public void setMaxAutonomy(double maxAutonomy)
+	{
+		this.maxAutonomy = maxAutonomy;
+	}
+
+
 	public void setCurrentAutonomy(double autonomy)
 	{
 		this.currentAutonomy = Math.max(0., Math.min(autonomy, this.maxAutonomy));

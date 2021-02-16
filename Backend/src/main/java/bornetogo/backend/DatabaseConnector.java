@@ -336,7 +336,6 @@ public class DatabaseConnector
 		boolean stationsCheckResult = checkStationsIDrange();
 		System.out.println("Fast mode status: " + stationsCheckResult);
 
-		ArrayList<ArrayList<Integer>> stationChargingPoints = new ArrayList<ArrayList<Integer>>();
 		String query = "SELECT * FROM StationBorne;";
 		int count = 0;
 
@@ -396,6 +395,91 @@ public class DatabaseConnector
 	}
 
 
+	// TODO: use this.
+	private static void loadBatteries()
+	{
+		ArrayList<Battery> batteries = new ArrayList<Battery>();
+		String query = "SELECT * FROM Batterie;";
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next())
+			{
+				int idBattery = answer.getInt("idBatterie");
+				double capacity = answer.getDouble("Capacite");
+				double autonomy = answer.getDouble("Autonomie");
+
+				// String row = "-> " + idBattery + ", " + capacity + ", " + autonomy;
+				// System.out.println(row);
+
+				Battery battery = new Battery(idBattery, capacity, autonomy);
+				batteries.add(battery);
+			}
+
+			connection.close();
+			// areBatteriesLoaded = true;
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		if (batteries.size() == 0) {
+			System.err.println("\nCould not load batteries.\n");
+			// areBatteriesLoaded = false;
+		}
+
+		// return batteries;
+	}
+
+
+	// TODO: use this.
+	private static void loadStatuses()
+	{
+		ArrayList<Status> statuses = new ArrayList<Status>();
+		String query = "SELECT * FROM Status;";
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next())
+			{
+				int idStatus = answer.getInt("idStatus");
+				String name = answer.getString("titre");
+				boolean isOperational = answer.getBoolean("isOperational");
+				boolean isUserSelectable = answer.getBoolean("isUserSelectable");
+
+				// String row = "-> " + idStatus + ", " + name + ", " + isOperational + ", " + isUserSelectable;
+				// System.out.println(row);
+
+				Status status = new Status(idStatus, name, isOperational, isUserSelectable);
+				statuses.add(status);
+			}
+
+			connection.close();
+			// areStatusesLoaded = true;
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		if (statuses.size() == 0) {
+			System.err.println("\nCould not load statuses.\n");
+			// areStatusesLoaded = false;
+		}
+
+		// return statuses;
+	}
+
+
 	public static void main(String[] args)
 	{
 		long time_0 = System.nanoTime();
@@ -405,6 +489,9 @@ public class DatabaseConnector
 		System.out.println("Cars number: " + getCars().size());
 		System.out.println("Charging Points number: " + getChargingPoints().size());
 		System.out.println("Stations number: " + getStations().size() + "\n");
+
+		loadBatteries();
+		loadStatuses();
 
 		long time_1 = System.nanoTime();
 		Core.benchmark(time_0, time_1, "DatabaseConnector.getStations()");
