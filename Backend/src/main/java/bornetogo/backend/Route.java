@@ -12,6 +12,8 @@ public class Route
 		ON
 	}
 
+	private static final double GAP_WARNING = 50.; // Minimal position change issuing a warning, in meters.
+
 	private double length; // in km
 	private double duration; // in sec
 	private double cost; // in euros
@@ -92,7 +94,7 @@ public class Route
 	}
 
 
-	// For testing, it isn't actually useful to parse this:
+	// For testing, it isn't actually useful to parse this. And it's slow.
 	private ArrayList<Coord> getFullPath()
 	{
 		try
@@ -121,53 +123,37 @@ public class Route
 	}
 
 
-	// Will complete the received waypoints with input name and address, and replace Coords with
-	// Stations where needed. Note that received coordinates will be kept over the input ones!
-	private void completedWaypoints(ArrayList<Coord> path)
+	// Will overwrite the waypoints with input steps, keeping name, address and potentially Station class,
+	// while setting the position to the received one, as to have a coherent full path.
+	private void updateWaypoints(ArrayList<Coord> path)
 	{
 		for (int i = 0; i < path.size(); ++i)
 		{
-			Coord coord = path.get(i);
+			Coord inputCoord = path.get(i);
+			Coord receivedCoord = this.waypoints.get(i);
 
-			// Adding proper Stations to the received waypoints:
-			if (coord.isStation()) {
-				this.waypoints.set(i, new Station(this.waypoints.get(i)));
+			double dist = 1000. * Coord.distance(inputCoord, receivedCoord); // in meters.
+
+			if (dist > GAP_WARNING) {
+				System.out.printf("\nGreat change in position (%.3f m) for waypoint:\n\n%s\n",
+					dist, inputCoord.toString());
 			}
 
+			inputCoord.move(receivedCoord.getLatitude(), receivedCoord.getLongitude());
+			this.waypoints.set(i, inputCoord);
+		}
+	}
+
+
+	// Computes the cost of the given route (in euros), and increases
+	// the duration of the route by the refilling time (in sec):
+	private void computeCostAndDuration(Car car)
+	{
+		for (int i = 0; i < this.waypoints.size(); ++i)
+		{
 			Coord waypoint = this.waypoints.get(i);
-			waypoint.setName(coord.getName()); // keeping input name.
-			waypoint.setAddress(coord.getAddress()); // a received waypoint have no address anyway.
-		}
-	}
-
-
-	// Computes the duration of the given route, including the refilling time, in sec:
-	private void computeDuration(Car car)
-	{
-		// Note: this.duration already contains the path duration, adding the refilling time:
-		for (int i = 0; i < this.waypoints.size(); ++i)
-		{
-			Coord currentStep = this.waypoints.get(i);
-
-			if (currentStep.isStation()) { // refilling!
-				Station station = new Station(currentStep);
-				this.duration += station.getChargingDuration(car);
-			}
-		}
-	}
-
-
-	// Computes the cost of the given route, in euros:
-	private void computeCost(Car car)
-	{
-		for (int i = 0; i < this.waypoints.size(); ++i)
-		{
-			Coord currentStep = this.waypoints.get(i);
-
-			if (currentStep.isStation()) { // refilling!
-				Station station = new Station(currentStep);
-				this.cost += station.getChargingCost(car);
-			}
+			this.cost += waypoint.getChargingCost(car);
+			this.duration += waypoint.getChargingDuration(car);
 		}
 	}
 
@@ -212,14 +198,13 @@ public class Route
 
 			JsonArray waypointsArray = json.getJsonArray("waypoints");
 
-			// N.B: Received waypoints are kept over the know steps... Change this?
 			for (int i = 0; i < waypointsArray.size(); ++i)
 			{
 				JsonObject waypoint = waypointsArray.getJsonObject(i);
 				String foundName = waypoint.getString("name");
 				JsonArray coordJson = waypoint.getJsonArray("location");
 				Coord foundCoord = Coord.getFromJsonArray(coordJson, foundName, "", Coord.Format.LONG_LAT);
-				// N.B: no address received.
+				// N.B: no address received for the API used.
 				route.waypoints.add(foundCoord);
 
 				if (foundCoord == null) {
@@ -265,11 +250,10 @@ public class Route
 				return null;
 			}
 
-			route.completedWaypoints(path); // to be done before the following:
+			route.updateWaypoints(path); // to be done before the following:
 
 			if (mode == AddingData.ON) {
-				route.computeDuration(car);
-				route.computeCost(car);
+				route.computeCostAndDuration(car);
 				route.computeAutonomyLeft(car);
 			}
 

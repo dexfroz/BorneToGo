@@ -21,14 +21,13 @@ public class Car
 	private int idBattery;
 
 
-	public Car(String model, int idCar, int idBattery)
+	public Car(int idCar, int idBattery, String model)
 	{
-		this.model = model;
 		this.idCar = idCar;
 		this.idBattery = idBattery;
+		this.model = model;
 
-		// TODO: fill the empty fields with the following function:
-		DatabaseConnector.fetchCarData(this);
+		// TODO: fill the empty fields!
 	}
 
 
@@ -44,7 +43,17 @@ public class Car
 
 	public Car copy()
 	{
-		return new Car(this.model, this.maxAutonomy, this.currentAutonomy, this.subscription);
+		Car car = new Car(this.idCar, this.idBattery, this.model);
+
+		car.subscription = this.subscription;
+		car.maxAutonomy = this.maxAutonomy;
+		car.currentAutonomy = this.currentAutonomy;
+		car.maxWattage = this.maxWattage;
+		car.capacity = this.capacity;
+		car.connectors = this.connectors;
+		car.currents = this.currents;
+
+		return car;
 	}
 
 

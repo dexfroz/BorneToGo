@@ -1,7 +1,6 @@
 package main.java.bornetogo.backend;
 
 import java.io.*;
-import java.util.*;
 import jakarta.json.*;
 
 
@@ -23,10 +22,7 @@ public class Coord
 	protected double latitude;
 	protected double longitude;
 
-	// Fields related to Stations. Do _not_ add setters for them!
-	protected Boolean isStation = false;
-	protected String paymentStatus = "";
-	protected ArrayList<Integer> chargingPointsID = null; // more memory efficient to store IDs.
+	protected boolean isStation = false; // Do _not_ add a setter for this!
 
 
 	public Coord(double latitude, double longitude, String name, String address)
@@ -62,12 +58,6 @@ public class Coord
 	}
 
 
-	public Boolean isStation()
-	{
-		return this.isStation;
-	}
-
-
 	public double getLatitude()
 	{
 		return this.latitude;
@@ -77,6 +67,12 @@ public class Coord
 	public double getLongitude()
 	{
 		return this.longitude;
+	}
+
+
+	public boolean isStation()
+	{
+		return this.isStation;
 	}
 
 
@@ -107,14 +103,14 @@ public class Coord
 
 	// Not overriding the equals() method, for it should be followed by overriding
 	// the hashCode() method too! This compares only the Coords position.
-	public Boolean isAtSameSpot(Coord coord)
+	public boolean isAtSameSpot(Coord coord)
 	{
 		return Math.abs(this.longitude - coord.longitude) < EPSILON &&
 			Math.abs(this.latitude - coord.latitude) < EPSILON;
 	}
 
 
-	// Great-circle distance between two points on the Earth, using the Haversine formula:
+	// Great-circle distance (in km) between two points on the Earth, using the Haversine formula:
 	public static double distance(Coord coord_1, Coord coord_2)
 	{
 		double a = Math.sin((coord_1.latitude - coord_2.latitude) * DEG_TO_RAD / 2.);
@@ -150,12 +146,6 @@ public class Coord
 	}
 
 
-	public JsonObject getJsonData(Car car)
-	{
-		return Json.createObjectBuilder().build(); // empty object by default.
-	}
-
-
 	public JsonArray toJsonSmall(Format format)
 	{
 		JsonArrayBuilder builder = Json.createArrayBuilder();
@@ -182,6 +172,27 @@ public class Coord
 			.add("isStation", this.isStation)
 			.add("data", this.getJsonData(car))
 			.build();
+	}
+
+
+	// Returns a default value, overriden by stations.
+	public JsonObject getJsonData(Car car)
+	{
+		return Json.createObjectBuilder().build();
+	}
+
+
+	// In seconds. Returns a default value, overriden by stations.
+	public double getChargingDuration(Car car)
+	{
+		return 0.;
+	}
+
+
+	// In euros. Returns a default value, overriden by stations.
+	public double getChargingCost(Car car)
+	{
+		return 0.;
 	}
 
 

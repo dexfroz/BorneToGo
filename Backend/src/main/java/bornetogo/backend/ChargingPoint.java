@@ -6,7 +6,7 @@ import jakarta.json.*;
 
 public class ChargingPoint
 {
-	private Boolean isUsable;
+	private boolean isUsable = true;
 	private double wattage;
 	private String connector = "";
 	private String current = "";
@@ -30,13 +30,7 @@ public class ChargingPoint
 	}
 
 
-	public int getID()
-	{
-		return this.idChargingPoint;
-	}
-
-
-	public Boolean isUsable()
+	public boolean isUsable()
 	{
 		return this.isUsable;
 	}
@@ -57,6 +51,30 @@ public class ChargingPoint
 	public double getWattage()
 	{
 		return this.wattage;
+	}
+
+
+	public int getID()
+	{
+		return this.idChargingPoint;
+	}
+
+
+	public int getIDConnector()
+	{
+		return this.idConnector;
+	}
+
+
+	public int getIDCurrent()
+	{
+		return this.idCurrent;
+	}
+
+
+	public int getIDStatus()
+	{
+		return this.idStatus;
 	}
 
 

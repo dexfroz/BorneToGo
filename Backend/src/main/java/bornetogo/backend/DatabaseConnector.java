@@ -7,9 +7,9 @@ import java.sql.*;
 
 public class DatabaseConnector
 {
-	private static Boolean areCarsLoaded = false;
-	private static Boolean areStationsLoaded = false;
-	private static Boolean areChargingPointsLoaded = false;
+	private static boolean areCarsLoaded = false;
+	private static boolean areStationsLoaded = false;
+	private static boolean areChargingPointsLoaded = false;
 
 	// Those will be kept in memory:
 	private static ArrayList<Car> cars = null;
@@ -72,12 +72,12 @@ public class DatabaseConnector
 			{
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				connection = DriverManager.getConnection(url, user, pwd); // Will raise an exception on failure!
-				System.out.println("\nSuccessful connection to the database with URL: " + url + "\n");
+				System.out.println("\n-> Successful connection to the database with URL: " + url + "\n");
 				break;
 			}
 			catch (Exception e) {
 				// e.printStackTrace();
-				System.err.println("\nFailed connection to the database with URL: " + url + "\n");
+				System.err.println("\nFailed connection to the database with URL: " + url);
 			}
 		}
 
@@ -107,6 +107,17 @@ public class DatabaseConnector
 	}
 
 
+	// Returns 0 for default values:
+	private static int sanitize(int field)
+	{
+		if (field == -1) {
+			return 0;
+		}
+
+		return field;
+	}
+
+
 	// Returns a string containing the list of tables:
 	public static String getTables()
 	{
@@ -127,7 +138,7 @@ public class DatabaseConnector
 		}
 		catch (Exception e) {
 			// e.printStackTrace();
-			result = "\nNo tables found.\n";
+			result = "No tables found.\n";
 			System.err.println("\n" + result + "\n");
 		}
 
@@ -176,15 +187,15 @@ public class DatabaseConnector
 
 			while (answer.next())
 			{
-				String model = sanitize(answer.getString("Modele"));
 				int idCar = answer.getInt("idVoiture");
 				int idBattery = answer.getInt("idBatterie");
+				String model = sanitize(answer.getString("Modele"));
 				// 'Chargement' is useless.
 
 				// String row = "-> " + model + ", " + idCar + ", " + idBattery;
 				// System.out.println(row);
 
-				Car car = new Car(model, idCar, idBattery);
+				Car car = new Car(idCar, idBattery, model);
 				cars.add(car);
 			}
 
@@ -200,55 +211,6 @@ public class DatabaseConnector
 			System.err.println("\nCould not get real cars, using mock data...\n");
 			areCarsLoaded = false;
 			cars = Car.mock();
-		}
-	}
-
-
-	private static void loadStations()
-	{
-		stations = new ArrayList<Station>();
-		String query = "SELECT * FROM Station;";
-
-		try
-		{
-			Connection connection = getConnection();
-			Statement statement = connection.createStatement();
-			ResultSet answer = statement.executeQuery(query);
-
-			while (answer.next())
-			{
-				int idStation = answer.getInt("idStation");
-				int idPaiement = answer.getInt("idPaiement");
-				String name = sanitize(answer.getString("Titre"));
-				double latitude = answer.getDouble("Latitude");
-				double longitude = answer.getDouble("Longitude");
-				String address = sanitize(answer.getString("Adresse"));
-				String city = sanitize(answer.getString("Ville"));
-				String zipCode = sanitize(answer.getString("Codepostal"));
-
-				// String row = "-> " + idStation + ", " + idPaiement + ", " + name + ", " + latitude +
-				// 	", " + longitude + ", " + address + ", " + city + ", " + zipCode;
-				// System.out.println(row);
-
-				String fullAddress = address + " " + city + " " + zipCode;
-				Station station = new Station(latitude, longitude, name, fullAddress,
-					String.valueOf(idPaiement), new ArrayList<Integer>()); // TODO: fetch the charging points ID!
-				stations.add(station);
-			}
-
-			connection.close();
-			areStationsLoaded = true;
-		}
-		catch (Exception e) {
-			// e.printStackTrace();
-			System.err.println("\nInvalid SQL query: '" + query + "'\n");
-		}
-
-		if (stations.size() == 0) {
-			System.err.println("\nCould not get real stations, using mock data...\n");
-			areStationsLoaded = false;
-			// stations = Station.mock();
-			stations = Station.bigMock();
 		}
 	}
 
@@ -296,19 +258,155 @@ public class DatabaseConnector
 	}
 
 
-	// Must fetch the car battery type and connector from its model:
-	public static void fetchCarData(Car car)
+	private static void loadStations()
 	{
-		return; // TODO!
+		stations = new ArrayList<Station>();
+		String query = "SELECT * FROM Station;";
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next())
+			{
+				int idStation = answer.getInt("idStation");
+				int idPayment = answer.getInt("idPaiement");
+				String name = sanitize(answer.getString("Titre"));
+				double latitude = answer.getDouble("Latitude");
+				double longitude = answer.getDouble("Longitude");
+				String address = sanitize(answer.getString("Adresse"));
+				String city = sanitize(answer.getString("Ville"));
+				String zipCode = sanitize(answer.getString("Codepostal"));
+
+				// String row = "-> " + idStation + ", " + idPayment + ", " + name + ", " + latitude +
+				// 	", " + longitude + ", " + address + ", " + city + ", " + zipCode;
+				// System.out.println(row);
+
+				String fullAddress = address + " " + city + " " + zipCode;
+				Station station = new Station(idStation, idPayment, latitude, longitude, name, address);
+				stations.add(station);
+			}
+
+			connection.close();
+			areStationsLoaded = true;
+
+			loadStationChargingPoints(); // fetching the chargingPointsIDs.
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		if (stations.size() == 0) {
+			System.err.println("\nCould not get real stations, using mock data...\n");
+			areStationsLoaded = false;
+			// stations = Station.mock();
+			stations = Station.bigMock();
+		}
+	}
+
+
+	// Checks if the Station table has entries of ID in increasing order,
+	// from 1, and without gaps, in order to activate the fast filling mode:
+	private static boolean checkStationsIDrange()
+	{
+		if (stations.get(0).getID() != 1) {
+			return false;
+		}
+
+		for (int i = 1; i < stations.size() - 1; ++i) {
+			if (stations.get(i + 1).getID() - stations.get(i).getID() != 1) { // gap detected.
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	private static void loadStationChargingPoints()
+	{
+		if (stations == null) {
+			System.err.println("\nCannot load the station-charging points IDs: null stations.\n");
+			return;
+		}
+
+		boolean stationsCheckResult = checkStationsIDrange();
+		System.out.println("Fast mode status: " + stationsCheckResult);
+
+		ArrayList<ArrayList<Integer>> stationChargingPoints = new ArrayList<ArrayList<Integer>>();
+		String query = "SELECT * FROM StationBorne;";
+		int count = 0;
+
+		try
+		{
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet answer = statement.executeQuery(query);
+
+			while (answer.next())
+			{
+				int idStationChargingPoint = answer.getInt("idStationBorne");
+				int idStation = answer.getInt("idStation");
+				int idChargingPoint = answer.getInt("idBorne");
+
+				// String row = "-> " + idStationChargingPoint + ", " + idStation + ", " + idChargingPoint;
+				// System.out.println(row);
+
+				boolean stationFound = false;
+
+				if (stationsCheckResult) // fast mode!
+				{
+					// This assumes 'idStation' values to be in increasing order, and without gaps:
+					if (1 <= idStation && idStation <= stations.size()) {
+						Station station = stations.get(idStation - 1);
+						station.getChargingPointsID().add(idChargingPoint);
+						stationFound = true;
+						++count;
+					}
+				}
+				else // This assumes nothing on stations IDs:
+				{
+					for (Station station : stations)
+					{
+						if (station.getID() == idStation) {
+							station.getChargingPointsID().add(idChargingPoint);
+							stationFound = true;
+							++count;
+							break;
+						}
+					}
+				}
+
+				if (! stationFound) {
+					System.err.println("Could not add a charging point ID for station of ID: " + idStation);
+				}
+			}
+
+			connection.close();
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("\nInvalid SQL query: '" + query + "'\n");
+		}
+
+		System.out.println("Loaded " + count + " charging point IDs.\n");
 	}
 
 
 	public static void main(String[] args)
 	{
+		long time_0 = System.nanoTime();
+
 		System.out.println(getTables());
 		System.out.println(getTableSize("Station"));
 		System.out.println("Cars number: " + getCars().size());
-		System.out.println("Stations number: " + getStations().size());
 		System.out.println("Charging Points number: " + getChargingPoints().size());
+		System.out.println("Stations number: " + getStations().size() + "\n");
+
+		long time_1 = System.nanoTime();
+		Core.benchmark(time_0, time_1, "DatabaseConnector.getStations()");
 	}
 }

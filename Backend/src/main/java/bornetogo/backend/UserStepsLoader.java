@@ -7,7 +7,7 @@ import jakarta.json.*;
 
 public class UserStepsLoader
 {
-	private static final Boolean enableUserStepsFiltering = true;
+	private static final boolean enableUserStepsFiltering = true;
 
 	private ArrayList<Coord> userSteps;
 	private ArrayList<Integer> indexesCoordsToComplete;

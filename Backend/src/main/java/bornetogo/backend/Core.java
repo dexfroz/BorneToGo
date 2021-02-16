@@ -8,7 +8,7 @@ import jakarta.json.*;
 public class Core
 {
 	// Allows for a more precise pathfinding when true (default), but makes the core function a bit slower:
-	public static final Boolean enableFirstQuery = true;
+	public static final boolean enableFirstQuery = true;
 
 
 	public static void safeJsonPrinting(JsonObject jsonObject)
@@ -143,8 +143,8 @@ public class Core
 
 	public static void main(String[] args)
 	{
-		String inputString = FileContent.read("input_example.json");
-		// String inputString = FileContent.read("input_example_singleStep.json");
+		// String inputString = FileContent.read("input_example.json");
+		String inputString = FileContent.read("input_example_singleStep.json");
 
 		JsonObject input = GetJson.jsonFromString(inputString);
 		JsonObject output = core(input);

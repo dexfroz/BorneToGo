@@ -35,14 +35,14 @@ public class Pathfinding
 
 	// Checks if the given point is inside the ellipse of focus 'ref_1' and 'ref_2',
 	// and with major axis of length: distance(ref_1, ref_2) * ellipseRatio
-	private static Boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
+	private static boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
 		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * ellipseRatio;
 	}
 
 
 	// Checks whether a destination is in the car's range, given the estimated length of the route:
-	private static Boolean lengthReachable(Car car, double estimatedLength)
+	private static boolean lengthReachable(Car car, double estimatedLength)
 	{
 		return estimatedLength + rangeMargin <= car.getCurrentAutonomy();
 	}
@@ -180,7 +180,7 @@ public class Pathfinding
 			return null;
 		}
 
-		Boolean singleWaypoint = waypoints.size() == 1;
+		boolean singleWaypoint = waypoints.size() == 1;
 
 		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'area' filtering!
 

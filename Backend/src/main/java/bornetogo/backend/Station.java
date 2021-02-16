@@ -7,36 +7,52 @@ import jakarta.json.*;
 
 public class Station extends Coord
 {
-	public Station(double latitude, double longitude, String name, String address,
-		String paymentStatus, ArrayList<Integer> chargingPointsID)
+	private int idStation;
+	private int idPayment;
+	private String paymentStatus = "";
+	private ArrayList<Integer> chargingPointsID = new ArrayList<Integer>(); // more memory efficient to store IDs.
+
+
+	public Station(int idStation, int idPayment, double latitude, double longitude, String name, String address)
 	{
 		super(latitude, longitude, name, address);
 		this.isStation = true;
-		this.paymentStatus = paymentStatus;
-		this.chargingPointsID = chargingPointsID;
+		this.idStation = idStation;
+		this.idPayment = idPayment;
 
-		// TODO: fetch payment data from the id stored as a string in paymentStatus.
-		// Note that this is useless as of now, since the 'Paiement' table contains nothing useful.
+		// TODO: fetch payment data from 'idPayment'. Note that this is probably
+		// useless as of now, since the 'Paiement' table contains nothing useful.
 	}
 
 
 	// For testing. Real stations come from the database.
 	public Station(double latitude, double longitude, String name, String address)
 	{
-		this(latitude, longitude, name, address, "", new ArrayList<Integer>());
+		this(0, 0, latitude, longitude, name, address);
 	}
 
 
-	public Station(Coord coord)
+	public int getID()
 	{
-		this(coord.latitude, coord.longitude, coord.name, coord.address, coord.paymentStatus, coord.chargingPointsID);
-		// TODO: fix this! paymentStatus and chargingPointsID are always to Coord defautl values here!
+		return this.idStation;
+	}
+
+
+	public int getIDPayment()
+	{
+		return this.idPayment;
 	}
 
 
 	public String getPaymentStatus()
 	{
 		return this.paymentStatus;
+	}
+
+
+	public ArrayList<Integer> getChargingPointsID()
+	{
+		return this.chargingPointsID;
 	}
 
 
@@ -97,7 +113,7 @@ public class Station extends Coord
 	}
 
 
-	public Boolean hasUsableCompatibleChargingPoint(Car car)
+	public boolean hasUsableCompatibleChargingPoint(Car car)
 	{
 		return true; // TODO, using the car and list of charging points.
 	}
