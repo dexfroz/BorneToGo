@@ -31,8 +31,8 @@ CREATE TABLE `BorneToGo`.`Courant` (
 
 CREATE TABLE `BorneToGo`.`Batterie` (
 	`idBatterie` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	`Capacite` INT,
-	`Autonomie` INT
+	`Capacite` DECIMAL(6, 2),
+	`Autonomie` DECIMAL(6, 2)
 )ENGINE=INNODB;
 
 CREATE TABLE `BorneToGo`.`Voiture` (
