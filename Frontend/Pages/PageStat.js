@@ -127,7 +127,7 @@ class PageStat extends React.Component {
         var stats = itineraire.fullPath.stats;
 
         var affichage = false;
-        /*if (stats && Object.keys(stats).length > 0) {
+        if (stats && Object.keys(stats).length > 0) {
             affichage = true;
             console.log(affichage);
         }
@@ -140,18 +140,7 @@ class PageStat extends React.Component {
                 "wattage": 0,
                 "days": 0
             };
-        }*/
-        affichage = true;
-
-        stats =
-        {
-            "moneySavings": 12.30,
-            "carbonEmissionSavings": 0.123,
-            "lightBulbsNumber": 3,
-            "wattage": 5,
-            "days": 12
-        };
-
+        }
 
         return (
             <View style={styles.main_container}>
