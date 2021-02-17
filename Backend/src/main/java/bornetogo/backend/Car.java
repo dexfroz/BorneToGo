@@ -3,9 +3,12 @@ package main.java.bornetogo.backend;
 import java.io.*;
 import java.util.*;
 import jakarta.json.*;
+import java.sql.*;
 
 
-public class Car
+// TODO: fill the empty fields!
+
+public class Car extends Table
 {
 	private String model = "";
 	private String subscription = "";
@@ -21,14 +24,7 @@ public class Car
 	private int idBattery;
 
 
-	public Car(int idCar, int idBattery, String model)
-	{
-		this.idCar = idCar;
-		this.idBattery = idBattery;
-		this.model = model;
-
-		// TODO: fill the empty fields!
-	}
+	public Car() {}
 
 
 	// For testing. Real cars come from the database.
@@ -41,10 +37,35 @@ public class Car
 	}
 
 
+	public Car query(ResultSet answer)
+	{
+		Car car = new Car();
+
+		try {
+			car.idCar = answer.getInt("idVoiture");
+			car.idBattery = answer.getInt("idBatterie");
+			car.model = Table.sanitize(answer.getString("Modele"));
+			// 'Chargement' is useless.
+
+			// String row = "-> " + car.idCar + ", " + car.idBattery + ", " + car.model;
+			// System.out.println(row);
+
+			return car;
+		}
+		catch (Exception e) {
+			System.err.printf("\nInvalid fields in '%s' query.\n", this.getClass().getSimpleName());
+			return null;
+		}
+	}
+
+
 	public Car copy()
 	{
-		Car car = new Car(this.idCar, this.idBattery, this.model);
+		Car car = new Car();
 
+		car.idCar = this.idCar;
+		car.idBattery = this.idBattery;
+		car.model = this.model;
 		car.subscription = this.subscription;
 		car.maxAutonomy = this.maxAutonomy;
 		car.currentAutonomy = this.currentAutonomy;

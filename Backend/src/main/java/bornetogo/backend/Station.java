@@ -3,7 +3,11 @@ package main.java.bornetogo.backend;
 import java.io.*;
 import java.util.*;
 import jakarta.json.*;
+import java.sql.*;
 
+
+// TODO: fetch payment data from 'idPayment'. Note that this is probably
+// useless as of now, since the 'Paiement' table contains nothing useful.
 
 public class Station extends Coord
 {
@@ -13,22 +17,46 @@ public class Station extends Coord
 	private ArrayList<Integer> chargingPointsID = new ArrayList<Integer>(); // more memory efficient to store IDs.
 
 
-	public Station(int idStation, int idPayment, double latitude, double longitude, String name, String address)
+	public Station()
 	{
-		super(latitude, longitude, name, address);
+		super(0, 0, "", "");
 		this.isStation = true;
-		this.idStation = idStation;
-		this.idPayment = idPayment;
-
-		// TODO: fetch payment data from 'idPayment'. Note that this is probably
-		// useless as of now, since the 'Paiement' table contains nothing useful.
 	}
 
 
 	// For testing. Real stations come from the database.
 	public Station(double latitude, double longitude, String name, String address)
 	{
-		this(0, 0, latitude, longitude, name, address);
+		super(latitude, longitude, name, address);
+		this.isStation = true;
+	}
+
+
+	public Station query(ResultSet answer)
+	{
+		Station s = new Station();
+
+		try	{
+			s.idStation = answer.getInt("idStation");
+			s.idPayment = answer.getInt("idPaiement");
+			s.name = Table.sanitize(answer.getString("Titre"));
+			s.latitude = answer.getDouble("Latitude");
+			s.longitude = answer.getDouble("Longitude");
+			String address = Table.sanitize(answer.getString("Adresse"));
+			String city = Table.sanitize(answer.getString("Ville"));
+			String zipCode = Table.sanitize(answer.getString("Codepostal"));
+			s.address = address + " " + city + " " + zipCode;
+
+			// String row = "-> " + s.idStation + ", " + s.idPayment + ", " + s.name + ", " + s.latitude +
+			// 	", " + s.longitude + ", " + address + ", " + city + ", " + zipCode;
+			// System.out.println(row);
+
+			return s;
+		}
+		catch (Exception e) {
+			System.err.printf("\nInvalid fields in '%s' query.\n", this.getClass().getSimpleName());
+			return null;
+		}
 	}
 
 

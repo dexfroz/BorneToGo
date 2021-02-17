@@ -2,9 +2,10 @@ package main.java.bornetogo.backend;
 
 import java.io.*;
 import jakarta.json.*;
+import java.sql.*;
 
 
-public class Coord
+public class Coord extends Table
 {
 	public enum Format {
 		LAT_LONG,
@@ -36,6 +37,12 @@ public class Coord
 	public Coord(double latitude, double longitude)
 	{
 		this(latitude, longitude, "", "");
+	}
+
+
+	public Coord query(ResultSet answer) // For compatibility.
+	{
+		return null;
 	}
 
 

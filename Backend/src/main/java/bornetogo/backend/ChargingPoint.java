@@ -2,9 +2,12 @@ package main.java.bornetogo.backend;
 
 import java.io.*;
 import jakarta.json.*;
+import java.sql.*;
 
 
-public class ChargingPoint
+// TODO: Load connector, current, and status status data (thus building isUsable).
+
+public class ChargingPoint extends Table
 {
 	private boolean isUsable = true;
 	private double wattage;
@@ -18,15 +21,30 @@ public class ChargingPoint
 	private int idStatus;
 
 
-	public ChargingPoint(int idChargingPoint, int idConnector, int idCurrent, int idStatus, double wattage)
-	{
-		this.idChargingPoint = idChargingPoint;
-		this.idConnector = idConnector;
-		this.idCurrent = idCurrent;
-		this.idStatus = idStatus;
-		this.wattage = wattage;
+	public ChargingPoint() {}
 
-		// TODO: Load connector, current, and status status data (thus building isUsable).
+
+	public ChargingPoint query(ResultSet answer)
+	{
+		ChargingPoint c = new ChargingPoint();
+
+		try	{
+			c.idChargingPoint = answer.getInt("idBorne");
+			c.idConnector = answer.getInt("idConnecteur");
+			c.idCurrent = answer.getInt("idCourant");
+			c.idStatus = answer.getInt("idStatus");
+			c.wattage = Table.sanitize(answer.getDouble("Puissance"));
+
+			// String row = "-> " + c.idChargingPoint + ", " + c.idConnector + ", " + c.idCurrent + ", " +
+			// 	c.idStatus + ", " + c.wattage;
+			// System.out.println(row);
+
+			return c;
+		}
+		catch (Exception e) {
+			System.err.printf("\nInvalid fields in '%s' query.\n", this.getClass().getSimpleName());
+			return null;
+		}
 	}
 
 
