@@ -3,7 +3,7 @@ package main.java.bornetogo.backend;
 import java.sql.*;
 
 
-public class Connector extends Table
+public class Connector extends Entry
 {
 	private int idConnector;
 	private String title;
@@ -19,8 +19,8 @@ public class Connector extends Table
 
 		try {
 			c.idConnector = answer.getInt("idConnecteur");
-			c.title = Table.sanitize(answer.getString("Titre"));
-			c.name = Table.sanitize(answer.getString("Name"));
+			c.title = Entry.sanitize(answer.getString("Titre"));
+			c.name = Entry.sanitize(answer.getString("Name"));
 
 			// String row = "-> " + c.idConnector + ", " + c.title + ", " + c.name;
 			// System.out.println(row);

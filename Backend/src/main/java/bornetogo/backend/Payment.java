@@ -3,7 +3,7 @@ package main.java.bornetogo.backend;
 import java.sql.*;
 
 
-public class Payment extends Table
+public class Payment extends Entry
 {
 	private int idPayment;
 	private String name;
@@ -21,7 +21,7 @@ public class Payment extends Table
 
 		try {
 			p.idPayment = answer.getInt("idPaiement");
-			p.name = Table.sanitize(answer.getString("Titre"));
+			p.name = Entry.sanitize(answer.getString("Titre"));
 			p.isPayAtLocation = answer.getBoolean("isPayAtLocation");
 			p.isMembershipRequired = answer.getBoolean("isMembershipRequired");
 			p.isAccessKeyRequired = answer.getBoolean("isAccessKeyRequired");

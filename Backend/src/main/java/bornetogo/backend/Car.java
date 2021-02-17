@@ -8,7 +8,7 @@ import java.sql.*;
 
 // TODO: fill the empty fields!
 
-public class Car extends Table
+public class Car extends Entry
 {
 	private String model = "";
 	private String subscription = "";
@@ -44,7 +44,7 @@ public class Car extends Table
 		try {
 			car.idCar = answer.getInt("idVoiture");
 			car.idBattery = answer.getInt("idBatterie");
-			car.model = Table.sanitize(answer.getString("Modele"));
+			car.model = Entry.sanitize(answer.getString("Modele"));
 			// 'Chargement' is useless.
 
 			// String row = "-> " + car.idCar + ", " + car.idBattery + ", " + car.model;
@@ -75,6 +75,12 @@ public class Car extends Table
 		car.currents = this.currents;
 
 		return car;
+	}
+
+
+	public int getID()
+	{
+		return this.idCar;
 	}
 
 

@@ -39,12 +39,12 @@ public class Station extends Coord
 		try	{
 			s.idStation = answer.getInt("idStation");
 			s.idPayment = answer.getInt("idPaiement");
-			s.name = Table.sanitize(answer.getString("Titre"));
+			s.name = Entry.sanitize(answer.getString("Titre"));
 			s.latitude = answer.getDouble("Latitude");
 			s.longitude = answer.getDouble("Longitude");
-			String address = Table.sanitize(answer.getString("Adresse"));
-			String city = Table.sanitize(answer.getString("Ville"));
-			String zipCode = Table.sanitize(answer.getString("Codepostal"));
+			String address = Entry.sanitize(answer.getString("Adresse"));
+			String city = Entry.sanitize(answer.getString("Ville"));
+			String zipCode = Entry.sanitize(answer.getString("Codepostal"));
 			s.address = address + " " + city + " " + zipCode;
 
 			// String row = "-> " + s.idStation + ", " + s.idPayment + ", " + s.name + ", " + s.latitude +

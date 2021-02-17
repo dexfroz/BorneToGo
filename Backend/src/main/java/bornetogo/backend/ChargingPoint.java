@@ -7,7 +7,7 @@ import java.sql.*;
 
 // TODO: Load connector, current, and status status data (thus building isUsable).
 
-public class ChargingPoint extends Table
+public class ChargingPoint extends Entry
 {
 	private boolean isUsable = true;
 	private double wattage;
@@ -33,7 +33,7 @@ public class ChargingPoint extends Table
 			c.idConnector = answer.getInt("idConnecteur");
 			c.idCurrent = answer.getInt("idCourant");
 			c.idStatus = answer.getInt("idStatus");
-			c.wattage = Table.sanitize(answer.getDouble("Puissance"));
+			c.wattage = Entry.sanitize(answer.getDouble("Puissance"));
 
 			// String row = "-> " + c.idChargingPoint + ", " + c.idConnector + ", " + c.idCurrent + ", " +
 			// 	c.idStatus + ", " + c.wattage;

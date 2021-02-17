@@ -3,7 +3,7 @@ package main.java.bornetogo.backend;
 import java.sql.*;
 
 
-public class Current extends Table
+public class Current extends Entry
 {
 	private int idCurrent;
 	private String name;

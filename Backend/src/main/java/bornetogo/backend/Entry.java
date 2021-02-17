@@ -5,8 +5,10 @@ import java.util.*;
 import java.sql.*;
 
 
-public abstract class Table
+public abstract class Entry
 {
+	public abstract int getID();
+
 	public abstract <T> T query(ResultSet answer);
 
 
@@ -43,6 +45,52 @@ public abstract class Table
 
 		System.out.println("Loaded " + entries.size() + " entries from '" + tableName + "'.\n");
 		return entries;
+	}
+
+
+	// Checks if the entries table has IDs in increasing order, from 1,
+	// and without gaps, in order to activate the fast search:
+	public <T extends Entry> boolean checkEntriesIDrange(ArrayList<T> entries)
+	{
+		if (entries == null || entries.size() == 0 || entries.get(0).getID() != 1) {
+			return false;
+		}
+
+		for (int i = 1; i < entries.size() - 1; ++i) {
+			if (entries.get(i + 1).getID() - entries.get(i).getID() != 1) { // gap detected.
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	// 'idCheck' must have been computed beforehand for the current entries using checkEntriesIDrange(),
+	// potentially giving access to a faster method. A value of false may be used by default.
+	// Returns null on failure.
+	public <T extends Entry> T findEntryID(ArrayList<T> entries, int id, boolean idCheck)
+	{
+		if (idCheck) // fast mode!
+		{
+			// Using the knowledge that ID values are in increasing order, without gaps:
+			if (1 <= id && id <= entries.size()) {
+				return entries.get(id - 1);
+			}
+		}
+		else // This assumes nothing on entries IDs:
+		{
+			for (T entry : entries)
+			{
+				if (entry.getID() == id) {
+					return entry;
+				}
+			}
+		}
+
+		System.err.printf("No entry of class '%s' found for id %d.\n",
+			this.getClass().getSimpleName(), id);
+		return null;
 	}
 
 

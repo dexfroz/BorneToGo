@@ -3,7 +3,7 @@ package main.java.bornetogo.backend;
 import java.sql.*;
 
 
-public class Status extends Table
+public class Status extends Entry
 {
 	private int idStatus;
 	private String name;
@@ -20,7 +20,7 @@ public class Status extends Table
 
 		try {
 			s.idStatus = answer.getInt("idStatus");
-			s.name = Table.sanitize(answer.getString("titre"));
+			s.name = Entry.sanitize(answer.getString("titre"));
 			s.isOperational = answer.getBoolean("isOperational");
 			s.isUserSelectable = answer.getBoolean("isUserSelectable");
 

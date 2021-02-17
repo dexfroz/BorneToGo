@@ -20,8 +20,8 @@ public class DatabaseConnector
 	public static ArrayList<Car> getCars()
 	{
 		if (! areCarsLoaded) {
-			Table table = new Car();
-			cars = table.loadTable("Voiture");
+			Entry entry = new Car();
+			cars = entry.loadTable("Voiture");
 			areCarsLoaded = cars.size() > 0;
 
 			if (areCarsLoaded) {
@@ -40,12 +40,12 @@ public class DatabaseConnector
 	public static ArrayList<Station> getStations()
 	{
 		if (! areStationsLoaded) {
-			Table table = new Station();
-			stations = table.loadTable("Station");
+			Entry entry = new Station();
+			stations = entry.loadTable("Station");
 			areStationsLoaded = stations.size() > 0;
 
 			if (areStationsLoaded) {
-				// loadStationChargingPoints(); // fetching the chargingPointsIDs.
+				addChargingPointsID();
 			}
 			else {
 				System.err.println("\nCould not get real stations, using mock data...\n");
@@ -61,8 +61,8 @@ public class DatabaseConnector
 	public static ArrayList<ChargingPoint> getChargingPoints()
 	{
 		if (! areChargingPointsLoaded) {
-			Table table = new ChargingPoint();
-			chargingPoints = table.loadTable("Borne");
+			Entry entry = new ChargingPoint();
+			chargingPoints = entry.loadTable("Borne");
 			areChargingPointsLoaded = chargingPoints.size() > 0;
 		}
 
@@ -73,8 +73,8 @@ public class DatabaseConnector
 	// TODO: save this?
 	public static ArrayList<Battery> getBatteries()
 	{
-		Table table = new Battery();
-		ArrayList<Battery> batteries = table.loadTable("Batterie");
+		Entry entry = new Battery();
+		ArrayList<Battery> batteries = entry.loadTable("Batterie");
 		return batteries;
 	}
 
@@ -82,8 +82,8 @@ public class DatabaseConnector
 	// TODO: save this?
 	public static ArrayList<Status> getStatuses()
 	{
-		Table table = new Status();
-		ArrayList<Status> statuses = table.loadTable("Status");
+		Entry entry = new Status();
+		ArrayList<Status> statuses = entry.loadTable("Status");
 		return statuses;
 	}
 
@@ -91,8 +91,8 @@ public class DatabaseConnector
 	// TODO: save this?
 	public static ArrayList<Current> getCurrents()
 	{
-		Table table = new Current();
-		ArrayList<Current> currents = table.loadTable("Courant");
+		Entry entry = new Current();
+		ArrayList<Current> currents = entry.loadTable("Courant");
 		return currents;
 	}
 
@@ -100,8 +100,8 @@ public class DatabaseConnector
 	// TODO: save this?
 	public static ArrayList<Connector> getConnectors()
 	{
-		Table table = new Connector();
-		ArrayList<Connector> connectors = table.loadTable("Connecteur");
+		Entry entry = new Connector();
+		ArrayList<Connector> connectors = entry.loadTable("Connecteur");
 		return connectors;
 	}
 
@@ -109,9 +109,49 @@ public class DatabaseConnector
 	// TODO: save this?
 	public static ArrayList<Payment> getPayments()
 	{
-		Table table = new Payment();
-		ArrayList<Payment> payments = table.loadTable("Paiement");
+		Entry entry = new Payment();
+		ArrayList<Payment> payments = entry.loadTable("Paiement");
 		return payments;
+	}
+
+
+	// TODO: save this?
+	public static ArrayList<StationChargingPoint> getStationChargingPoints()
+	{
+		Entry entry = new StationChargingPoint();
+		ArrayList<StationChargingPoint> stationChargingPoints = entry.loadTable("StationBorne");
+		return stationChargingPoints;
+	}
+
+
+	// TODO: save this?
+	public static ArrayList<Vcc> getVcc()
+	{
+		Entry entry = new Vcc();
+		ArrayList<Vcc> vccs = entry.loadTable("VCC");
+		return vccs;
+	}
+
+
+	// Only do this once!
+	private static void addChargingPointsID()
+	{
+		if (! areStationsLoaded) { // no need to have loaded chargingPoints yet!
+			return;
+		}
+
+		Entry entry = new Station();
+		boolean stationsCheck = entry.checkEntriesIDrange(stations);
+		ArrayList<StationChargingPoint> stationChargingPoints = getStationChargingPoints();
+
+		for (StationChargingPoint scp : stationChargingPoints) {
+			Station station = entry.findEntryID(stations, scp.getIdStation(), stationsCheck);
+			if (station != null) {
+				station.getChargingPointsID().add(scp.getIdChargingPoint());
+			}
+		}
+
+		System.out.println("Added charging points to all stations.\n");
 	}
 
 
@@ -184,10 +224,10 @@ public class DatabaseConnector
 
 
 	// Returns the number of entries in the given table:
-	public static String getTableSize(String table)
+	public static String getTableSize(String tableName)
 	{
-		String query = "SELECT COUNT(*) AS entriesNumber FROM " + table + ";";
-		String result = "Number of entries in table '" + table + "': ";
+		String query = "SELECT COUNT(*) AS entriesNumber FROM " + tableName + ";";
+		String result = "Number of entries in table '" + tableName + "': ";
 
 		try
 		{
@@ -203,99 +243,12 @@ public class DatabaseConnector
 		}
 		catch (Exception e) {
 			// e.printStackTrace();
-			result = "No table '" + table + "' found.";
+			result = "No table '" + tableName + "' found.";
 			System.err.println("\n" + result + "\n");
 		}
 
 		return result;
 	}
-
-
-	// // Checks if the Station table has entries of ID in increasing order,
-	// // from 1, and without gaps, in order to activate the fast filling mode:
-	// private static boolean checkStationsIDrange()
-	// {
-	// 	if (stations.get(0).getID() != 1) {
-	// 		return false;
-	// 	}
-
-	// 	for (int i = 1; i < stations.size() - 1; ++i) {
-	// 		if (stations.get(i + 1).getID() - stations.get(i).getID() != 1) { // gap detected.
-	// 			return false;
-	// 		}
-	// 	}
-
-	// 	return true;
-	// }
-
-
-	// private static void loadStationChargingPoints()
-	// {
-	// 	if (stations == null) {
-	// 		System.err.println("\nCannot load the station-charging points IDs: null stations.\n");
-	// 		return;
-	// 	}
-
-	// 	boolean stationsCheckResult = checkStationsIDrange();
-	// 	System.out.println("Fast mode status: " + stationsCheckResult);
-
-	// 	String query = "SELECT * FROM StationBorne;";
-	// 	int count = 0;
-
-	// 	try
-	// 	{
-	// 		Connection connection = getConnection();
-	// 		Statement statement = connection.createStatement();
-	// 		ResultSet answer = statement.executeQuery(query);
-
-	// 		while (answer.next())
-	// 		{
-	// 			int idStationChargingPoint = answer.getInt("idStationBorne");
-	// 			int idStation = answer.getInt("idStation");
-	// 			int idChargingPoint = answer.getInt("idBorne");
-
-	// 			// String row = "-> " + idStationChargingPoint + ", " + idStation + ", " + idChargingPoint;
-	// 			// System.out.println(row);
-
-	// 			boolean stationFound = false;
-
-	// 			if (stationsCheckResult) // fast mode!
-	// 			{
-	// 				// This assumes 'idStation' values to be in increasing order, and without gaps:
-	// 				if (1 <= idStation && idStation <= stations.size()) {
-	// 					Station station = stations.get(idStation - 1);
-	// 					station.getChargingPointsID().add(idChargingPoint);
-	// 					stationFound = true;
-	// 					++count;
-	// 				}
-	// 			}
-	// 			else // This assumes nothing on stations IDs:
-	// 			{
-	// 				for (Station station : stations)
-	// 				{
-	// 					if (station.getID() == idStation) {
-	// 						station.getChargingPointsID().add(idChargingPoint);
-	// 						stationFound = true;
-	// 						++count;
-	// 						break;
-	// 					}
-	// 				}
-	// 			}
-
-	// 			if (! stationFound) {
-	// 				System.err.println("Could not add a charging point ID for station of ID: " + idStation);
-	// 			}
-	// 		}
-
-	// 		connection.close();
-	// 	}
-	// 	catch (Exception e) {
-	// 		// e.printStackTrace();
-	// 		System.err.println("\nInvalid SQL query: '" + query + "'\n");
-	// 	}
-
-	// 	System.out.println("Loaded " + count + " charging point IDs.\n");
-	// }
 
 
 	public static void main(String[] args)
@@ -304,9 +257,9 @@ public class DatabaseConnector
 
 		System.out.println(getTables());
 		System.out.println(getTableSize("Voiture"));
-		getCars();
-		getStations();
-		getChargingPoints();
+		System.out.println("-> Cars number: " + getCars().size());
+		System.out.println("-> Charging Points number: " + getChargingPoints().size());
+		System.out.println("-> Stations number: " + getStations().size() + "\n");
 
 		// Waiting to be properly integrated:
 		getBatteries();
@@ -315,7 +268,21 @@ public class DatabaseConnector
 		getConnectors();
 		getPayments();
 
+		getStationChargingPoints();
+		getVcc();
+
 		long time_1 = System.nanoTime();
 		Core.benchmark(time_0, time_1, "Loading everything.");
+
+
+		Entry entry = new Car();
+		boolean carsCheck = entry.checkEntriesIDrange(cars);
+		System.out.println("Check result for cars: " + carsCheck + "\n");
+		int id = 1;
+		Car car = entry.findEntryID(cars, id, carsCheck);
+
+		if (car != null) {
+			car.print();
+		}
 	}
 }

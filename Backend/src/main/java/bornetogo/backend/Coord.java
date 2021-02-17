@@ -5,7 +5,7 @@ import jakarta.json.*;
 import java.sql.*;
 
 
-public class Coord extends Table
+public class Coord extends Entry
 {
 	public enum Format {
 		LAT_LONG,
@@ -37,12 +37,6 @@ public class Coord extends Table
 	public Coord(double latitude, double longitude)
 	{
 		this(latitude, longitude, "", "");
-	}
-
-
-	public Coord query(ResultSet answer) // For compatibility.
-	{
-		return null;
 	}
 
 
@@ -179,6 +173,20 @@ public class Coord extends Table
 			.add("isStation", this.isStation)
 			.add("data", this.getJsonData(car))
 			.build();
+	}
+
+
+	// For compatibility:
+
+	public int getID()
+	{
+		return 0;
+	}
+
+
+	public Coord query(ResultSet answer)
+	{
+		return null;
 	}
 
 

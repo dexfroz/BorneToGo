@@ -3,7 +3,7 @@ package main.java.bornetogo.backend;
 import java.sql.*;
 
 
-public class Battery extends Table
+public class Battery extends Entry
 {
 	private int idBattery;
 	private double capacity;
@@ -19,8 +19,8 @@ public class Battery extends Table
 
 		try {
 			b.idBattery = answer.getInt("idBatterie");
-			b.capacity = Table.sanitize(answer.getDouble("Capacite"));
-			b.autonomy = Table.sanitize(answer.getDouble("Autonomie"));
+			b.capacity = Entry.sanitize(answer.getDouble("Capacite"));
+			b.autonomy = Entry.sanitize(answer.getDouble("Autonomie"));
 
 			// String row = "-> " + b.idBattery + ", " + b.capacity + ", " + b.autonomy;
 			// System.out.println(row);
