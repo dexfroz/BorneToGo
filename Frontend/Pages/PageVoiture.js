@@ -9,7 +9,6 @@ import { StyleSheet, View, Image, Text, Dimensions } from 'react-native'
 import SelectionVoiture from '../Composants/SelectionVoiture'
 import { ScrollView } from 'react-native-gesture-handler'
 
-const { width, height } = Dimensions.get('window');
 
 
 class PageVoiture extends React.Component {

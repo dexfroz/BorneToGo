@@ -1,6 +1,6 @@
 // Store/Reducers/selectedCarReducer.js
 
-// Etat initial : pas de borne sélectionnée
+// Etat initial : pas de voiture sélectionnée
 const initialState = { car: null }
 
 function reducerCarSelected(state = initialState, action) {

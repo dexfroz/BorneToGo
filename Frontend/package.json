@@ -24,11 +24,13 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native-dialog": "^6.1.2",
     "react-native-elements": "^3.1.0",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-maps": "^0.27.1",
     "react-native-maps-directions": "^1.8.0",
     "react-native-maps-osmdroid": "^0.26.1-rc1",
+    "react-native-network-info": "^5.2.1",
     "react-native-paper": "^4.7.0",
     "react-native-permissions": "^3.0.0",
     "react-native-radio-button-group": "^1.0.3",
@@ -42,7 +44,8 @@
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
-    "redux-form": "^8.3.7"
+    "redux-form": "^8.3.7",
+    "string.prototype.startswith": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
