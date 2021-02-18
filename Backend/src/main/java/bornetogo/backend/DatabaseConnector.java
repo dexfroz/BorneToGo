@@ -25,7 +25,7 @@ public class DatabaseConnector
 			areCarsLoaded = cars.size() > 0;
 
 			if (areCarsLoaded) {
-				// loadCarMissingData();
+				completeCars();
 			}
 			else {
 				System.err.println("\nCould not get real cars, using mock data...\n");
@@ -144,7 +144,7 @@ public class DatabaseConnector
 		}
 
 		Entry entry = new Station();
-		boolean stationsCheck = entry.checkEntriesIDrange(stations);
+		boolean stationsCheck = entry.checkEntriesIDrange(stations); // used for speed!
 		ArrayList<StationChargingPoint> stationChargingPoints = getStationChargingPoints();
 
 		for (StationChargingPoint scp : stationChargingPoints) {
@@ -202,6 +202,62 @@ public class DatabaseConnector
 
 		System.out.println("-> Added data to all charging points.\n");
 	}
+
+
+	private static void completeCars()
+	{
+		if (! areCarsLoaded) {
+			return;
+		}
+
+		// Batteries:
+
+		Entry entry = new Battery();
+		ArrayList<Battery> batteries = getBatteries();
+
+		for (Car car : cars) {
+			Battery battery = entry.findEntryID(batteries, car.getIdBattery(), false);
+			if (battery != null) {
+
+				car.setMaxAutonomy(battery);
+				car.setCapacity(battery);
+			}
+		}
+
+		ArrayList<Vcc> vccs = getVcc();
+
+
+
+
+		// // Connectors:
+
+		// entry = new Connector();
+		// ArrayList<Connector> connectors = getConnectors();
+
+		// for (ChargingPoint cp : chargingPoints) {
+		// 	Connector connector = entry.findEntryID(connectors, cp.getIdConnector(), false);
+		// 	if (connector != null) {
+		// 		cp.setConnector(connector);
+		// 	}
+		// }
+
+		// // Currents:
+
+		// entry = new Current();
+		// ArrayList<Current> currents = getCurrents();
+
+		// for (ChargingPoint cp : chargingPoints) {
+		// 	Current current = entry.findEntryID(currents, cp.getIdCurrent(), false);
+		// 	if (current != null) {
+		// 		cp.setCurrent(current);
+		// 	}
+		// }
+
+		System.out.println("-> Added data to all cars.\n");
+	}
+
+
+
 
 
 	// The result of this function should be closed at its end life.
@@ -310,28 +366,25 @@ public class DatabaseConnector
 		System.out.println("-> Charging Points number: " + getChargingPoints().size());
 		System.out.println("-> Stations number: " + getStations().size() + "\n");
 
-		// Waiting to be properly integrated:
 		getBatteries();
 		getStatuses();
 		getCurrents();
 		getConnectors();
 		getPayments();
-
-		getStationChargingPoints();
 		getVcc();
+		getStationChargingPoints();
 
-		long time_1 = System.nanoTime();
-		Core.benchmark(time_0, time_1, "Loading everything.");
-
-
+		// Entry search:
 		Entry entry = new Car();
 		boolean carsCheck = entry.checkEntriesIDrange(cars);
 		System.out.println("Check result for cars: " + carsCheck + "\n");
 		int id = 1;
-		Car car = entry.findEntryID(cars, id, carsCheck);
-
+		Car car = entry.findEntryID(cars, id, carsCheck); // null object returned on failure!
 		if (car != null) {
-			car.print();
+			System.out.println(car.toString() + "\n");
 		}
+
+		long time_1 = System.nanoTime();
+		Core.benchmark(time_0, time_1, "Loading everything.");
 	}
 }

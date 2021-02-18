@@ -19,15 +19,15 @@ services:
     # image: bornetogo-database:1.0
     container_name: bornetogo-database
     restart: "no"
-    # build: ./newBDD
+    # build: ./Database
     ports:
       - 3306:3306
     volumes:
-      - ./newBDD/.data:/var/lib/mysql
+      - ./Database/.data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: aaa # To change this, remove the .data dir.
     # env_file:
-    #   - ./newBDD/secret.cnf
+    #   - ./Database/secret.cnf
     networks:
       - my-network
 

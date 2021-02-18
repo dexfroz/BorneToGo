@@ -39,7 +39,7 @@ CREATE TABLE `BorneToGo`.`Voiture` (
 	`idVoiture` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	`idBatterie` INT UNSIGNED,
 	`Modele` VARCHAR(128),
-	`Chargement` VARCHAR(32),
+	`Chargement` INT,
 	CONSTRAINT `fk_Batterie` FOREIGN KEY (`idBatterie`) REFERENCES `Batterie`(`idBatterie`)
 )ENGINE=INNODB;
 

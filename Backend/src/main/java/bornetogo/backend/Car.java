@@ -84,6 +84,12 @@ public class Car extends Entry
 	}
 
 
+	public int getIdBattery()
+	{
+		return this.idBattery;
+	}
+
+
 	public String getModel()
 	{
 		return this.model;
@@ -132,9 +138,16 @@ public class Car extends Entry
 	}
 
 
-	public void setMaxAutonomy(double maxAutonomy)
+	public void setCapacity(Battery battery)
 	{
-		this.maxAutonomy = maxAutonomy;
+		this.capacity = battery.getCapacity();
+	}
+
+
+	public void setMaxAutonomy(Battery battery)
+	{
+		this.maxAutonomy = battery.getAutonomy();
+		this.currentAutonomy = this.maxAutonomy; // by default
 	}
 
 
