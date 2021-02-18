@@ -19,16 +19,14 @@ public class Output
 			{
 				// Stats:
 
-				JsonObject statsJson = Json.createObjectBuilder().build(); // TODO! Expand route.getStats()
-
-				// "stats":
-				// {
-				// 	"moneySavings": 12.30,
-				// 	"carbonEmissionSavings": 0.123,
-				// 	"lightBulbsNumber": 3,
-				// 	"wattage": 5,
-				// 	"days": 12
-				// }
+				// TODO! Expand route.getStats()
+				JsonObject statsJson = Json.createObjectBuilder()
+					.add("moneySavings", 0.)
+					.add("carbonEmissionSavings", 0.)
+					.add("lightBulbsNumber", 0)
+					.add("wattage", 0.)
+					.add("days", 0)
+					.build();
 
 				// waypoints:
 

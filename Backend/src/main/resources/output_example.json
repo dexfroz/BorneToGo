@@ -1,11 +1,17 @@
 {
 	"type": "output",
 	"status": "Ok",
-	"processingTime": 0.658,
+	"processingTime": 0.644,
 	"convention": "long-lat",
 	"routes": [
 		{
-			"stats": {},
+			"stats": {
+				"moneySavings": 0,
+				"carbonEmissionSavings": 0,
+				"lightBulbsNumber": 0,
+				"wattage": 0,
+				"days": 0
+			},
 			"waypoints": [
 				{
 					"location": [
@@ -23,34 +29,34 @@
 						43.125209
 					],
 					"name": "TOULON_Ancienne prison St Roch",
-					"address": "Ancienne prison St Roch 83000 TOULON",
+					"address": "Ancienne prison St Roch 83000 TOULON  ",
 					"isStation": true,
 					"data": {
 						"paymentStatus": "",
 						"bornes": [
 							{
 								"status": true,
-								"puissance": 22,
-								"connecteur": "",
-								"courant": ""
+								"courant": "AC (Single-Phase)",
+								"connecteur": "CEE 7/4",
+								"puissance": 22
 							},
 							{
 								"status": true,
-								"puissance": 22,
-								"connecteur": "",
-								"courant": ""
+								"courant": "AC (Three-Phase)",
+								"connecteur": "IEC 62196-2",
+								"puissance": 22
 							},
 							{
 								"status": true,
-								"puissance": 22,
-								"connecteur": "",
-								"courant": ""
+								"courant": "AC (Single-Phase)",
+								"connecteur": "CEE 7/4",
+								"puissance": 22
 							},
 							{
 								"status": true,
-								"puissance": 22,
-								"connecteur": "",
-								"courant": ""
+								"courant": "AC (Three-Phase)",
+								"connecteur": "IEC 62196-2",
+								"puissance": 22
 							}
 						]
 					}

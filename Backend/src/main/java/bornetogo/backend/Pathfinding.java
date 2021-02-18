@@ -118,12 +118,12 @@ public class Pathfinding
 	// Used when it has been deemed safe to go to the next step:
 	private static void goNextStep(Car car, ArrayList<Coord> path, double legLength, Coord nextStep)
 	{
-		System.out.println("\n-> Going to step:\n\n" + nextStep.toString());
+		// System.out.println("\n-> Going to step:\n\n" + nextStep.toString());
 		path.add(nextStep);
 		car.setCurrentAutonomy(car.getCurrentAutonomy() - legLength);
 
 		if (nextStep.isStation()) {
-			System.out.println("\nLucky one!");
+			// System.out.println("\nLucky one!");
 			car.setCurrentAutonomy(car.getMaxAutonomy());
 		}
 	}
@@ -145,7 +145,7 @@ public class Pathfinding
 		}
 
 		Station chosenStation = chooseBestStation(reachableStations);
-		System.out.println("\n-> Refilling at station:\n\n" + chosenStation.toString());
+		// System.out.println("\n-> Refilling at station:\n\n" + chosenStation.toString());
 
 		// Preventing an infinite loop, when the station has already been visited!
 		if (currentStep.isAtSameSpot(chosenStation) && car.getCurrentAutonomy() == car.getMaxAutonomy()) {
@@ -164,6 +164,8 @@ public class Pathfinding
 	public static ArrayList<Coord> find(ArrayList<Station> allStations, Car userCar,
 		ArrayList<Coord> waypoints, ArrayList<Double> legsLengths)
 	{
+		System.out.println("Starting the pathfinding computation.\n");
+
 		if (! Core.enableFirstQuery) { // using an estimation of the legs lengths.
 			legsLengths = mockLegsLengths(waypoints);
 		}
@@ -202,9 +204,9 @@ public class Pathfinding
 
 		while (true)
 		{
-			System.out.println("------------------------------------------");
-			System.out.println("currentStep: " + currentStep.toString());
-			System.out.println("\nnextStep: " + nextStep.toString());
+			// System.out.println("------------------------------------------");
+			// System.out.println("currentStep: " + currentStep.toString());
+			// System.out.println("\nnextStep: " + nextStep.toString());
 
 			// Potential improvement: only work on the stations for this subpath...
 			sortByDistance((ArrayList<Coord>) ((ArrayList<?>) relevantStations), nextStep); // causes a warning.
@@ -214,7 +216,7 @@ public class Pathfinding
 			double legLength = singleWaypoint ? 0. : legsLengths.get(stepIndex - 1);
 			legLength = currentStep.isStation() ? lengthUpperBound(currentStep, nextStep) : legLength;
 
-			System.out.printf("\nlegLength: %.3f km\n", legLength);
+			// System.out.printf("\nlegLength: %.3f km\n", legLength);
 
 			if (! singleWaypoint && lengthReachable(car, legLength + lengthUpperBound(nextStep, safetyNext)))
 			{
@@ -246,11 +248,11 @@ public class Pathfinding
 				}
 			}
 
-			System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
+			// System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
 		}
 
-		System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
-		System.out.println("\n-> Successfull pathfinding.\n");
+		// System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
+		// System.out.println("\n-> Successfull pathfinding.\n");
 		return path;
 	}
 
@@ -272,8 +274,8 @@ public class Pathfinding
 
 	public static void main(String[] args)
 	{
-		ArrayList<Station> allStations = Station.mock();
-		// ArrayList<Station> allStations = Station.bigMock();
+		// ArrayList<Station> allStations = Station.mock(); // Won't be enough.
+		ArrayList<Station> allStations = Station.bigMock(); // Will do it!
 		// There should be enough mock stations, for a max autonomy of 200 km.
 
 		Car car = new Car("Tesla cybertruck", 200, 50, "None");

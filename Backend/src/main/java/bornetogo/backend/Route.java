@@ -298,6 +298,6 @@ public class Route
 		routes.add(route);
 		JsonObject output = Output.build(routes, car, startTime);
 
-		// Core.safeJsonPrinting(output); // lots of printing...
+		// GetJson.safeJsonPrinting(output); // lots of printing...
 	}
 }

@@ -212,18 +212,18 @@ public class QueryAPIs
 
 		// // The trip plugin solves the Traveling Salesman Problem using a greedy heuristic:
 		// JsonObject json_1 = queryRoute("trip", routeCoordinates, "");
-		// Core.safeJsonPrinting(json_1);
+		// GetJson.safeJsonPrinting(json_1);
 
 		// // Finds the fastest route between coordinates in the supplied order:
 		// JsonObject json_2 = queryRoute("route", routeCoordinates, "&overview=full");
-		// Core.safeJsonPrinting(json_2);
+		// GetJson.safeJsonPrinting(json_2);
 
 		// ArrayList<Coord> onlyOneCoord = new ArrayList<Coord>();
 		// onlyOneCoord.add(new Coord(47.34083, 5.05015, "Le barathon", "Dijon"));
 
 		// // Snaps a coordinate to the street network and returns the nearest match:
 		// JsonObject json_3 = queryRoute("nearest", onlyOneCoord, "");
-		// Core.safeJsonPrinting(json_3);
+		// GetJson.safeJsonPrinting(json_3);
 
 		////////////////////////////////////////////////////////////////
 		// Geocoding queries - from a place, and from coordinates:
@@ -231,12 +231,12 @@ public class QueryAPIs
 		ArrayList<String> searchedLocations = new ArrayList<String>();
 		searchedLocations.add("Isen Toulon");
 		JsonObject json_4 = queryFromLocation("mapquestapi", searchedLocations);
-		Core.safeJsonPrinting(json_4);
+		GetJson.safeJsonPrinting(json_4);
 
 		ArrayList<Coord> searchedCoords = new ArrayList<Coord>();
 		searchedCoords.add(new Coord(48.85661, 2.3499, "Pâtisserie Montmartre", "Paris"));
 		JsonObject json_5 = queryFromCoord("opencagedata", searchedCoords);
-		Core.safeJsonPrinting(json_5);
+		GetJson.safeJsonPrinting(json_5);
 
 		////////////////////////////////////////////////////////////////
 

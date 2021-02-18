@@ -39,7 +39,7 @@ public class DatabaseConnector
 			areCarsLoaded = allCars.size() > 0;
 
 			if (areCarsLoaded) {
-				completeCars();
+				completeCars(); // only done once!
 			}
 			else {
 				System.err.println("\nCould not get real cars, using mock data...\n");
@@ -59,7 +59,7 @@ public class DatabaseConnector
 			areStationsLoaded = allStations.size() > 0;
 
 			if (areStationsLoaded) {
-				completeStations();
+				completeStations(); // only done once!
 			}
 			else {
 				System.err.println("\nCould not get real stations, using mock data...\n");
@@ -78,10 +78,10 @@ public class DatabaseConnector
 			Entry entry = new ChargingPoint();
 			allChargingPoints = entry.loadTable("Borne");
 			areChargingPointsLoaded = allChargingPoints.size() > 0;
-		}
 
-		if (areChargingPointsLoaded) {
-			completeChargingPoints();
+			if (areChargingPointsLoaded) {
+				completeChargingPoints(); // only done once!
+			}
 		}
 
 		return allChargingPoints;
@@ -94,10 +94,10 @@ public class DatabaseConnector
 			Entry entry = new PowerConnector();
 			allPowerConnectors = entry.loadTable("VCC");
 			arePowerConnectorsLoaded = allPowerConnectors.size() > 0;
-		}
 
-		if (arePowerConnectorsLoaded) {
-			completePowerConnectors();
+			if (arePowerConnectorsLoaded) {
+				completePowerConnectors(); // only done once!
+			}
 		}
 
 		return allPowerConnectors;

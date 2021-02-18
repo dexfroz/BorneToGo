@@ -107,15 +107,15 @@ public class RequestHandler
 			String inputString = FileContent.read("input_example_singleStep.json");
 
 			JsonObject input = GetJson.jsonFromString(inputString);
-			JsonObject output = Core.core(input);
+			Core answer = Core.answer(input);
 
-			if (output == null) {
+			if (answer.getOuput() == null) {
 				JsonObject obj = Json.createObjectBuilder()
-					.add("Error", "Core program failed to output a path.").build();
+					.add("Error", answer.getMessage()).build();
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
-			return Response.ok(output).build();
+			return Response.ok(answer.getOuput()).build();
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
@@ -137,15 +137,15 @@ public class RequestHandler
 			JsonObject input = reader.readObject();
 			reader.close();
 
-			JsonObject output = Core.core(input);
+			Core answer = Core.answer(input);
 
-			if (output == null) {
+			if (answer.getOuput() == null) {
 				JsonObject obj = Json.createObjectBuilder()
-					.add("Error", "Core program failed to output a path.").build();
+					.add("Error", answer.getMessage()).build();
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
-			return Response.ok(output).build();
+			return Response.ok(answer.getOuput()).build();
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
