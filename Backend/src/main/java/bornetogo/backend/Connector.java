@@ -34,7 +34,7 @@ public class Connector extends Entry
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idConnector;
 	}

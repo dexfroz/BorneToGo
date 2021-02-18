@@ -178,7 +178,7 @@ public class Coord extends Entry
 
 	// For compatibility:
 
-	public int getID()
+	public int getId()
 	{
 		return 0;
 	}

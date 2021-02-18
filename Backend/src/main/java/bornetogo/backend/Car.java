@@ -78,7 +78,7 @@ public class Car extends Entry
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idCar;
 	}

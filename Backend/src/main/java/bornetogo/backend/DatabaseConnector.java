@@ -66,6 +66,10 @@ public class DatabaseConnector
 			areChargingPointsLoaded = chargingPoints.size() > 0;
 		}
 
+		if (areChargingPointsLoaded) {
+			completeChargingPoints();
+		}
+
 		return chargingPoints;
 	}
 
@@ -133,7 +137,6 @@ public class DatabaseConnector
 	}
 
 
-	// Only do this once!
 	private static void addChargingPointsID()
 	{
 		if (! areStationsLoaded) { // no need to have loaded chargingPoints yet!
@@ -151,7 +154,29 @@ public class DatabaseConnector
 			}
 		}
 
-		System.out.println("Added charging points to all stations.\n");
+		System.out.println("-> Added charging points to all stations.\n");
+	}
+
+
+	private static void completeChargingPoints()
+	{
+		if (! areChargingPointsLoaded) {
+			return;
+		}
+
+		Entry entry = new Status();
+		ArrayList<Status> statuses = getStatuses();
+
+		for (ChargingPoint c : chargingPoints) {
+			Status status = entry.findEntryID(statuses, c.getIdStatus(), false);
+			if (status != null) {
+				c.setUsability(status.isOperational() && status.isUserSelectable());
+			}
+		}
+
+		System.out.println("-> Added statuses to all charging points.\n");
+
+		// Continue this...
 	}
 
 

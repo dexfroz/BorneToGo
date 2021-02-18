@@ -34,7 +34,7 @@ public class Battery extends Entry
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idBattery;
 	}

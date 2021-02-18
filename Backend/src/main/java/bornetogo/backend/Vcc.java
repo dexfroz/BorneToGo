@@ -39,7 +39,7 @@ public class Vcc extends Entry
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idVcc;
 	}

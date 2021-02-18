@@ -7,12 +7,12 @@ import java.sql.*;
 
 public abstract class Entry
 {
-	public abstract int getID();
+	public abstract int getId();
 
-	public abstract <T> T query(ResultSet answer);
+	public abstract <T extends Entry> T query(ResultSet answer);
 
 
-	public <T> ArrayList<T> loadTable(String tableName)
+	public <T extends Entry> ArrayList<T> loadTable(String tableName)
 	{
 		ArrayList<T> entries = new ArrayList<T>();
 		String query = "SELECT * FROM " + tableName + ";";
@@ -52,12 +52,12 @@ public abstract class Entry
 	// and without gaps, in order to activate the fast search:
 	public <T extends Entry> boolean checkEntriesIDrange(ArrayList<T> entries)
 	{
-		if (entries == null || entries.size() == 0 || entries.get(0).getID() != 1) {
+		if (entries == null || entries.size() == 0 || entries.get(0).getId() != 1) {
 			return false;
 		}
 
 		for (int i = 1; i < entries.size() - 1; ++i) {
-			if (entries.get(i + 1).getID() - entries.get(i).getID() != 1) { // gap detected.
+			if (entries.get(i + 1).getId() - entries.get(i).getId() != 1) { // gap detected.
 				return false;
 			}
 		}
@@ -82,7 +82,7 @@ public abstract class Entry
 		{
 			for (T entry : entries)
 			{
-				if (entry.getID() == id) {
+				if (entry.getId() == id) {
 					return entry;
 				}
 			}

@@ -60,13 +60,13 @@ public class Station extends Coord
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idStation;
 	}
 
 
-	public int getIDPayment()
+	public int getIdPayment()
 	{
 		return this.idPayment;
 	}
@@ -106,7 +106,7 @@ public class Station extends Coord
 			// This does not assume any good property on IDs:
 			for (ChargingPoint c : allChargingPoints)
 			{
-				if (c.getID() == id) {
+				if (c.getId() == id) {
 					stationChargingPoints.add(c);
 					break;
 				}

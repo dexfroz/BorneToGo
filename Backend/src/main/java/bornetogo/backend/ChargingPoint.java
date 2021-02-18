@@ -72,27 +72,33 @@ public class ChargingPoint extends Entry
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idChargingPoint;
 	}
 
 
-	public int getIDConnector()
+	public int getIdConnector()
 	{
 		return this.idConnector;
 	}
 
 
-	public int getIDCurrent()
+	public int getIdCurrent()
 	{
 		return this.idCurrent;
 	}
 
 
-	public int getIDStatus()
+	public int getIdStatus()
 	{
 		return this.idStatus;
+	}
+
+
+	public void setUsability(boolean b)
+	{
+		this.isUsable = b;
 	}
 
 

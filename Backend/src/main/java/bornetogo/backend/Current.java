@@ -34,7 +34,7 @@ public class Current extends Entry
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idCurrent;
 	}

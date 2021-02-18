@@ -36,7 +36,7 @@ public class Status extends Entry
 	}
 
 
-	public int getID()
+	public int getId()
 	{
 		return this.idStatus;
 	}
