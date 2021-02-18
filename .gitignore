@@ -38,7 +38,7 @@ buildNumber.properties
 # Secret files, API keys...
 #
 secret/
-secret.cnf
+# secret.cnf # useful, not sensitive for now.
 
 # Frontend things:
 Frontend/node_modules/**/*
