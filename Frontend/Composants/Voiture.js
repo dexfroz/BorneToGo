@@ -21,8 +21,8 @@ class Voiture extends PureComponent {
                         <Text style={styles.info}>{this.props.model}</Text>
                     </View>
                     <View>
-                        <Text style={styles.title}>Autonomie</Text>
-                        <Text style={styles.info}>{this.props.currentAutonomy} km restants</Text>
+                        <Text style={styles.title}>Puiss Max</Text>
+                        <Text style={styles.info}>{this.props.maxWattage} kWh</Text>
                     </View>
                 </View>
                 <View style={styles.sousContainer}>

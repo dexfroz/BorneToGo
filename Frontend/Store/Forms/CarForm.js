@@ -12,9 +12,8 @@ class CarForm extends React.Component {
 		return (
 			//textContentType : one of ["none","URL","addressCity","addressCityAndState","addressState","countryName","creditCardNumber","emailAddress","familyName","fullStreetAddress","givenName","jobTitle","location","middleName","name","namePrefix","nameSuffix","nickname","organizationName","postalCode","streetAddressLine1","streetAddressLine2","sublocality","telephoneNumber","username","password","newPassword","oneTimeCode"]
 			<View style={styles.formContainer}>
-				<View style={styles.rowForm}>
 					<Field
-						name="modele"
+						name="model"
 						label="Modèle de voiture"
 						textContentType="none"
 						autoCorrect={false}
@@ -22,15 +21,13 @@ class CarForm extends React.Component {
 						component={TextInputClass}
 					/>
 					<Field
-						name="typeprise"
+						name="batteryType"
 						label="Type de Prise"
 						textContentType="none"
 						autoCorrect={false}
 						autoCapitalize="none"
 						component={TextInputClass}
 					/>
-				</View>
-				<View style={styles.rowForm}>
 					<Field
 						name="maxWattage"
 						label="Puissance maximale autorisée"
@@ -39,10 +36,8 @@ class CarForm extends React.Component {
 						autoCapitalize="none"
 						component={TextInputClass}
 					/>
-				</View>
-				<View style={styles.rowForm}>
 					<Field
-						name="capacite"
+						name="maxAutonomy"
 						label="Capacité"
 						textContentType="none"
 						autoCorrect={false}
@@ -50,14 +45,13 @@ class CarForm extends React.Component {
 						component={TextInputClass}
 					/>
 					<Field
-						name="autonomie"
+						name="currentAutonomy"
 						label="Autonomie Restante"
 						textContentType="none"
 						autoCorrect={false}
 						autoCapitalize="none"
 						component={TextInputClass}
 					/>
-				</View>
 				<View style={styles.center}>
 					<View style={styles.valider}>
 						<Button color='#70B445' title="Valider" onPress={this.props.handleSubmit} />
@@ -71,10 +65,6 @@ class CarForm extends React.Component {
 const styles = StyleSheet.create({
 	formContainer: {
 		flexDirection: "column",
-	},
-	rowForm: {
-		flexDirection: "row",
-		justifyContent: "space-between",
 		alignSelf: "center",
 	},
 	valider: {

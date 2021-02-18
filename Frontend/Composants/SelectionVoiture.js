@@ -11,6 +11,9 @@ import { FontAwesome } from '@expo/vector-icons'
 import Voiture from './Voiture'
 import CarForm from '../Store/Forms/CarForm'
 import { connect } from 'react-redux';
+import { getRequest } from '../Fonctions/HTTPRequestjson'
+import Toast from 'react-native-simple-toast';
+import DialogInput from 'Dialog'
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,15 +23,20 @@ class SelectionVoiture extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            modeleSelected: { id: 0, model: 'Voiture' },
-            modeles: [{ id: 0, model: 'Voiture' },],
+            modeleSelected: {id : 0, model: 'Voiture', currentAutonomy: ''},
+            modeles: [{id: 0, model: 'Voiture', currentAutonomy: '',},],
             nombreVoiture: 0,
-            //testModel: this.loadModelesVehicules()
         }
-        //this.loadModelesVehicules();
         this.loadAncientModeles();
     }
 
+    
+
+    
+
+    /**
+     * On charge ici la vrai liste de toutes les voitures de la bdd
+     */
     componentDidMount() {
         this.loadModelesVehicules();
     }
@@ -37,71 +45,82 @@ class SelectionVoiture extends React.Component {
         { id: 0, model: 'Voiture' },
     ];
 
-    loadAncientModeles() {
+    /**
+     * Initialisation de la liste des modèles de voitures et du modèle séléctionné
+     * pour ne pas que le rendre crash
+     */
+    loadAncientModeles(){
         var modelesVoituresCree = [];
         this.modelesVoitures.map((modeleVoiture) => (
-            modelesVoituresCree.push(<Picker.Item label={modeleVoiture.model} value={modeleVoiture} key={this.state.nombreVoiture++} />)
+           modelesVoituresCree.push(<Picker.Item label={modeleVoiture.model} value={modeleVoiture} key={this.state.nombreVoiture++} />)
         ));
-        //console.log("tab ancientModele : ", modelesVoituresCree);
-        //modelesVoituresCree.map((voiture) =>(console.log("VoitureAncient : ", voiture)))
         this.state.modeles = modelesVoituresCree;
         this.state.modeleSelected = modelesVoituresCree[0].props.value;
     }
 
+    
+    /**
+     * Récupération et stockage de tous les modèles de voitures dans la bdd
+     */
     async loadModelesVehicules() {
         var testVoitures = [];
-        testVoitures = await this.testMap(this.getRequest("http://192.168.1.32:4321/bornetogo/backend/cars"));
-        testVoitures.map((voiture) => (console.log("Voiture : ", voiture)));
-        this.setState({ modeles: testVoitures, modeleSelected: testVoitures[0].props.value });
+        //Récupération des voitures
+        testVoitures = await this.formatJSON(getRequest("cars"));
+        //Stockage des données collectées
+        if (testVoitures != null){
+            this.setState( {modeles : testVoitures, modeleSelected : testVoitures[0].props.value} );
+        }
     }
 
+   
+    /**
+     * On recherche l'indice de la voiture dans la liste des voitures par son modèle (nom)
+     * @param {*} modeleChoisi le modèle selectionné dans la liste déroulante
+     */
     trouverModeleChoisi(modeleChoisi) {
-        //console.log("modeles : ", this.state.modeles)
-        for (var i = 0; i < this.state.modeles.length; i++) {
-            if (this.state.modeles[i].props.value.model == modeleChoisi.model) {
+        for(var i = 0 ; i < this.state.modeles.length ; i++){
+            if(this.state.modeles[i].props.value.model == modeleChoisi.model){
                 return i;
             }
         }
     }
-
+    
+    /**
+     * Affichage de la voiture séléctionnée dans le menu déroulant
+     * @param {*} modeleChoisi le modèle selectionné dans la liste déroulante
+     */
     renderVoitureChoisie(modeleChoisi) {
-        //console.log("modeleChoisi : ", modeleChoisi)
+        //On cherche l'indice du modèle pour le retourner
         var idModel = this.trouverModeleChoisi(modeleChoisi);
         var modele = this.state.modeles[idModel];
-        //console.log("Modele : ", modele)
+        //affichage de la voiture
         return (
+
             <View>
                 <Voiture {...modele.props.value} />
             </View>
         )
     }
 
-    async getRequest(url) {
-        let cars;
-        // console.log("Envoi de la requête :", url);
-        await fetch(url, {
-            method: "GET"
-        })
-            .then((response) => response.json())
-            .then((reponseJson) => cars = reponseJson)
-            .catch((error) => {
-                console.log("Error in requesting http get :", url, " with error :", error);
-            })
-            ;
-        // console.log("Requête GET terminée :", url);
-        return cars.cars;
-    }
-
-    async testMap(allCars) {
+     /**
+     * Mise en forme des données collectées du JSON et les stockées dans un menu déroulant
+     * @param {*} allCars fichier json de toutes les voitures retournées
+     */
+    async formatJSON(allCars){
+        //Vérification de voitures retournées par la requête sinon toast
+        if (allCars == null){
+            Toast.showWithGravity("Aucun modèle de voiture n'a pu être chargé.", Toast.LONG, Toast.BOTTOM);
+            return;
+        }
         var tabCars = [];
         var bigtabCars = [];
         var i = 0;
-
-        bigtabCars = await allCars.then(
+        //Mappage des voitures
+        bigtabCars = await allCars.then( 
             function (cars) {
-                cars.map(
+                cars.map( 
                     function (voiture) {
-                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} />)
+                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} /> )
                         i = i + 1
                         return tabCars
                     }
@@ -109,37 +128,66 @@ class SelectionVoiture extends React.Component {
                 return tabCars
             }
         );
-        // console.log("BigTabCars : ", bigtabCars);
+        //Enregistrement et retour du tableau de picker item
         this.state.nombreVoiture = bigtabCars.length;
-        // console.log("Tableau de voiture : ", tabCars.length, "Nombre Voitures : ", this.state.nombreVoiture);
         return bigtabCars;
     }
 
-    /*async sendRequest(){
-        const url="http://192.168.1.59:8080/bornetogo/backend/cars";
-        let cars; 
-        console.log("Ca va envoyer"); 
-        await fetch( url, {
-            method: "GET"
-        })
-        .then( (response) => response.json())
-        .then( (reponseJson) => cars = reponseJson)
-        .catch( (error) => {console.log("Error in requesting http get cars : ", error);})
-        ;
-        console.log("ReponseJson : ", cars)
-        console.log("Ok envoyé");
-
-    }*/
-
-    displayForm(data) {
-        //console.log('data : ', data)
-        //console.log('Donnees voiture : modele ', data.modele, ' | capacite ', data.capacite, ' | type de prise ', data.typeprise)
+    /**
+     * Vérifie que tous les champs soient complets et envoies les données de la voiture au redux
+     * @param {*} data les données à envoyer
+     */
+    handleFormFullField(data){
+        var allFieldsCompleted = true;
+        //Met à false si il manque une donnée
+        for (var property in data){
+            if(data.hasOwnProperty(property)){
+                if(data[property] == null){
+                    allFieldsCompleted = false;
+                }
+            }
+        }
+        //On envoie les données si tous les champs sont complétés
+        if(allFieldsCompleted){
+            const action = { type: 'CAR_PICKED_BY_USER', value: data }
+            this.props.dispatch(action);
+            // Passage à la vue suivante
+            propsnavigation.navigation.navigate('BorneToGo');
+        }
+        else{
+            Toast.showWithGravity("Vous n'avez pas renseigné tous les champs du formulaire.", Toast.LONG, Toast.BOTTOM);
+        }
     }
 
-    handleCarSelected(data, propsnavigation) {
-        //console.log('data : ', data)
+    handleCarSelected(data, propsnavigation){
+        //TODO gestion autonomie avec boite de dialogue
+        //var autonomie = DialogInput();
+        //console.log('Autonomie : ', autonomie);
+        var dataCarSelected = {};
+        //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
+        for(var property in data){
+            if(data.hasOwnProperty(property)){
+                if(property != 'currentAutonomy'){
+                    Object.defineProperty(dataCarSelected, property, {
+                        value: data[property],
+                        writable: true,
+                        enumerable: true
+                    });
+                }
+                else{
+                    Object.defineProperty(dataCarSelected, property, {
+                        value: 42,
+                        writable: true,
+                        enumerable: true
+                    });
+                    
+                }
+            }
+        }
+        //Enregistrement des données de la voiture 
+        this.setState({modeleSelected: dataCarSelected})
         const action = { type: 'CAR_PICKED_BY_USER', value: data }
-        this.props.dispatch(action)
+        this.props.dispatch(action);
 
         // Passage à la vue suivante
         propsnavigation.navigation.navigate('BorneToGo');
@@ -179,7 +227,7 @@ class SelectionVoiture extends React.Component {
                     <Text style={styles.titleStyle}>Ou décrivez votre modèle de voiture :</Text>
                     <View style={styles.form}>
                         <CarForm onSubmit={(values) => {
-                            this.displayForm(values);
+                            this.handleFormFullField(values);
                             // passage à la partie suivante
                         }
                         } />
