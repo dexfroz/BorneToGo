@@ -96,9 +96,21 @@ public class ChargingPoint extends Entry
 	}
 
 
-	public void setUsability(boolean b)
+	public void setUsability(Status s)
 	{
-		this.isUsable = b;
+		this.isUsable = s.isOperational() && s.isUserSelectable();
+	}
+
+
+	public void setConnector(Connector c)
+	{
+		this.connector = c.getName();
+	}
+
+
+	public void setCurrent(Current c)
+	{
+		this.current = c.getName();
 	}
 
 

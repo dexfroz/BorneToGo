@@ -75,7 +75,7 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	public static ArrayList<Battery> getBatteries()
+	private static ArrayList<Battery> getBatteries()
 	{
 		Entry entry = new Battery();
 		ArrayList<Battery> batteries = entry.loadTable("Batterie");
@@ -84,7 +84,7 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	public static ArrayList<Status> getStatuses()
+	private static ArrayList<Status> getStatuses()
 	{
 		Entry entry = new Status();
 		ArrayList<Status> statuses = entry.loadTable("Status");
@@ -93,7 +93,7 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	public static ArrayList<Current> getCurrents()
+	private static ArrayList<Current> getCurrents()
 	{
 		Entry entry = new Current();
 		ArrayList<Current> currents = entry.loadTable("Courant");
@@ -102,7 +102,7 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	public static ArrayList<Connector> getConnectors()
+	private static ArrayList<Connector> getConnectors()
 	{
 		Entry entry = new Connector();
 		ArrayList<Connector> connectors = entry.loadTable("Connecteur");
@@ -111,7 +111,7 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	public static ArrayList<Payment> getPayments()
+	private static ArrayList<Payment> getPayments()
 	{
 		Entry entry = new Payment();
 		ArrayList<Payment> payments = entry.loadTable("Paiement");
@@ -120,7 +120,7 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	public static ArrayList<StationChargingPoint> getStationChargingPoints()
+	private static ArrayList<StationChargingPoint> getStationChargingPoints()
 	{
 		Entry entry = new StationChargingPoint();
 		ArrayList<StationChargingPoint> stationChargingPoints = entry.loadTable("StationBorne");
@@ -129,7 +129,7 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	public static ArrayList<Vcc> getVcc()
+	private static ArrayList<Vcc> getVcc()
 	{
 		Entry entry = new Vcc();
 		ArrayList<Vcc> vccs = entry.loadTable("VCC");
@@ -164,19 +164,43 @@ public class DatabaseConnector
 			return;
 		}
 
+		// Statuses:
+
 		Entry entry = new Status();
 		ArrayList<Status> statuses = getStatuses();
 
-		for (ChargingPoint c : chargingPoints) {
-			Status status = entry.findEntryID(statuses, c.getIdStatus(), false);
+		for (ChargingPoint cp : chargingPoints) {
+			Status status = entry.findEntryID(statuses, cp.getIdStatus(), false);
 			if (status != null) {
-				c.setUsability(status.isOperational() && status.isUserSelectable());
+				cp.setUsability(status);
 			}
 		}
 
-		System.out.println("-> Added statuses to all charging points.\n");
+		// Connectors:
 
-		// Continue this...
+		entry = new Connector();
+		ArrayList<Connector> connectors = getConnectors();
+
+		for (ChargingPoint cp : chargingPoints) {
+			Connector connector = entry.findEntryID(connectors, cp.getIdConnector(), false);
+			if (connector != null) {
+				cp.setConnector(connector);
+			}
+		}
+
+		// Currents:
+
+		entry = new Current();
+		ArrayList<Current> currents = getCurrents();
+
+		for (ChargingPoint cp : chargingPoints) {
+			Current current = entry.findEntryID(currents, cp.getIdCurrent(), false);
+			if (current != null) {
+				cp.setCurrent(current);
+			}
+		}
+
+		System.out.println("-> Added data to all charging points.\n");
 	}
 
 
