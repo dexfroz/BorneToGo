@@ -3,29 +3,29 @@ package main.java.bornetogo.backend;
 import java.sql.*;
 
 
-public class Current extends Entry
+public class Power extends Entry
 {
-	private int idCurrent;
+	private int idPower;
 	private String name;
 	private String description;
 
 
-	public Current() {}
+	public Power() {}
 
 
-	public Current query(ResultSet answer)
+	public Power query(ResultSet answer)
 	{
-		Current c = new Current();
+		Power p = new Power();
 
 		try {
-			c.idCurrent = answer.getInt("idCourant");
-			c.name = answer.getString("Titre");
-			c.description = answer.getString("Description");
+			p.idPower = answer.getInt("idCourant");
+			p.name = answer.getString("Titre");
+			p.description = answer.getString("Description");
 
-			// String row = "-> " + c.idCurrent + ", " + c.name + ", " + c.description;
+			// String row = "-> " + p.idPower + ", " + p.name + ", " + p.description;
 			// System.out.println(row);
 
-			return c;
+			return p;
 		}
 		catch (Exception e) {
 			System.err.printf("\nInvalid fields in '%s' query.\n", this.getClass().getSimpleName());
@@ -36,7 +36,7 @@ public class Current extends Entry
 
 	public int getId()
 	{
-		return this.idCurrent;
+		return this.idPower;
 	}
 
 

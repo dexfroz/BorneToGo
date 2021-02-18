@@ -93,11 +93,11 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	private static ArrayList<Current> getCurrents()
+	private static ArrayList<Power> getPowers()
 	{
-		Entry entry = new Current();
-		ArrayList<Current> currents = entry.loadTable("Courant");
-		return currents;
+		Entry entry = new Power();
+		ArrayList<Power> powers = entry.loadTable("Courant");
+		return powers;
 	}
 
 
@@ -129,11 +129,11 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	private static ArrayList<CurrentConnector> getCurrentConnector()
+	private static ArrayList<PowerConnector> getPowerConnector()
 	{
-		Entry entry = new CurrentConnector();
-		ArrayList<CurrentConnector> currentConnectors = entry.loadTable("VCC");
-		return currentConnectors;
+		Entry entry = new PowerConnector();
+		ArrayList<PowerConnector> powerConnectors = entry.loadTable("VCC");
+		return powerConnectors;
 	}
 
 
@@ -188,15 +188,15 @@ public class DatabaseConnector
 			}
 		}
 
-		// Currents:
+		// Powers:
 
-		entry = new Current();
-		ArrayList<Current> currents = getCurrents();
+		entry = new Power();
+		ArrayList<Power> powers = getPowers();
 
 		for (ChargingPoint cp : chargingPoints) {
-			Current current = entry.findEntryID(currents, cp.getIdCurrent(), false);
-			if (current != null) {
-				cp.setCurrent(current);
+			Power power = entry.findEntryID(powers, cp.getIdPower(), false);
+			if (power != null) {
+				cp.setPower(power);
 			}
 		}
 
@@ -224,8 +224,28 @@ public class DatabaseConnector
 			}
 		}
 
-		// ArrayList<CurrentConnector> currentConnectors = getCurrentConnector();
-		// car.setMaxWattage(currentConnector); // ISSUE! several instances!
+		// PowerConnector
+
+		// entry = new PowerConnector();
+		ArrayList<PowerConnector> powerConnectors = getPowerConnector();
+
+		// for (Car car : cars) {
+		// 	PowerConnector pc = entry.findEntryID(powerConnectors, car.getIdCar(), false);
+		// }
+
+		entry = new Car();
+		for (PowerConnector pc : powerConnectors) {
+			Car car = entry.findEntryID(cars, pc.getIdCar(), false);
+			if (car != null) {
+				int idConnector = pc.getIdConnector();
+				int idPower = pc.getIdPower();
+				double wattage = pc.getWattage(); // several!
+				System.out.println(car.getId() + " -> " + idConnector + ", " + idPower + ", " + wattage);
+			}
+		}
+
+
+		// car.setMaxWattage(powerConnector); // ISSUE! several instances!
 
 
 
@@ -242,15 +262,15 @@ public class DatabaseConnector
 		// 	}
 		// }
 
-		// // Currents:
+		// // Powers:
 
-		// entry = new Current();
-		// ArrayList<Current> currents = getCurrents();
+		// entry = new Power();
+		// ArrayList<Power> powers = getPowers();
 
 		// for (ChargingPoint cp : chargingPoints) {
-		// 	Current current = entry.findEntryID(currents, cp.getIdCurrent(), false);
-		// 	if (current != null) {
-		// 		cp.setCurrent(current);
+		// 	Power power = entry.findEntryID(powers, cp.getIdPower(), false);
+		// 	if (power != null) {
+		// 		cp.setPower(power);
 		// 	}
 		// }
 
@@ -369,10 +389,10 @@ public class DatabaseConnector
 
 		getBatteries();
 		getStatuses();
-		getCurrents();
+		getPowers();
 		getConnectors();
 		getPayments();
-		getCurrentConnector();
+		getPowerConnector();
 		getStationChargingPoints();
 
 		// Entry search:

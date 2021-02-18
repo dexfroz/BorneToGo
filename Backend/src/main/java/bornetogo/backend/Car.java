@@ -140,9 +140,9 @@ public class Car extends Entry
 	}
 
 
-	public void setMaxWattage(CurrentConnector cc)
+	public void setMaxWattage(PowerConnector pc)
 	{
-		this.maxWattage = cc.getWattage();
+		this.maxWattage = pc.getWattage();
 	}
 
 
