@@ -129,11 +129,11 @@ public class DatabaseConnector
 
 
 	// TODO: save this?
-	private static ArrayList<Vcc> getVcc()
+	private static ArrayList<CurrentConnector> getCurrentConnector()
 	{
-		Entry entry = new Vcc();
-		ArrayList<Vcc> vccs = entry.loadTable("VCC");
-		return vccs;
+		Entry entry = new CurrentConnector();
+		ArrayList<CurrentConnector> currentConnectors = entry.loadTable("VCC");
+		return currentConnectors;
 	}
 
 
@@ -224,7 +224,8 @@ public class DatabaseConnector
 			}
 		}
 
-		ArrayList<Vcc> vccs = getVcc();
+		// ArrayList<CurrentConnector> currentConnectors = getCurrentConnector();
+		// car.setMaxWattage(currentConnector); // ISSUE! several instances!
 
 
 
@@ -371,7 +372,7 @@ public class DatabaseConnector
 		getCurrents();
 		getConnectors();
 		getPayments();
-		getVcc();
+		getCurrentConnector();
 		getStationChargingPoints();
 
 		// Entry search:

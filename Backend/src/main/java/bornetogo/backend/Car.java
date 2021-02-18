@@ -7,6 +7,8 @@ import java.sql.*;
 
 
 // TODO: fill the empty fields!
+// ISSUE! several wattages!
+
 
 public class Car extends Entry
 {
@@ -138,6 +140,12 @@ public class Car extends Entry
 	}
 
 
+	public void setMaxWattage(CurrentConnector cc)
+	{
+		this.maxWattage = cc.getWattage();
+	}
+
+
 	public void setCapacity(Battery battery)
 	{
 		this.capacity = battery.getCapacity();
@@ -252,3 +260,23 @@ public class Car extends Entry
 		System.out.println(car_2.toString() + "\n");
 	}
 }
+
+// {
+//     model: "Renault ZOE R135"
+//     subscription: ""
+//     maxAutonomy: 390
+//     currentAutonomy: 390
+//     capacity: 52
+//     currentConnectors: [
+//         {
+//             wattage: 150.0,
+//             connector: "",
+//             current: ""
+//         },
+//         {
+//             wattage: 150.0,
+//             connector: "",
+//             current: ""
+//         }
+//     ]
+// }

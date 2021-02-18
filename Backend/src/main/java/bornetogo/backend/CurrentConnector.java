@@ -3,30 +3,30 @@ package main.java.bornetogo.backend;
 import java.sql.*;
 
 
-public class Vcc extends Entry
+public class CurrentConnector extends Entry
 {
-	private int idVcc;
+	private int idCurrentConnector;
 	private int idCar;
 	private int idConnector;
 	private int idCurrent;
 	private double wattage;
 
 
-	public Vcc() {}
+	public CurrentConnector() {}
 
 
-	public Vcc query(ResultSet answer)
+	public CurrentConnector query(ResultSet answer)
 	{
-		Vcc v = new Vcc();
+		CurrentConnector v = new CurrentConnector();
 
 		try {
-			v.idVcc = answer.getInt("idVCC");
+			v.idCurrentConnector = answer.getInt("idVCC");
 			v.idCar = answer.getInt("idVoiture");
 			v.idConnector = answer.getInt("idConnecteur");
 			v.idCurrent = answer.getInt("idCourant");
 			v.wattage = Entry.sanitize(answer.getDouble("Puissance"));
 
-			// String row = "-> " + v.idVcc + ", " + v.idCar + ", " + v.idConnector
+			// String row = "-> " + v.idCurrentConnector + ", " + v.idCar + ", " + v.idConnector
 			// 	+ ", " + v.idCurrent + ", " + v.wattage;
 			// System.out.println(row);
 
@@ -41,7 +41,7 @@ public class Vcc extends Entry
 
 	public int getId()
 	{
-		return this.idVcc;
+		return this.idCurrentConnector;
 	}
 
 
