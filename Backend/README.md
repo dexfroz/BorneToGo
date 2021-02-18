@@ -69,8 +69,3 @@ Once the project is done, and needs to be deployed e.g on a web server, java and
 - Provide a documentation, with detailed explanations on the workings of the backend, especially the core program and the pathfinding part.
 - Generate statistics about the found path.
 - (Future) query temperature data for the next few hours on a region/country level, use it in the autonomy left computation, and modify the pathfinding accordingly.
-
-
-## Possible optimizations:
-
-- Bypass many distance computations in the pathfinding, by using various tricks, like precomputation or factorization. Note: for now this is overkill, since said pathfinding take less than 0.1 second to run.
