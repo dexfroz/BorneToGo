@@ -7,7 +7,7 @@ import jakarta.json.*;
 public class Output
 {
 	// Returns null on failure.
-	public static JsonObject build(ArrayList<Route> routes, long startTime)
+	public static JsonObject build(ArrayList<Route> routes, Car car, long startTime)
 	{
 		try
 		{
@@ -21,12 +21,21 @@ public class Output
 
 				JsonObject statsJson = Json.createObjectBuilder().build(); // TODO! Expand route.getStats()
 
+				// "stats":
+				// {
+				// 	"moneySavings": 12.30,
+				// 	"carbonEmissionSavings": 0.123,
+				// 	"lightBulbsNumber": 3,
+				// 	"wattage": 5,
+				// 	"days": 12
+				// }
+
 				// waypoints:
 
 				JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
 
 				for (Coord coord : route.getWaypoints()) {
-					waypointsBuilder.add(coord.toJsonFull(Coord.Format.LONG_LAT));
+					waypointsBuilder.add(coord.toJsonFull(Coord.Format.LONG_LAT, car));
 				}
 
 				JsonArray waypointsArray = waypointsBuilder.build();
@@ -88,6 +97,7 @@ public class Output
 			return output;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			System.err.println("\nError while building the output json.\n");
 			return null;
 		}

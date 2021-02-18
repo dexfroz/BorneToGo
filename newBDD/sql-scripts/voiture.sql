@@ -1,0 +1,32 @@
+-- Strict SQL mode disabled:
+SET sql_mode = '';
+
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('1','1','Renault ZOE R135','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('2','1','Renault ZOE R110','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('3','2','Renault ZOE R110','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('4','2','Renault ZOE R75','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('5','2','Renault ZOE R90','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('6','3','Renault ZOE Q90','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('7','4','Renault ZOE R240','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('8','5','Renault ZOE R210/Q210','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('9','5','Renault ZOE Q90','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('10','6','Tesla Model 3 Autonomie Standard Plus','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('11','7','Tesla Model 3 Grande autonomie','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('12','8','Tesla Model 3 Performance','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('13','9','Peugeot e-208','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('14','10','Volkswagen ID3 Pure','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('15','11','Volkswagen ID3 Pro Performance','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('16','12','Volkswagen ID3 Pro S','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('17','13','Tesla Model S Autonomie Standard','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('18','14','Tesla Model S Grande autonomie','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('19','15','Tesla Model S Performance','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('20','16','Tesla Model S 70','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('21','17','Tesla Model S 70D','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('22','18','Tesla Model S Plaid','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('23','19','BMW i3 120 Ah','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('24','20','BMW i3 94 Ah','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('25','21','BMW i3 94 Ah REX','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('26','22','BMW i3 60 Ah','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('27','22','BMW i3 60 Ah REX','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('28','23','Renault Twizy 45','100');
+INSERT INTO BorneToGo.Voiture (idVoiture, idBatterie, Modele, Chargement) VALUES ('29','24','Renault Twizy 80','100');

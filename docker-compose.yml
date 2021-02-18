@@ -1,0 +1,35 @@
+version: '3.2'
+
+services:
+
+  backend:
+    image: bornetogo-backend:1.0
+    container_name: bornetogo-backend
+    restart: "no"
+    build: ./Backend
+    ports:
+      - 4321:8080 # host:container
+    networks:
+      - my-network
+
+  database:
+    # image: mysql:8.0 # bugged!
+    # image: mysql:5.7
+    image: mariadb:10.5
+    # image: bornetogo-database:1.0
+    container_name: bornetogo-database
+    restart: "no"
+    # build: ./newBDD
+    ports:
+      - 3306:3306
+    volumes:
+      - ./newBDD/.data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: aaa # To change this, remove the .data dir.
+    # env_file:
+    #   - ./newBDD/secret.cnf
+    networks:
+      - my-network
+
+networks:
+  my-network:

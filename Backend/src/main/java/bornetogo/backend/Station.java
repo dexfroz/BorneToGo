@@ -3,13 +3,28 @@ package main.java.bornetogo.backend;
 import java.io.*;
 import java.util.*;
 import jakarta.json.*;
+import java.sql.*;
 
+
+// TODO: fetch payment data from 'idPayment'. Note that this is probably
+// useless as of now, since the 'Paiement' table contains nothing useful.
 
 public class Station extends Coord
 {
-	// TODO: must contain a list of charging points, and other stats.
+	private int idStation;
+	private int idPayment;
+	private String paymentStatus = "";
+	private ArrayList<Integer> chargingPointsID = new ArrayList<Integer>(); // more memory efficient to store IDs.
 
 
+	public Station()
+	{
+		super(0, 0, "", "");
+		this.isStation = true;
+	}
+
+
+	// For testing. Real stations come from the database.
 	public Station(double latitude, double longitude, String name, String address)
 	{
 		super(latitude, longitude, name, address);
@@ -17,25 +32,126 @@ public class Station extends Coord
 	}
 
 
-	public Station(Coord coord)
+	public Station query(ResultSet answer)
 	{
-		super(coord.latitude, coord.longitude, coord.name, coord.address);
-		this.isStation = true;
+		Station s = new Station();
+
+		try	{
+			s.idStation = answer.getInt("idStation");
+			s.idPayment = answer.getInt("idPaiement");
+			s.name = Entry.sanitize(answer.getString("Titre"));
+			s.latitude = answer.getDouble("Latitude");
+			s.longitude = answer.getDouble("Longitude");
+			String address = Entry.sanitize(answer.getString("Adresse"));
+			String city = Entry.sanitize(answer.getString("Ville"));
+			String zipCode = Entry.sanitize(answer.getString("Codepostal"));
+			s.address = address + " " + city + " " + zipCode;
+
+			// String row = "-> " + s.idStation + ", " + s.idPayment + ", " + s.name + ", " + s.latitude +
+			// 	", " + s.longitude + ", " + address + ", " + city + ", " + zipCode;
+			// System.out.println(row);
+
+			return s;
+		}
+		catch (Exception e) {
+			System.err.printf("\nInvalid fields in '%s' query.\n", this.getClass().getSimpleName());
+			return null;
+		}
 	}
 
 
-	// TODO: add stations specific data:
-	public JsonObject getJsonData()
+	public int getId()
 	{
+		return this.idStation;
+	}
+
+
+	public int getIdPayment()
+	{
+		return this.idPayment;
+	}
+
+
+	public String getPaymentStatus()
+	{
+		return this.paymentStatus;
+	}
+
+
+	public ArrayList<Integer> getChargingPointsID()
+	{
+		return this.chargingPointsID;
+	}
+
+
+	// Loads on demand the charging points for this station.
+	// This is not to be kept in memory for all stations at all times.
+	public ArrayList<ChargingPoint> getChargingPoints()
+	{
+		ArrayList<ChargingPoint> allChargingPoints = DatabaseConnector.getChargingPoints();
+		ArrayList<ChargingPoint> stationChargingPoints = new ArrayList<ChargingPoint>();
+
+		if (this.chargingPointsID == null) {
+			System.err.println("\nCould not get the charging points of a station: null 'chargingPointsID'.\n");
+			return stationChargingPoints;
+		}
+
+		if (allChargingPoints == null) {
+			System.err.println("\nCould not get the charging points of a station: database loading failed.\n");
+			return stationChargingPoints;
+		}
+
+		for (int id : this.chargingPointsID)
+		{
+			// This does not assume any good property on IDs:
+			for (ChargingPoint c : allChargingPoints)
+			{
+				if (c.getId() == id) {
+					stationChargingPoints.add(c);
+					break;
+				}
+			}
+		}
+
+		if (stationChargingPoints.size() != this.chargingPointsID.size()) {
+			System.err.println("\nSome charging points IDs where invalid.\n");
+		}
+
+		return stationChargingPoints;
+	}
+
+
+	public JsonObject getJsonData(Car car)
+	{
+		// The backend needs to output all compatible charging points - available or not!
+		ArrayList<ChargingPoint> compatibleChargingPoints = getCompatibleChargingPoints(car);
+
+		JsonArrayBuilder chargingPointsBuilder = Json.createArrayBuilder();
+
+		for (ChargingPoint chargingPoint : compatibleChargingPoints) {
+			chargingPointsBuilder.add(chargingPoint.toJson());
+		}
+
+		JsonArray chargingPointsArray = chargingPointsBuilder.build();
+
 		return Json.createObjectBuilder()
-			// .add("things", 0) // add this station data...
+			.add("paymentStatus", this.paymentStatus)
+			.add("bornes", chargingPointsArray)
 			.build();
 	}
 
 
-	public Boolean hasCompatibleChargingPoint(Car car)
+	public boolean hasUsableCompatibleChargingPoint(Car car)
 	{
 		return true; // TODO, using the car and list of charging points.
+	}
+
+
+	// This must _not_ filter charging points on availability:
+	public ArrayList<ChargingPoint> getCompatibleChargingPoints(Car car)
+	{
+		// TODO, using the car and list of charging points.
+		return this.getChargingPoints();
 	}
 
 

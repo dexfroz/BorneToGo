@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.*;
 public class RequestHandler
 {
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response helloWorld()
 	{
 		JsonObject obj = Json.createObjectBuilder().add("hello", "world").build();
@@ -22,6 +23,7 @@ public class RequestHandler
 
 	@GET
 	@Path("get/{param}")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response answerGETrequest(@PathParam("param") String request)
 	{
 		String answer = "GET answer: " + request;
@@ -31,8 +33,8 @@ public class RequestHandler
 
 	@POST
 	@Path("post")
-	// @Consumes(MediaType.TEXT_PLAIN)
-	// @Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response answerPOSTrequest(String request)
 	{
 		String answer = "POST answer: " + request;
@@ -42,13 +44,14 @@ public class RequestHandler
 
 	@GET
 	@Path("file")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response answerFileRequest()
 	{
 		String filename = "some_text_file.txt";
 		// String filename = "not_existing_file.txt";
 
 		String content = FileContent.read(filename);
-		String answer = "File content: " + content; // all '\n' are ignored!
+		String answer = "File content: " + content;
 
 		// Equivalent to 404 / 200:
 		Response.Status status = content == null ? Response.Status.NOT_FOUND : Response.Status.OK;
@@ -58,6 +61,7 @@ public class RequestHandler
 
 	@GET
 	@Path("cars")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCars()
 	{
 		try
@@ -65,8 +69,9 @@ public class RequestHandler
 			ArrayList<Car> allCars = DatabaseConnector.getCars();
 
 			if (allCars == null) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Cars could not be loaded by the backend.").build();
+				JsonObject obj = Json.createObjectBuilder()
+					.add("Error", "Cars could not be loaded by the backend.").build();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
 			JsonArrayBuilder carsBuilder = Json.createArrayBuilder();
@@ -84,15 +89,17 @@ public class RequestHandler
 			return Response.ok(carsJson).build();
 		}
 		catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity("Unknown error.").build();
+			JsonObject obj = Json.createObjectBuilder()
+				.add("Error", "Could not output the cars list.").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 		}
 	}
 
 
 	@GET
 	@Path("mockpath")
-	public Response mockOutput()
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMockPath()
 	{
 		try
 		{
@@ -103,15 +110,17 @@ public class RequestHandler
 			JsonObject output = Core.core(input);
 
 			if (output == null) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Core program failed to output a path.").build();
+				JsonObject obj = Json.createObjectBuilder()
+					.add("Error", "Core program failed to output a path.").build();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
 			return Response.ok(output).build();
 		}
 		catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-				.entity("Unknown error.").build();
+			JsonObject obj = Json.createObjectBuilder()
+				.add("Error", "Could not output the mock path.").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 		}
 	}
 
@@ -120,7 +129,7 @@ public class RequestHandler
 	@Path("path")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response backendOutput(String stringQuery)
+	public Response getPaths(String stringQuery)
 	{
 		try
 		{
@@ -131,15 +140,51 @@ public class RequestHandler
 			JsonObject output = Core.core(input);
 
 			if (output == null) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Core program failed to output a path.").build();
+				JsonObject obj = Json.createObjectBuilder()
+					.add("Error", "Core program failed to output a path.").build();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
 			return Response.ok(output).build();
 		}
 		catch (Exception e) {
-			return Response.status(Response.Status.BAD_REQUEST)
-				.entity("Wrong request.").build();
+			JsonObject obj = Json.createObjectBuilder()
+				.add("Error", "Wrong request for a path.").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
+		}
+	}
+
+
+	@GET
+	@Path("tables")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getTables()
+	{
+		try
+		{
+			String result = DatabaseConnector.getTables();
+			return Response.ok(result).build();
+		}
+		catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity("Error while trying to connect to the database.").build();
+		}
+	}
+
+
+	@GET
+	@Path("tableSize/{param}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getTableSize(@PathParam("param") String table)
+	{
+		try
+		{
+			String result = DatabaseConnector.getTableSize(table);
+			return Response.ok(result).build();
+		}
+		catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+				.entity("Error while trying to connect to the database.").build();
 		}
 	}
 }
