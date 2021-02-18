@@ -65,15 +65,9 @@ Once the project is done, and needs to be deployed e.g on a web server, java and
 
 ## TODO:
 
-- Load from the MySQL database cars, stations, connectors, batteries...
-- Get both cost and duration of a recharging.
-- Add multiple-criteria optimization in the pathfinding, and therefore use the input field "optimOption".
-- Update the output file with stations data, in the field: "data": {}
 - Add the feature of returning several routes in the answer.
 - Provide a documentation, with detailed explanations on the workings of the backend, especially the core program and the pathfinding part.
 - Generate statistics about the found path.
-- (Optional) add a timeout to all API queries.
-- (Optional) add a logger, to better trace the failures of the whole app.
 - (Future) query temperature data for the next few hours on a region/country level, use it in the autonomy left computation, and modify the pathfinding accordingly.
 
 
