@@ -32,7 +32,6 @@ class PageLogo extends React.Component {
                         source={require('../Images/logo_isen.png')}
                     />
                 </View>
-
             </View >
         )
     }
