@@ -11,10 +11,12 @@ import java.sql.*;
 
 public class Station extends Coord
 {
-	private int idStation;
-	private int idPayment;
 	private String paymentStatus = "";
 	private ArrayList<Integer> chargingPointsID = new ArrayList<Integer>(); // more memory efficient to store IDs.
+
+	// In reguards to the database:
+	private int idStation;
+	private int idPayment;
 
 
 	public Station()

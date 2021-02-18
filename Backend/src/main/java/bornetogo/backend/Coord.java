@@ -16,8 +16,8 @@ public class Coord extends Entry
 	private static final double MEAN_EARTH_DIAMETER = 12742.0016; // in km
 	private static final double EPSILON = 0.0001; // max error: 11.11 m
 
-	protected String name;
-	protected String address;
+	protected String name = "";
+	protected String address = "";
 
 	// In decimal degrees:
 	protected double latitude;

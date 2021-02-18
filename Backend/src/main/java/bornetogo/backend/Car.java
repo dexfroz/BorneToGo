@@ -6,9 +6,7 @@ import jakarta.json.*;
 import java.sql.*;
 
 
-// TODO: fill the empty fields!
-// ISSUE! several wattages!
-
+// TODO: get ArrayList<PowerConnector> powerConnectors from json!
 
 public class Car extends Entry
 {
@@ -16,10 +14,8 @@ public class Car extends Entry
 	private String subscription = "";
 	private double maxAutonomy; // in km
 	private double currentAutonomy; // in km
-	private double maxWattage; // in kW
 	private double capacity; // in kWh
-	private ArrayList<String> connectors = new ArrayList<String>();
-	private ArrayList<String> currents = new ArrayList<String>();
+	private ArrayList<PowerConnector> powerConnectors = new ArrayList<PowerConnector>();
 
 	// In reguards to the database:
 	private int idCar;
@@ -71,10 +67,8 @@ public class Car extends Entry
 		car.subscription = this.subscription;
 		car.maxAutonomy = this.maxAutonomy;
 		car.currentAutonomy = this.currentAutonomy;
-		car.maxWattage = this.maxWattage;
 		car.capacity = this.capacity;
-		car.connectors = this.connectors;
-		car.currents = this.currents;
+		car.powerConnectors = this.powerConnectors;
 
 		return car;
 	}
@@ -116,33 +110,15 @@ public class Car extends Entry
 	}
 
 
-	public double getMaxWattage()
-	{
-		return this.maxWattage;
-	}
-
-
 	public double getCapacity()
 	{
 		return this.capacity;
 	}
 
 
-	public ArrayList<String> getConnectors()
+	public ArrayList<PowerConnector> getPowerConnectors()
 	{
-		return this.connectors;
-	}
-
-
-	public ArrayList<String> getCurrents()
-	{
-		return this.currents;
-	}
-
-
-	public void setMaxWattage(PowerConnector pc)
-	{
-		this.maxWattage = pc.getWattage();
+		return this.powerConnectors;
 	}
 
 
@@ -167,10 +143,9 @@ public class Car extends Entry
 
 	public String toString()
 	{
-		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nMax autonomy: " + this.maxAutonomy +
-			" km\nCurrent autonomy: " + this.currentAutonomy + " km\nmaxWattage: " + this.maxWattage +
-			" kW\nCapacity: " + this.capacity + " kWh\nConnectors number: " + this.connectors.size() +
-			"\nCurrents number: " + this.currents.size();
+		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nMax autonomy: " +
+			this.maxAutonomy + " km\nCurrent autonomy: " + this.currentAutonomy + " km\nCapacity: " +
+			this.capacity + " kWh\nPowerConnectors number: " + this.powerConnectors.size();
 	}
 
 
@@ -180,6 +155,7 @@ public class Car extends Entry
 	}
 
 
+	// TODO: make this able to work just with the model + PowerConnector!
 	// Returns null on failure.
 	public static Car getFromJson(JsonObject json)
 	{
@@ -192,8 +168,8 @@ public class Car extends Entry
 			double currentAutonomy = carJson.getJsonNumber​("currentAutonomy").doubleValue(); // in km
 
 			// TODO: update the constructor to add those:
-			double maxWattage = carJson.getJsonNumber​("maxWattage").doubleValue(); // in kW
 			double capacity = carJson.getJsonNumber​("capacity").doubleValue(); // in kWh
+			// double maxWattage = carJson.getJsonNumber​("maxWattage").doubleValue(); // in kW // ISSUE
 			// ArrayList<String> connectors = carJson.getString("connectors"); // TODO
 			// ArrayList<String> currents = carJson.getString("currents"); // TODO
 
@@ -208,33 +184,21 @@ public class Car extends Entry
 
 	public JsonObject toJson()
 	{
-		JsonArrayBuilder connectorsBuilder = Json.createArrayBuilder();
+		JsonArrayBuilder currentConnectorsBuilder = Json.createArrayBuilder();
 
-		for (String connector : this.connectors) {
-			connectorsBuilder.add(connector);
+		for (PowerConnector pc : this.powerConnectors) {
+			currentConnectorsBuilder.add(pc.toJson());
 		}
 
-		JsonArray connectorsArray = connectorsBuilder.build();
-
-
-		JsonArrayBuilder currentsBuilder = Json.createArrayBuilder();
-
-		for (String current : this.currents) {
-			currentsBuilder.add(current);
-		}
-
-		JsonArray currentsArray = currentsBuilder.build();
-
+		JsonArray currentConnectorsArray = currentConnectorsBuilder.build();
 
 		return Json.createObjectBuilder()
 			.add("model", this.model)
 			.add("subscription", this.subscription)
 			.add("maxAutonomy", this.maxAutonomy)
 			.add("currentAutonomy", this.currentAutonomy)
-			.add("maxWattage", this.maxWattage)
 			.add("capacity", this.capacity)
-			.add("connectors", connectorsArray)
-			.add("currents", currentsArray)
+			.add("courantConnecteurs", currentConnectorsArray)
 			.build();
 	}
 
@@ -260,23 +224,3 @@ public class Car extends Entry
 		System.out.println(car_2.toString() + "\n");
 	}
 }
-
-// {
-//     model: "Renault ZOE R135"
-//     subscription: ""
-//     maxAutonomy: 390
-//     currentAutonomy: 390
-//     capacity: 52
-//     currentConnectors: [
-//         {
-//             wattage: 150.0,
-//             connector: "",
-//             current: ""
-//         },
-//         {
-//             wattage: 150.0,
-//             connector: "",
-//             current: ""
-//         }
-//     ]
-// }

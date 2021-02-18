@@ -6,8 +6,8 @@ import java.sql.*;
 public class Connector extends Entry
 {
 	private int idConnector;
-	private String title;
-	private String name;
+	private String title = "";
+	private String name = "";
 
 
 	public Connector() {}

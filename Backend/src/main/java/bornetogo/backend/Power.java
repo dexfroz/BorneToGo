@@ -6,8 +6,8 @@ import java.sql.*;
 public class Power extends Entry
 {
 	private int idPower;
-	private String name;
-	private String description;
+	private String name = "";
+	private String description = "";
 
 
 	public Power() {}

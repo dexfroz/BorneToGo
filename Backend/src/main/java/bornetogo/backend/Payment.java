@@ -6,7 +6,7 @@ import java.sql.*;
 public class Payment extends Entry
 {
 	private int idPayment;
-	private String name;
+	private String name = "";
 	private boolean isPayAtLocation;
 	private boolean isMembershipRequired;
 	private boolean isAccessKeyRequired;

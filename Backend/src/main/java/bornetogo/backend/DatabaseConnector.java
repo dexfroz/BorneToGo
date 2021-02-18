@@ -10,30 +10,44 @@ public class DatabaseConnector
 	private static boolean areCarsLoaded = false;
 	private static boolean areStationsLoaded = false;
 	private static boolean areChargingPointsLoaded = false;
+	private static boolean arePowerConnectorsLoaded = false;
+	private static boolean areStationChargingPointsLoaded = false;
+	private static boolean areBatteriesLoaded = false;
+	private static boolean areStatusesLoaded = false;
+	private static boolean arePowersLoaded = false;
+	private static boolean areConnectorsLoaded = false;
+	private static boolean arePaymentsLoaded = false;
 
 	// Those will be kept in memory:
-	private static ArrayList<Car> cars = null;
-	private static ArrayList<Station> stations = null;
-	private static ArrayList<ChargingPoint> chargingPoints = null;
+	private static ArrayList<Car> allCars = null;
+	private static ArrayList<Station> allStations = null;
+	private static ArrayList<ChargingPoint> allChargingPoints = null;
+	private static ArrayList<PowerConnector> allPowerConnectors = null;
+	private static ArrayList<StationChargingPoint> allStationChargingPoints = null;
+	private static ArrayList<Battery> allBatteries = null;
+	private static ArrayList<Status> allStatuses = null;
+	private static ArrayList<Power> allPowers = null;
+	private static ArrayList<Connector> allConnectors = null;
+	private static ArrayList<Payment> allPayments = null;
 
 
 	public static ArrayList<Car> getCars()
 	{
 		if (! areCarsLoaded) {
 			Entry entry = new Car();
-			cars = entry.loadTable("Voiture");
-			areCarsLoaded = cars.size() > 0;
+			allCars = entry.loadTable("Voiture");
+			areCarsLoaded = allCars.size() > 0;
 
 			if (areCarsLoaded) {
 				completeCars();
 			}
 			else {
 				System.err.println("\nCould not get real cars, using mock data...\n");
-				cars = Car.mock();
+				allCars = Car.mock();
 			}
 		}
 
-		return cars;
+		return allCars;
 	}
 
 
@@ -41,20 +55,20 @@ public class DatabaseConnector
 	{
 		if (! areStationsLoaded) {
 			Entry entry = new Station();
-			stations = entry.loadTable("Station");
-			areStationsLoaded = stations.size() > 0;
+			allStations = entry.loadTable("Station");
+			areStationsLoaded = allStations.size() > 0;
 
 			if (areStationsLoaded) {
-				addChargingPointsID();
+				completeStations();
 			}
 			else {
 				System.err.println("\nCould not get real stations, using mock data...\n");
-				// stations = Station.mock();
-				stations = Station.bigMock();
+				// allStations = Station.mock();
+				allStations = Station.bigMock();
 			}
 		}
 
-		return stations;
+		return allStations;
 	}
 
 
@@ -62,145 +76,103 @@ public class DatabaseConnector
 	{
 		if (! areChargingPointsLoaded) {
 			Entry entry = new ChargingPoint();
-			chargingPoints = entry.loadTable("Borne");
-			areChargingPointsLoaded = chargingPoints.size() > 0;
+			allChargingPoints = entry.loadTable("Borne");
+			areChargingPointsLoaded = allChargingPoints.size() > 0;
 		}
 
 		if (areChargingPointsLoaded) {
 			completeChargingPoints();
 		}
 
-		return chargingPoints;
+		return allChargingPoints;
 	}
 
 
-	// TODO: save this?
-	private static ArrayList<Battery> getBatteries()
+	private static ArrayList<PowerConnector> getPowerConnectors()
 	{
-		Entry entry = new Battery();
-		ArrayList<Battery> batteries = entry.loadTable("Batterie");
-		return batteries;
+		if (! arePowerConnectorsLoaded) {
+			Entry entry = new PowerConnector();
+			allPowerConnectors = entry.loadTable("VCC");
+			arePowerConnectorsLoaded = allPowerConnectors.size() > 0;
+		}
+
+		if (arePowerConnectorsLoaded) {
+			completePowerConnectors();
+		}
+
+		return allPowerConnectors;
 	}
 
 
-	// TODO: save this?
-	private static ArrayList<Status> getStatuses()
-	{
-		Entry entry = new Status();
-		ArrayList<Status> statuses = entry.loadTable("Status");
-		return statuses;
-	}
-
-
-	// TODO: save this?
-	private static ArrayList<Power> getPowers()
-	{
-		Entry entry = new Power();
-		ArrayList<Power> powers = entry.loadTable("Courant");
-		return powers;
-	}
-
-
-	// TODO: save this?
-	private static ArrayList<Connector> getConnectors()
-	{
-		Entry entry = new Connector();
-		ArrayList<Connector> connectors = entry.loadTable("Connecteur");
-		return connectors;
-	}
-
-
-	// TODO: save this?
-	private static ArrayList<Payment> getPayments()
-	{
-		Entry entry = new Payment();
-		ArrayList<Payment> payments = entry.loadTable("Paiement");
-		return payments;
-	}
-
-
-	// TODO: save this?
 	private static ArrayList<StationChargingPoint> getStationChargingPoints()
 	{
-		Entry entry = new StationChargingPoint();
-		ArrayList<StationChargingPoint> stationChargingPoints = entry.loadTable("StationBorne");
-		return stationChargingPoints;
+		if (! areStationChargingPointsLoaded) {
+			Entry entry = new StationChargingPoint();
+			allStationChargingPoints = entry.loadTable("StationBorne");
+			areStationChargingPointsLoaded = allStationChargingPoints.size() > 0;
+		}
+
+		return allStationChargingPoints;
 	}
 
 
-	// TODO: save this?
-	private static ArrayList<PowerConnector> getPowerConnector()
+	private static ArrayList<Battery> getBatteries()
 	{
-		Entry entry = new PowerConnector();
-		ArrayList<PowerConnector> powerConnectors = entry.loadTable("VCC");
-		return powerConnectors;
+		if (! areBatteriesLoaded) {
+			Entry entry = new Battery();
+			allBatteries = entry.loadTable("Batterie");
+			areBatteriesLoaded = allBatteries.size() > 0;
+		}
+
+		return allBatteries;
 	}
 
 
-	private static void addChargingPointsID()
+	private static ArrayList<Status> getStatuses()
 	{
-		if (! areStationsLoaded) { // no need to have loaded chargingPoints yet!
-			return;
+		if (! areStatusesLoaded) {
+			Entry entry = new Status();
+			allStatuses = entry.loadTable("Status");
+			areStatusesLoaded = allStatuses.size() > 0;
 		}
 
-		Entry entry = new Station();
-		boolean stationsCheck = entry.checkEntriesIDrange(stations); // used for speed!
-		ArrayList<StationChargingPoint> stationChargingPoints = getStationChargingPoints();
-
-		for (StationChargingPoint scp : stationChargingPoints) {
-			Station station = entry.findEntryID(stations, scp.getIdStation(), stationsCheck);
-			if (station != null) {
-				station.getChargingPointsID().add(scp.getIdChargingPoint());
-			}
-		}
-
-		System.out.println("-> Added charging points to all stations.\n");
+		return allStatuses;
 	}
 
 
-	private static void completeChargingPoints()
+	private static ArrayList<Power> getPowers()
 	{
-		if (! areChargingPointsLoaded) {
-			return;
+		if (! arePowersLoaded) {
+			Entry entry = new Power();
+			allPowers = entry.loadTable("Courant");
+			arePowersLoaded = allPowers.size() > 0;
 		}
 
-		// Statuses:
+		return allPowers;
+	}
 
-		Entry entry = new Status();
-		ArrayList<Status> statuses = getStatuses();
 
-		for (ChargingPoint cp : chargingPoints) {
-			Status status = entry.findEntryID(statuses, cp.getIdStatus(), false);
-			if (status != null) {
-				cp.setUsability(status);
-			}
+	private static ArrayList<Connector> getConnectors()
+	{
+		if (! areConnectorsLoaded) {
+			Entry entry = new Connector();
+			allConnectors = entry.loadTable("Connecteur");
+			areConnectorsLoaded = allConnectors.size() > 0;
 		}
 
-		// Connectors:
+		return allConnectors;
+	}
 
-		entry = new Connector();
-		ArrayList<Connector> connectors = getConnectors();
 
-		for (ChargingPoint cp : chargingPoints) {
-			Connector connector = entry.findEntryID(connectors, cp.getIdConnector(), false);
-			if (connector != null) {
-				cp.setConnector(connector);
-			}
+	private static ArrayList<Payment> getPayments()
+	{
+		if (! arePaymentsLoaded) {
+			Entry entry = new Payment();
+			allPayments = entry.loadTable("Paiement");
+			arePaymentsLoaded = allPayments.size() > 0;
 		}
 
-		// Powers:
-
-		entry = new Power();
-		ArrayList<Power> powers = getPowers();
-
-		for (ChargingPoint cp : chargingPoints) {
-			Power power = entry.findEntryID(powers, cp.getIdPower(), false);
-			if (power != null) {
-				cp.setPower(power);
-			}
-		}
-
-		System.out.println("-> Added data to all charging points.\n");
+		return allPayments;
 	}
 
 
@@ -215,70 +187,129 @@ public class DatabaseConnector
 		Entry entry = new Battery();
 		ArrayList<Battery> batteries = getBatteries();
 
-		for (Car car : cars) {
+		for (Car car : allCars) {
 			Battery battery = entry.findEntryID(batteries, car.getIdBattery(), false);
 			if (battery != null) {
-
 				car.setMaxAutonomy(battery);
 				car.setCapacity(battery);
 			}
 		}
 
-		// PowerConnector
-
-		// entry = new PowerConnector();
-		ArrayList<PowerConnector> powerConnectors = getPowerConnector();
-
-		// for (Car car : cars) {
-		// 	PowerConnector pc = entry.findEntryID(powerConnectors, car.getIdCar(), false);
-		// }
+		// Adding PowerConnectors:
 
 		entry = new Car();
+		ArrayList<PowerConnector> powerConnectors = getPowerConnectors();
+
 		for (PowerConnector pc : powerConnectors) {
-			Car car = entry.findEntryID(cars, pc.getIdCar(), false);
+			Car car = entry.findEntryID(allCars, pc.getIdCar(), false);
 			if (car != null) {
-				int idConnector = pc.getIdConnector();
-				int idPower = pc.getIdPower();
-				double wattage = pc.getWattage(); // several!
-				System.out.println(car.getId() + " -> " + idConnector + ", " + idPower + ", " + wattage);
+				car.getPowerConnectors().add(pc);
 			}
 		}
-
-
-		// car.setMaxWattage(powerConnector); // ISSUE! several instances!
-
-
-
-
-		// // Connectors:
-
-		// entry = new Connector();
-		// ArrayList<Connector> connectors = getConnectors();
-
-		// for (ChargingPoint cp : chargingPoints) {
-		// 	Connector connector = entry.findEntryID(connectors, cp.getIdConnector(), false);
-		// 	if (connector != null) {
-		// 		cp.setConnector(connector);
-		// 	}
-		// }
-
-		// // Powers:
-
-		// entry = new Power();
-		// ArrayList<Power> powers = getPowers();
-
-		// for (ChargingPoint cp : chargingPoints) {
-		// 	Power power = entry.findEntryID(powers, cp.getIdPower(), false);
-		// 	if (power != null) {
-		// 		cp.setPower(power);
-		// 	}
-		// }
 
 		System.out.println("-> Added data to all cars.\n");
 	}
 
 
+	private static void completeStations()
+	{
+		if (! areStationsLoaded) { // no need to have loaded chargingPoints yet!
+			return;
+		}
 
+		Entry entry = new Station();
+		boolean stationsCheck = entry.checkEntriesIDrange(allStations); // used for speed!
+		ArrayList<StationChargingPoint> stationChargingPoints = getStationChargingPoints();
+
+		for (StationChargingPoint scp : stationChargingPoints) {
+			Station station = entry.findEntryID(allStations, scp.getIdStation(), stationsCheck);
+			if (station != null) {
+				station.getChargingPointsID().add(scp.getIdChargingPoint());
+			}
+		}
+
+		System.out.println("-> Added charging points IDs to all stations.\n");
+	}
+
+
+	private static void completeChargingPoints()
+	{
+		if (! areChargingPointsLoaded) {
+			return;
+		}
+
+		// Statuses:
+
+		Entry entry = new Status();
+		ArrayList<Status> statuses = getStatuses();
+
+		for (ChargingPoint cp : allChargingPoints) {
+			Status status = entry.findEntryID(statuses, cp.getIdStatus(), false);
+			if (status != null) {
+				cp.setUsability(status);
+			}
+		}
+
+		// Connectors:
+
+		entry = new Connector();
+		ArrayList<Connector> connectors = getConnectors();
+
+		for (ChargingPoint cp : allChargingPoints) {
+			Connector connector = entry.findEntryID(connectors, cp.getIdConnector(), false);
+			if (connector != null) {
+				cp.setConnector(connector);
+			}
+		}
+
+		// Powers:
+
+		entry = new Power();
+		ArrayList<Power> powers = getPowers();
+
+		for (ChargingPoint cp : allChargingPoints) {
+			Power power = entry.findEntryID(powers, cp.getIdPower(), false);
+			if (power != null) {
+				cp.setPower(power);
+			}
+		}
+
+		System.out.println("-> Added data to all charging points.\n");
+	}
+
+
+	private static void completePowerConnectors()
+	{
+		if (! arePowerConnectorsLoaded) {
+			return;
+		}
+
+		// Connectors:
+
+		Entry entry = new Connector();
+		ArrayList<Connector> connectors = getConnectors();
+
+		for (PowerConnector pc : allPowerConnectors) {
+			Connector connector = entry.findEntryID(connectors, pc.getIdConnector(), false);
+			if (connector != null) {
+				pc.setConnector(connector);
+			}
+		}
+
+		// Powers:
+
+		entry = new Power();
+		ArrayList<Power> powers = getPowers();
+
+		for (PowerConnector pc : allPowerConnectors) {
+			Power power = entry.findEntryID(powers, pc.getIdPower(), false);
+			if (power != null) {
+				pc.setPower(power);
+			}
+		}
+
+		System.out.println("-> Added data to all PowerConnectors.\n");
+	}
 
 
 	// The result of this function should be closed at its end life.
@@ -392,12 +423,13 @@ public class DatabaseConnector
 		getPowers();
 		getConnectors();
 		getPayments();
-		getPowerConnector();
+		getPowerConnectors();
 		getStationChargingPoints();
 
 		// Entry search:
 		Entry entry = new Car();
-		boolean carsCheck = entry.checkEntriesIDrange(cars);
+		ArrayList<Car> cars = getCars();
+		boolean carsCheck = entry.checkEntriesIDrange(cars); // for speed.
 		System.out.println("Check result for cars: " + carsCheck + "\n");
 		int id = 1;
 		Car car = entry.findEntryID(cars, id, carsCheck); // null object returned on failure!

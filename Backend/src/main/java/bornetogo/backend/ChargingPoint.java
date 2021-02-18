@@ -5,14 +5,12 @@ import jakarta.json.*;
 import java.sql.*;
 
 
-// TODO: Load connector, power, and status status data (thus building isUsable).
-
 public class ChargingPoint extends Entry
 {
-	private boolean isUsable = true;
-	private double wattage;
-	private String connector = "";
-	private String power = "";
+	private boolean isUsable = true; // by default
+	private double wattage; // in kW
+	private Connector connector;
+	private Power power;
 
 	// In reguards to the database:
 	private int idChargingPoint; // used to avoid reundancies in Stations.
@@ -54,13 +52,13 @@ public class ChargingPoint extends Entry
 	}
 
 
-	public String getConnector()
+	public Connector getConnector()
 	{
 		return this.connector;
 	}
 
 
-	public String getPower()
+	public Power getPower()
 	{
 		return this.power;
 	}
@@ -104,23 +102,26 @@ public class ChargingPoint extends Entry
 
 	public void setConnector(Connector c)
 	{
-		this.connector = c.getName();
+		this.connector = c;
 	}
 
 
 	public void setPower(Power c)
 	{
-		this.power = c.getName();
+		this.power = c;
 	}
 
 
 	public JsonObject toJson()
 	{
+		String powerName = this.power == null ? "" : this.power.getName();
+		String connectorName = this.connector == null ? "" : this.connector.getName();
+
 		return Json.createObjectBuilder()
 			.add("status", this.isUsable)
+			.add("courant", powerName)
+			.add("connecteur", connectorName)
 			.add("puissance", this.wattage)
-			.add("connecteur", this.connector)
-			.add("courant", this.power)
 			.build();
 	}
 }

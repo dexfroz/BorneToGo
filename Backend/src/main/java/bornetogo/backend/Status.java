@@ -6,9 +6,9 @@ import java.sql.*;
 public class Status extends Entry
 {
 	private int idStatus;
-	private String name;
-	private boolean isOperational;
-	private boolean isUserSelectable;
+	private String name = "";
+	private boolean isOperational = true; // default
+	private boolean isUserSelectable = true; // default
 
 
 	public Status() {}

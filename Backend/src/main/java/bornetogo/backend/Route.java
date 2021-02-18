@@ -18,7 +18,7 @@ public class Route
 	private double duration; // in sec
 	private double cost; // in euros
 	private double autonomyLeft; // in km
-	private String stats;
+	private String stats = "";
 	private ArrayList<Coord> waypoints; // size n
 	private ArrayList<Double> legsLengths; // size n-1
 	private ArrayList<Double> legsDurations; // size n-1
