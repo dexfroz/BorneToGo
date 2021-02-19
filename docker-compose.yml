@@ -17,7 +17,7 @@ services:
     container_name: bornetogo-database
     restart: "no"
     ports:
-      - 3306:3306
+      - 3456:3306
     volumes:
       - ./Database/.data:/var/lib/mysql
       - ./Database/sql-scripts:/tmp/sql-scripts

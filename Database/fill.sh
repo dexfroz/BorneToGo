@@ -6,10 +6,10 @@
 # time sudo sh fill.sh
 
 # To access the database from CLI with MySQL client:
-# mysql -h localhost -P 3306 --protocol=tcp -u root -p
+# mysql -h localhost -P 3456 --protocol=tcp -u root -p
 
 # To check on the port:
-# sudo ss -tulpn | grep :3306
+# sudo ss -tulpn | grep :3456
 
 
 # # This can be used with: mysql --defaults-extra-file=$SECRET ...

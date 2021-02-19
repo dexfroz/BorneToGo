@@ -319,20 +319,19 @@ public class DatabaseConnector
 		String user = "root";
 		String pwd = "aaa"; // this could be dehardcoded.
 
-		int port = 3306;
 		String protocol = "jdbc:mysql://";
 		String options = "?useSSL=false"; // necessary for requesting from the container.
 
 		ArrayList<String> ipCandidates = new ArrayList<String>();
-		ipCandidates.add("database"); // service name = container IP. Always checked first.
-		ipCandidates.add("localhost"); // host IP.
+		ipCandidates.add("database:3306"); // service name = container IP. Always checked first.
+		ipCandidates.add("localhost:3456"); // host IP and port.
 
 		Connection connection = null;
 		String warningStatus = "Warning";
 
 		for (String ip : ipCandidates)
 		{
-			String url = protocol + ip + ":" + port + "/" + database + options;
+			String url = protocol + ip + "/" + database + options;
 
 			try
 			{
