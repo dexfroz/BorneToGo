@@ -7,7 +7,7 @@ import jakarta.json.*;
 public class Output
 {
 	// Returns null on failure.
-	public static JsonObject build(ArrayList<Route> routes, long startTime)
+	public static JsonObject build(ArrayList<Route> routes, Car car, long startTime)
 	{
 		try
 		{
@@ -19,14 +19,21 @@ public class Output
 			{
 				// Stats:
 
-				JsonObject statsJson = Json.createObjectBuilder().build(); // TODO! Expand route.getStats()
+				// TODO! Expand route.getStats()
+				JsonObject statsJson = Json.createObjectBuilder()
+					.add("moneySavings", 0.)
+					.add("carbonEmissionSavings", 0.)
+					.add("lightBulbsNumber", 0)
+					.add("wattage", 0.)
+					.add("days", 0)
+					.build();
 
 				// waypoints:
 
 				JsonArrayBuilder waypointsBuilder = Json.createArrayBuilder();
 
 				for (Coord coord : route.getWaypoints()) {
-					waypointsBuilder.add(coord.toJsonFull(Coord.Format.LONG_LAT));
+					waypointsBuilder.add(coord.toJsonFull(Coord.Format.LONG_LAT, car));
 				}
 
 				JsonArray waypointsArray = waypointsBuilder.build();
@@ -75,6 +82,7 @@ public class Output
 
 			long endTime = System.nanoTime();
 			double processingTime = (endTime - startTime) / 1e9; // in seconds.
+			processingTime = Math.round(processingTime * 1000.) / 1000.; // rounding to 3 decimal places.
 
 			JsonObject output = Json.createObjectBuilder()
 				.add("type", "output")
@@ -87,6 +95,7 @@ public class Output
 			return output;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			System.err.println("\nError while building the output json.\n");
 			return null;
 		}

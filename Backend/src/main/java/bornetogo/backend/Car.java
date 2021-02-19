@@ -3,37 +3,86 @@ package main.java.bornetogo.backend;
 import java.io.*;
 import java.util.*;
 import jakarta.json.*;
+import java.sql.*;
 
 
-public class Car
+// TODO: get ArrayList<PowerConnector> powerConnectors from json!
+
+public class Car extends Entry
 {
-	private String model;
-	private String subscription;
-	private String batteryType;
+	private String model = "";
+	private String subscription = "";
 	private double maxAutonomy; // in km
 	private double currentAutonomy; // in km
-	private double maxWattage; // in kW
-	private ArrayList<String> connectors;
+	private double capacity; // in kWh
+	private ArrayList<PowerConnector> powerConnectors = new ArrayList<PowerConnector>();
+
+	// In reguards to the database:
+	private int idCar;
+	private int idBattery;
 
 
+	public Car() {}
+
+
+	// For testing. Real cars come from the database.
 	public Car(String model, double maxAutonomy, double currentAutonomy, String subscription)
 	{
 		this.model = model;
 		this.subscription = subscription;
-		this.batteryType = "";
 		this.maxAutonomy = maxAutonomy;
 		this.currentAutonomy = currentAutonomy;
-		this.maxWattage = 0.;
-		this.connectors = new ArrayList<String>();
+	}
 
-		// TODO: fill the empty fields with the following function:
-		DatabaseConnector.fetchData(this);
+
+	public Car query(ResultSet answer)
+	{
+		Car car = new Car();
+
+		try {
+			car.idCar = answer.getInt("idVoiture");
+			car.idBattery = answer.getInt("idBatterie");
+			car.model = Entry.sanitize(answer.getString("Modele"));
+			// 'Chargement' is useless.
+
+			// String row = "-> " + car.idCar + ", " + car.idBattery + ", " + car.model;
+			// System.out.println(row);
+
+			return car;
+		}
+		catch (Exception e) {
+			System.err.printf("\nInvalid fields in '%s' query.\n", this.getClass().getSimpleName());
+			return null;
+		}
 	}
 
 
 	public Car copy()
 	{
-		return new Car(this.model, this.maxAutonomy, this.currentAutonomy, this.subscription);
+		Car car = new Car();
+
+		car.idCar = this.idCar;
+		car.idBattery = this.idBattery;
+		car.model = this.model;
+		car.subscription = this.subscription;
+		car.maxAutonomy = this.maxAutonomy;
+		car.currentAutonomy = this.currentAutonomy;
+		car.capacity = this.capacity;
+		car.powerConnectors = this.powerConnectors;
+
+		return car;
+	}
+
+
+	public int getId()
+	{
+		return this.idCar;
+	}
+
+
+	public int getIdBattery()
+	{
+		return this.idBattery;
 	}
 
 
@@ -49,12 +98,6 @@ public class Car
 	}
 
 
-	public String getBatteryType()
-	{
-		return this.batteryType;
-	}
-
-
 	public double getMaxAutonomy()
 	{
 		return this.maxAutonomy;
@@ -67,15 +110,28 @@ public class Car
 	}
 
 
-	public double getMaxWattage()
+	public double getCapacity()
 	{
-		return this.maxWattage;
+		return this.capacity;
 	}
 
 
-	public ArrayList<String> getConnectors()
+	public ArrayList<PowerConnector> getPowerConnectors()
 	{
-		return this.connectors;
+		return this.powerConnectors;
+	}
+
+
+	public void setCapacity(Battery battery)
+	{
+		this.capacity = battery.getCapacity();
+	}
+
+
+	public void setMaxAutonomy(Battery battery)
+	{
+		this.maxAutonomy = battery.getAutonomy();
+		this.currentAutonomy = this.maxAutonomy; // by default
 	}
 
 
@@ -87,9 +143,9 @@ public class Car
 
 	public String toString()
 	{
-		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nBattery type: " + this.batteryType +
-			"\nMax autonomy: " + this.maxAutonomy + " km\nCurrent autonomy: " + this.currentAutonomy +
-			" km\nmaxWattage: " + this.maxWattage + " kW\nConnectors number: " + this.connectors.size();
+		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nMax autonomy: " +
+			this.maxAutonomy + " km\nCurrent autonomy: " + this.currentAutonomy + " km\nCapacity: " +
+			this.capacity + " kWh\nPowerConnectors number: " + this.powerConnectors.size();
 	}
 
 
@@ -99,6 +155,7 @@ public class Car
 	}
 
 
+	// TODO: make this able to work just with the model + PowerConnector!
 	// Returns null on failure.
 	public static Car getFromJson(JsonObject json)
 	{
@@ -111,9 +168,10 @@ public class Car
 			double currentAutonomy = carJson.getJsonNumber​("currentAutonomy").doubleValue(); // in km
 
 			// TODO: update the constructor to add those:
-			String batteryType = carJson.getString("batteryType");
-			double maxWattage = carJson.getJsonNumber​("maxWattage").doubleValue(); // in kW
+			double capacity = carJson.getJsonNumber​("capacity").doubleValue(); // in kWh
+			// double maxWattage = carJson.getJsonNumber​("maxWattage").doubleValue(); // in kW // ISSUE
 			// ArrayList<String> connectors = carJson.getString("connectors"); // TODO
+			// ArrayList<String> currents = carJson.getString("currents"); // TODO
 
 			return new Car(model, maxAutonomy, currentAutonomy, subscription);
 		}
@@ -126,22 +184,21 @@ public class Car
 
 	public JsonObject toJson()
 	{
-		JsonArrayBuilder connectorsBuilder = Json.createArrayBuilder();
+		JsonArrayBuilder currentConnectorsBuilder = Json.createArrayBuilder();
 
-		for (String connector : this.connectors) {
-			connectorsBuilder.add(connector);
+		for (PowerConnector pc : this.powerConnectors) {
+			currentConnectorsBuilder.add(pc.toJson());
 		}
 
-		JsonArray connectorsArray = connectorsBuilder.build();
+		JsonArray currentConnectorsArray = currentConnectorsBuilder.build();
 
 		return Json.createObjectBuilder()
 			.add("model", this.model)
 			.add("subscription", this.subscription)
-			.add("batteryType", this.batteryType)
 			.add("maxAutonomy", this.maxAutonomy)
 			.add("currentAutonomy", this.currentAutonomy)
-			.add("maxWattage", this.maxWattage)
-			.add("connectors", connectorsArray)
+			.add("capacity", this.capacity)
+			.add("courantConnecteurs", currentConnectorsArray)
 			.build();
 	}
 

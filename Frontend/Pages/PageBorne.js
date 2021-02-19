@@ -160,17 +160,24 @@ class PageBorne extends React.Component {
     render() {
         // récupération de la voiture dans le redux
         var car = {
-            "model": "Tesla cybertruck",
+            "model": "Renault ZOE R135",
             "subscription": "",
-            "batteryType": "",
-            "maxAutonomy": 200,
-            "currentAutonomy": 50,
-            "maxWattage": 42.1,
-            "connectors": [
-                "EF-T2",
-                "EF"
+            "maxAutonomy": 390,
+            "currentAutonomy": 390,
+            "capacity": 52,
+            "courantConnecteurs": [
+                {
+                    "courant": "AC (Three-Phase)",
+                    "connecteur": "IEC 62196-2 Type 2",
+                    "puissance": 22
+                },
+                {
+                    "courant": "DC",
+                    "connecteur": "IEC 62196-3 Configuration FF",
+                    "puissance": 50
+                }
             ]
-        }
+        };
 
         // On récupère le useCase
         var useCase = "fastest";

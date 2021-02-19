@@ -7,7 +7,7 @@ import jakarta.json.*;
 
 public class UserStepsLoader
 {
-	private static final Boolean enableUserStepsFiltering = true;
+	private static final boolean enableUserStepsFiltering = true;
 
 	private ArrayList<Coord> userSteps;
 	private ArrayList<Integer> indexesCoordsToComplete;
@@ -49,12 +49,12 @@ public class UserStepsLoader
 				}
 				else
 				{
-					System.err.println("\nUser step at index " + i + " is missing coordinates.\n");
+					System.err.println("Warning: user step at index " + i + " is missing coordinates.\n");
 					coord = new Coord(0., 0., name, address);
 					this.userSteps.add(coord);
 					this.indexesCoordsToComplete.add(i);
 					this.searchedLocations.add(name + "," + address);
-				}	
+				}
 			}
 		}
 		catch (Exception e) {

@@ -7,10 +7,10 @@
 	{
 		"model": "Tesla cybertruck",
 		"subscription": "",
-		"batteryType": "",
 		"maxAutonomy": 200,
 		"currentAutonomy": 50,
 		"maxWattage": 42.1,
+		"capacity": 13.0,
 		"connectors": [
 			"EF-T2",
 			"EF"
@@ -22,8 +22,8 @@
 				5.928,
 				43.124228
 			],
-			"name": "Toulon",
-			"address": ""
+			"name": "",
+			"address": "Toulon"
 		}
 	]
 }

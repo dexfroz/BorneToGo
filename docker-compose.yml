@@ -1,0 +1,32 @@
+version: '3.2'
+
+services:
+
+  backend:
+    image: bornetogo-backend:1.0
+    container_name: bornetogo-backend
+    restart: "no"
+    build: ./Backend
+    ports:
+      - 4321:8080 # host:container
+    networks:
+      - my-network
+
+  database:
+    image: mariadb:10.5
+    container_name: bornetogo-database
+    restart: "no"
+    ports:
+      - 3456:3306
+    volumes:
+      - ./Database/.data:/var/lib/mysql
+      - ./Database/sql-scripts:/tmp/sql-scripts
+    environment:
+      MYSQL_ROOT_PASSWORD: aaa # To change this, remove the .data dir.
+    # env_file:
+    #   - ./Database/secret.cnf
+    networks:
+      - my-network
+
+networks:
+  my-network:

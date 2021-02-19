@@ -12,7 +12,7 @@
 	<properties>
 		<!-- Which source file to be considered as main, when no API is used. -->
 		<!-- Package name starts with 'main.java' for better integration with Eclipse IDE: -->
-		<myMainClass>main.java.bornetogo.backend.Core</myMainClass>
+		<myMainClass>main.java.bornetogo.backend.DatabaseConnector</myMainClass>
 
 		<!-- Targeted java JDK and JRE version: -->
 		<java.version>1.8</java.version>
@@ -76,6 +76,13 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.json</artifactId>
 			<version>2.0.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.23</version>
 		</dependency>
 
 	</dependencies>

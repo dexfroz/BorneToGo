@@ -2,14 +2,14 @@
 
 Backend for the BorneToGo ISEN's project, an app whose purpose is to help finding where to charge electric cars.
 
-Concretely, given an user request of either recharging his electric car, or planing a trip, the backend must find the route of lower duration and cost, and return the result to the frontend, for it to be shown to the user. Said backend is provided with an asynchronous REST API. It uses the docker image Payara Micro, and Jakarta EE.
+Concretely, given an user request of either recharging his electric car, or planing a trip, the backend must find the route of lower duration and cost, and return the result to the frontend, for it to be shown to the user. Said backend is provided with an asynchronous REST API. It uses a docker image of Payara Micro, an open-source application server which is Jakarta EE compliant.
 
 
 ## Installation (Linux)
 
-Install docker, java 1.8 (jdk + jre), and maven 3.6.3. Don't forget to export the JAVA_HOME and M2_HOME environment variables, and if under a proxy to properly setup the setting.xml file, which must be placed in the ```~/.m2``` directory.
+Install Java 1.8 (JDK + JRE), and maven 3.6.3. Don't forget to export the JAVA_HOME and M2_HOME environment variables, and if under a proxy to properly setup the ``` setting.xml ``` file, which must be placed in the ```~/.m2``` directory. Finally, install [Docker](https://docs.docker.com/engine/install) and [Docker Compose.](https://docs.docker.com/compose/install)
 
-The docker image used will be downloaded automatically, however it can still be found at <https://hub.docker.com/r/payara/micro>
+The docker image used will be downloaded automatically, however it can still be found [here.](https://hub.docker.com/r/payara/micro)
 
 Finally, an API key for the service <https://developer.mapquest.com> must be generated, and stored in a file:
 
@@ -24,15 +24,15 @@ Compile the project by running: ``` sh build.sh ```
 
 To start using the API, start the docker process with: ``` sudo systemctl start docker ```
 
-Then run: ``` sudo sh deploy.sh ```
+To build the docker image, run ``` sudo docker-compose build ```. Note that this step should be done after each compilation.
 
-Note that after each update to the code, the build and deploy scripts need to be rerun.
+Then launch a container with: ``` sudo docker-compose up -d ```
 
 To obtain a path from the backend, send a POST request containing the user given steps in a json file, like below:
 
 ```
 curl -w '\n' -X POST -H "Content-Type: application/json" \
- --data '{"type":"input","convention":"long-lat","useCase":"trip","optimOption":"default","car":{"model":"Tesla cybertruck","subscription":"","batteryType":"","maxAutonomy":200,"currentAutonomy":50,"maxWattage":42.1,"connectors":["EF-T2","EF"]},"userSteps":[{"location":[5.928,43.124228],"name":"Toulon","address":""},{"location":[5.36978,43.296482],"name":"Marseille","address":""},{"location":[4.83566,45.76404],"name":"Lyon","address":""},{"location":[5.05015,47.34083],"name":"Dijon","address":""},{"location":[2.3499,48.85661],"name":"Paris","address":""}]}' \
+ --data '{"type":"input","convention":"long-lat","useCase":"trip","optimOption":"default","car":{"model":"Tesla cybertruck","subscription":"","maxAutonomy":200,"currentAutonomy":50,"maxWattage":42.1,"capacity":13.0,"connectors":["EF-T2","EF"]},"userSteps":[{"location":[5.928,43.124228],"name":"Toulon","address":""},{"location":[5.36978,43.296482],"name":"Marseille","address":""},{"location":[4.83566,45.76404],"name":"Lyon","address":""},{"location":[5.05015,47.34083],"name":"Dijon","address":""},{"location":[2.3499,48.85661],"name":"Paris","address":""}]}' \
  http://localhost:4321/bornetogo/backend/path
 ```
 
@@ -50,32 +50,22 @@ Similarly, to get the list of all supported cars, use the link:
 http://localhost:4321/bornetogo/backend/cars
 ```
 
-Finally, note that the port 4321 used can be configured in the deploy.sh script.
+Finally, note that the port 4321 used can be configured in the ``` docker-compose.yml ``` file.
 
 
 ## Deployment:
 
-Once the project is done, and needs to be deployed e.g on a server, java and maven need not to be reinstalled there again! Indeed, the docker image contains a java JRE. Therefore, the only files necessary for this to run are:
+Once the project is done, and needs to be deployed e.g on a web server, java and maven need not to be reinstalled there again! Indeed, the docker image contains a java JRE. Therefore, only Docker and Docker Compose are to be installed, and the only files necessary for this to run are:
 
 - This README
 - Dockerfile
-- deploy.sh
+- docker-compose.yml
 - The target/ directory containing only the .war file.
 
 
 ## TODO:
 
-- Load from the MySQL database cars, stations, connectors, batteries...
-- Get both cost and duration of a recharging.
-- Add multiple-criteria optimization in the pathfinding, and therefore use the input field "optimOption".
-- Update the output file with stations data, in the field: "data": {}
 - Add the feature of returning several routes in the answer.
 - Provide a documentation, with detailed explanations on the workings of the backend, especially the core program and the pathfinding part.
 - Generate statistics about the found path.
-- (Optional) add a timeout to all API queries.
-- (Optional) add a logger, to better trace the failures of the whole app.
-
-
-## Possible optimizations:
-
-- Bypass many distance computations in the pathfinding, by using various tricks, like precomputation or factorization. Note: for now this is overkill, since said pathfinding take less than 0.1 second to run.
+- (Future) query temperature data for the next few hours on a region/country level, use it in the autonomy left computation, and modify the pathfinding accordingly.

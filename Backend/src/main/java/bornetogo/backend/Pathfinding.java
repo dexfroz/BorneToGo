@@ -6,9 +6,9 @@ import java.util.*;
 
 public class Pathfinding
 {
-	private static final double distBoundCoeff = 1.5; // unitless.
+	private static final double distBoundCoeff = 2.0; // unitless.
 	private static final double ellipseRatio = 1.2; // unitless, must be > 1.
-	private static final double rangeMargin = 10.; // in km
+	private static final double rangeMargin = 20.; // in km
 	private static final int minimalSafetyStationsNumber = 1; // Must be > 0.
 
 
@@ -35,14 +35,14 @@ public class Pathfinding
 
 	// Checks if the given point is inside the ellipse of focus 'ref_1' and 'ref_2',
 	// and with major axis of length: distance(ref_1, ref_2) * ellipseRatio
-	private static Boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
+	private static boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
 		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * ellipseRatio;
 	}
 
 
 	// Checks whether a destination is in the car's range, given the estimated length of the route:
-	private static Boolean lengthReachable(Car car, double estimatedLength)
+	private static boolean lengthReachable(Car car, double estimatedLength)
 	{
 		return estimatedLength + rangeMargin <= car.getCurrentAutonomy();
 	}
@@ -54,7 +54,7 @@ public class Pathfinding
 		ArrayList<Station> relevantStations = new ArrayList<Station>();
 
 		for (Station station : allStations) {
-			if (station.hasCompatibleChargingPoint(car)) {
+			if (station.hasUsableCompatibleChargingPoint(car)) {
 				relevantStations.add(station);
 			}
 		}
@@ -118,12 +118,12 @@ public class Pathfinding
 	// Used when it has been deemed safe to go to the next step:
 	private static void goNextStep(Car car, ArrayList<Coord> path, double legLength, Coord nextStep)
 	{
-		System.out.println("\n-> Going to step:\n\n" + nextStep.toString());
+		// System.out.println("\n-> Going to step:\n\n" + nextStep.toString());
 		path.add(nextStep);
 		car.setCurrentAutonomy(car.getCurrentAutonomy() - legLength);
 
-		if (nextStep.isStation()) { // This cannot be used for now, waypoints should be scrutinized first...
-			System.out.println("\nLucky one!");
+		if (nextStep.isStation()) {
+			// System.out.println("\nLucky one!");
 			car.setCurrentAutonomy(car.getMaxAutonomy());
 		}
 	}
@@ -145,7 +145,7 @@ public class Pathfinding
 		}
 
 		Station chosenStation = chooseBestStation(reachableStations);
-		System.out.println("\n-> Refilling at station:\n\n" + chosenStation.toString());
+		// System.out.println("\n-> Refilling at station:\n\n" + chosenStation.toString());
 
 		// Preventing an infinite loop, when the station has already been visited!
 		if (currentStep.isAtSameSpot(chosenStation) && car.getCurrentAutonomy() == car.getMaxAutonomy()) {
@@ -164,6 +164,8 @@ public class Pathfinding
 	public static ArrayList<Coord> find(ArrayList<Station> allStations, Car userCar,
 		ArrayList<Coord> waypoints, ArrayList<Double> legsLengths)
 	{
+		System.out.println("Starting the pathfinding computation.\n");
+
 		if (! Core.enableFirstQuery) { // using an estimation of the legs lengths.
 			legsLengths = mockLegsLengths(waypoints);
 		}
@@ -180,9 +182,9 @@ public class Pathfinding
 			return null;
 		}
 
-		Boolean singleWaypoint = waypoints.size() == 1;
+		boolean singleWaypoint = waypoints.size() == 1;
 
-		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'zone' filtering!
+		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'area' filtering!
 
 		if (! singleWaypoint) {
 			relevantStations = areaFiltering(relevantStations, waypoints);
@@ -202,9 +204,9 @@ public class Pathfinding
 
 		while (true)
 		{
-			System.out.println("------------------------------------------");
-			System.out.println("currentStep: " + currentStep.toString());
-			System.out.println("\nnextStep: " + nextStep.toString());
+			// System.out.println("------------------------------------------");
+			// System.out.println("currentStep: " + currentStep.toString());
+			// System.out.println("\nnextStep: " + nextStep.toString());
 
 			// Potential improvement: only work on the stations for this subpath...
 			sortByDistance((ArrayList<Coord>) ((ArrayList<?>) relevantStations), nextStep); // causes a warning.
@@ -214,7 +216,7 @@ public class Pathfinding
 			double legLength = singleWaypoint ? 0. : legsLengths.get(stepIndex - 1);
 			legLength = currentStep.isStation() ? lengthUpperBound(currentStep, nextStep) : legLength;
 
-			System.out.printf("\nlegLength: %.3f km\n", legLength);
+			// System.out.printf("\nlegLength: %.3f km\n", legLength);
 
 			if (! singleWaypoint && lengthReachable(car, legLength + lengthUpperBound(nextStep, safetyNext)))
 			{
@@ -246,11 +248,11 @@ public class Pathfinding
 				}
 			}
 
-			System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
+			// System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
 		}
 
-		System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
-		System.out.println("\n-> Successfull pathfinding.\n");
+		// System.out.printf("\nCurrent autonomy (estimate): %.3f km.\n", car.getCurrentAutonomy());
+		// System.out.println("\n-> Successfull pathfinding.\n");
 		return path;
 	}
 
@@ -272,18 +274,18 @@ public class Pathfinding
 
 	public static void main(String[] args)
 	{
-		ArrayList<Station> allStations = Station.mock();
-		// ArrayList<Station> allStations = Station.bigMock();
+		// ArrayList<Station> allStations = Station.mock(); // Won't be enough.
+		ArrayList<Station> allStations = Station.bigMock(); // Will do it!
 		// There should be enough mock stations, for a max autonomy of 200 km.
 
 		Car car = new Car("Tesla cybertruck", 200, 50, "None");
 
 		ArrayList<Coord> waypoints = new ArrayList<Coord>();
-		waypoints.add(new Coord(43.124228, 5.928, "Toulon", ""));
-		waypoints.add(new Coord(43.296482, 5.36978, "Marseille", ""));
-		waypoints.add(new Coord(45.76404, 4.83566, "Lyon", ""));
-		waypoints.add(new Coord(47.34083, 5.05015, "Dijon", ""));
-		waypoints.add(new Coord(48.85661, 2.3499, "Paris", ""));
+		waypoints.add(new Coord(43.124228, 5.928, "A", "Toulon"));
+		waypoints.add(new Coord(43.296482, 5.36978, "B", "Marseille"));
+		waypoints.add(new Coord(45.76404, 4.83566, "C", "Lyon"));
+		waypoints.add(new Coord(47.34083, 5.05015, "D", "Dijon"));
+		waypoints.add(new Coord(48.85661, 2.3499, "E", "Paris"));
 
 		ArrayList<Double> legsLengths = mockLegsLengths(waypoints); // mocks API queries.
 
