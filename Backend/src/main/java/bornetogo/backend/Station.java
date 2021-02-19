@@ -6,12 +6,9 @@ import jakarta.json.*;
 import java.sql.*;
 
 
-// TODO: fetch payment data from 'idPayment'. Note that this is probably
-// useless as of now, since the 'Paiement' table contains nothing useful.
-
 public class Station extends Coord
 {
-	private String paymentStatus = "";
+	private Payment payment = null;
 	private ArrayList<Integer> chargingPointsID = new ArrayList<Integer>(); // more memory efficient to store IDs.
 
 	// In reguards to the database:
@@ -74,15 +71,21 @@ public class Station extends Coord
 	}
 
 
-	public String getPaymentStatus()
+	public Payment getPayment()
 	{
-		return this.paymentStatus;
+		return this.payment;
 	}
 
 
 	public ArrayList<Integer> getChargingPointsID()
 	{
 		return this.chargingPointsID;
+	}
+
+
+	public void setPayment(Payment p)
+	{
+		this.payment = p;
 	}
 
 
@@ -136,10 +139,29 @@ public class Station extends Coord
 
 		JsonArray chargingPointsArray = chargingPointsBuilder.build();
 
+		String paymentName = this.payment == null ? "" : this.payment.getName();
+
 		return Json.createObjectBuilder()
-			.add("paymentStatus", this.paymentStatus)
+			.add("paymentStatus", paymentName)
 			.add("bornes", chargingPointsArray)
 			.build();
+	}
+
+
+	public static ArrayList<Station> getFreeAccessPublicStations()
+	{
+		ArrayList<Station> stations = DatabaseConnector.getStations();
+		ArrayList<Station> thelist = new ArrayList<Station>();
+
+		for (Station s : stations) {
+			Payment p = s.getPayment();
+			if (p.isPayAtLocation() && ! p.isMembershipRequired() && ! p.isAccessKeyRequired() &&
+				p.getName().indexOf("Public") != -1) {
+					thelist.add(s);
+			}
+		}
+
+		return thelist;
 	}
 
 
