@@ -13,7 +13,8 @@ import CarForm from '../Store/Forms/CarForm'
 import { connect } from 'react-redux';
 import { getRequest } from '../Fonctions/HTTPRequestjson'
 import Toast from 'react-native-simple-toast';
-import DialogInput from 'Dialog'
+//import { OpenDialog } from 'rn-android-picke'
+import Dialog from "react-native-dialog"
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,6 +27,8 @@ class SelectionVoiture extends React.Component {
             modeleSelected: {id : 0, model: 'Voiture', currentAutonomy: ''},
             modeles: [{id: 0, model: 'Voiture', currentAutonomy: '',},],
             nombreVoiture: 0,
+            isDialogVisible: false,
+            autonomieSelected: '', 
         }
         this.loadAncientModeles();
     }
@@ -42,7 +45,7 @@ class SelectionVoiture extends React.Component {
     }
 
     modelesVoitures = [
-        { id: 0, model: 'Voiture' },
+        { id: 0, model: 'Voiture' , currentAutonomy: ''},
     ];
 
     /**
@@ -108,40 +111,56 @@ class SelectionVoiture extends React.Component {
      */
     async formatJSON(allCars){
         //Vérification de voitures retournées par la requête sinon toast
-        if (allCars == null){
-            Toast.showWithGravity("Aucun modèle de voiture n'a pu être chargé.", Toast.LONG, Toast.BOTTOM);
-            return;
-        }
-        var tabCars = [];
-        var bigtabCars = [];
-        var i = 0;
-        //Mappage des voitures
-        bigtabCars = await allCars.then( 
-            function (cars) {
-                cars.map( 
-                    function (voiture) {
-                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} /> )
-                        i = i + 1
-                        return tabCars
-                    }
-                )
-                return tabCars
-            }
+        var isCarsNotNull = true;
+        await allCars.then( 
+            function(cars) {
+                if(cars == null){
+                    Toast.showWithGravity("Aucun modèle de voiture n'a pu être chargé.", Toast.LONG, Toast.BOTTOM);
+                    isCarsNotNull = false;
+                }
+            } 
         );
-        //Enregistrement et retour du tableau de picker item
-        this.state.nombreVoiture = bigtabCars.length;
-        return bigtabCars;
+        if(!isCarsNotNull){
+            return null;
+        }
+        else{
+            var tabCars = [];
+            var bigtabCars = [];
+            var i = 0;
+            //Mappage des voitures
+            bigtabCars = await allCars.then( 
+                function (cars) {
+                    cars.map( 
+                        function (voiture) {
+                            tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} /> )
+                            i = i + 1
+                            return tabCars
+                        }
+                    )
+                    return tabCars
+                }
+            );
+            //Enregistrement et retour du tableau de picker item
+            this.state.nombreVoiture = bigtabCars.length;
+            return bigtabCars;
+        }
     }
 
     /**
      * Vérifie que tous les champs soient complets et envoies les données de la voiture au redux
      * @param {*} data les données à envoyer
      */
-    handleFormFullField(data){
-        var allFieldsCompleted = true;
+    handleFormFullField(data, propsnavigation){
+        if(data[0] == null){
+            var allFieldsCompleted = false;
+        }
+        else{
+            var allFieldsCompleted = true;
+        }
         //Met à false si il manque une donnée
         for (var property in data){
             if(data.hasOwnProperty(property)){
+                console.log("Data : " , property , ' ', data[property])
                 if(data[property] == null){
                     allFieldsCompleted = false;
                 }
@@ -159,24 +178,53 @@ class SelectionVoiture extends React.Component {
         }
     }
 
-    handleCarSelected(data, propsnavigation){
-        //TODO gestion autonomie avec boite de dialogue
-        //var autonomie = DialogInput();
-        //console.log('Autonomie : ', autonomie);
+    /**
+     * Gestion du click du bouton Sélectionner.
+     * @param {*} data les données de la voiture à sauvegarder dans le state.modeleSelected
+     */
+    handleCarSelected(data){
+        this.showDialog(true);
+        //Enregistrement des données de la voiture 
+        this.setState({modeleSelected: data});
+    }
+
+    /**
+     * Gestion du click sur le bouton Annuler de la boite de dialogue
+     */
+    handleCancelButtonDialog(){
+        this.showDialog(false);
+    }
+
+    /**
+     * Gestion de l'affichage de la boite de dialogue
+     * @param {*} isShow true : affiche la boite, false : cache la boite
+     */
+    showDialog(isShow){
+        this.setState({isDialogVisible: isShow});
+      }
+
+    /**
+    * Gestion du click sur le bouton Valider de la boite de dialogue
+    */
+    handleValidateButtonDialog(propsnavigation){
+        //Ferme la boite de dialogue
+        this.showDialog(false);
+
         var dataCarSelected = {};
         //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
-        for(var property in data){
-            if(data.hasOwnProperty(property)){
+        for(var property in this.state.modeleSelected){
+            if(this.state.modeleSelected.hasOwnProperty(property)){
+                console.log("property : ", property);
                 if(property != 'currentAutonomy'){
                     Object.defineProperty(dataCarSelected, property, {
-                        value: data[property],
+                        value: this.state.modeleSelected[property],
                         writable: true,
                         enumerable: true
                     });
                 }
                 else{
                     Object.defineProperty(dataCarSelected, property, {
-                        value: 42,
+                        value: this.state.autonomieSelected,
                         writable: true,
                         enumerable: true
                     });
@@ -184,15 +232,16 @@ class SelectionVoiture extends React.Component {
                 }
             }
         }
-        //Enregistrement des données de la voiture 
-        this.setState({modeleSelected: dataCarSelected})
-        const action = { type: 'CAR_PICKED_BY_USER', value: data }
+        //Enregistrement dans le store redux
+        const action = { type: 'CAR_PICKED_BY_USER', value: dataCarSelected }
         this.props.dispatch(action);
-
         // Passage à la vue suivante
         propsnavigation.navigation.navigate('BorneToGo');
     }
 
+    /**
+     * Affichage de la page
+     */
     render() {
         const { propsnavigation } = this.props;
 
@@ -220,14 +269,22 @@ class SelectionVoiture extends React.Component {
                             color='#70B445'
                             title="Sélectionner"
                             width={width}
-                            onPress={() => this.handleCarSelected(this.state.modeleSelected, propsnavigation)} />
+                            onPress={() => this.handleCarSelected(this.state.modeleSelected)} />
+                    </View>
+                    <View>
+                        <Dialog.Container visible={this.state.isDialogVisible}>
+                            <Dialog.Title>Entrer l'autonomie actuelle de votre véhicule</Dialog.Title>
+                            <Dialog.Input onChangeText={(arg) => this.setState({autonomieSelected: arg})}/>
+                            <Dialog.Button label="Annuler" onPress={() => this.handleCancelButtonDialog()}/>
+                            <Dialog.Button label="Valider" onPress={() => this.handleValidateButtonDialog(propsnavigation)}/>
+                        </Dialog.Container>
                     </View>
                 </View>
                 <View style={styles.describeCarContainer}>
                     <Text style={styles.titleStyle}>Ou décrivez votre modèle de voiture :</Text>
                     <View style={styles.form}>
                         <CarForm onSubmit={(values) => {
-                            this.handleFormFullField(values);
+                            this.handleFormFullField(values, propsnavigation);
                             // passage à la partie suivante
                         }
                         } />
