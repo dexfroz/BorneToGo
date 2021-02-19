@@ -1,4 +1,11 @@
 #
+# Standard Java .gitignore
+#
+*.class
+*.jar
+*.war
+
+#
 # Standard Maven .gitignore
 #
 target/
@@ -31,6 +38,7 @@ buildNumber.properties
 # Secret files, API keys...
 #
 secret/
+# secret.cnf # useful, not sensitive for now.
 
 # Frontend things:
 package-lock.json
@@ -47,3 +55,6 @@ Frontend/web-build/
 
 # macOS
 .DS_Store
+
+# Database:
+.data/

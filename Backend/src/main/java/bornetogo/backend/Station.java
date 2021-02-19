@@ -3,13 +3,30 @@ package main.java.bornetogo.backend;
 import java.io.*;
 import java.util.*;
 import jakarta.json.*;
+import java.sql.*;
 
+
+// TODO: fetch payment data from 'idPayment'. Note that this is probably
+// useless as of now, since the 'Paiement' table contains nothing useful.
 
 public class Station extends Coord
 {
-	// TODO: must contain a list of charging points, and other stats.
+	private String paymentStatus = "";
+	private ArrayList<Integer> chargingPointsID = new ArrayList<Integer>(); // more memory efficient to store IDs.
+
+	// In reguards to the database:
+	private int idStation;
+	private int idPayment;
 
 
+	public Station()
+	{
+		super(0, 0, "", "");
+		this.isStation = true;
+	}
+
+
+	// For testing. Real stations come from the database.
 	public Station(double latitude, double longitude, String name, String address)
 	{
 		super(latitude, longitude, name, address);
@@ -17,25 +34,126 @@ public class Station extends Coord
 	}
 
 
-	public Station(Coord coord)
+	public Station query(ResultSet answer)
 	{
-		super(coord.latitude, coord.longitude, coord.name, coord.address);
-		this.isStation = true;
+		Station s = new Station();
+
+		try	{
+			s.idStation = answer.getInt("idStation");
+			s.idPayment = answer.getInt("idPaiement");
+			s.name = Entry.sanitize(answer.getString("Titre"));
+			s.latitude = answer.getDouble("Latitude");
+			s.longitude = answer.getDouble("Longitude");
+			String address = Entry.sanitize(answer.getString("Adresse"));
+			String city = Entry.sanitize(answer.getString("Ville"));
+			String zipCode = Entry.sanitize(answer.getString("Codepostal"));
+			s.address = address + " " + city + " " + zipCode;
+
+			// String row = "-> " + s.idStation + ", " + s.idPayment + ", " + s.name + ", " + s.latitude +
+			// 	", " + s.longitude + ", " + address + ", " + city + ", " + zipCode;
+			// System.out.println(row);
+
+			return s;
+		}
+		catch (Exception e) {
+			System.err.printf("\nInvalid fields in '%s' query.\n", this.getClass().getSimpleName());
+			return null;
+		}
 	}
 
 
-	// TODO: add stations specific data:
-	public JsonObject getJsonData()
+	public int getId()
 	{
+		return this.idStation;
+	}
+
+
+	public int getIdPayment()
+	{
+		return this.idPayment;
+	}
+
+
+	public String getPaymentStatus()
+	{
+		return this.paymentStatus;
+	}
+
+
+	public ArrayList<Integer> getChargingPointsID()
+	{
+		return this.chargingPointsID;
+	}
+
+
+	// Loads on demand the charging points for this station.
+	// This is not to be kept in memory for all stations at all times.
+	public ArrayList<ChargingPoint> getChargingPoints()
+	{
+		ArrayList<ChargingPoint> allChargingPoints = DatabaseConnector.getChargingPoints();
+		ArrayList<ChargingPoint> stationChargingPoints = new ArrayList<ChargingPoint>();
+
+		if (this.chargingPointsID == null) {
+			System.err.println("\nCould not get the charging points of a station: null 'chargingPointsID'.\n");
+			return stationChargingPoints;
+		}
+
+		if (allChargingPoints == null) {
+			System.err.println("\nCould not get the charging points of a station: database loading failed.\n");
+			return stationChargingPoints;
+		}
+
+		for (int id : this.chargingPointsID)
+		{
+			// This does not assume any good property on IDs:
+			for (ChargingPoint c : allChargingPoints)
+			{
+				if (c.getId() == id) {
+					stationChargingPoints.add(c);
+					break;
+				}
+			}
+		}
+
+		if (stationChargingPoints.size() != this.chargingPointsID.size()) {
+			System.err.println("\nSome charging points IDs where invalid.\n");
+		}
+
+		return stationChargingPoints;
+	}
+
+
+	public JsonObject getJsonData(Car car)
+	{
+		// The backend needs to output all compatible charging points - available or not!
+		ArrayList<ChargingPoint> compatibleChargingPoints = getCompatibleChargingPoints(car);
+
+		JsonArrayBuilder chargingPointsBuilder = Json.createArrayBuilder();
+
+		for (ChargingPoint chargingPoint : compatibleChargingPoints) {
+			chargingPointsBuilder.add(chargingPoint.toJson());
+		}
+
+		JsonArray chargingPointsArray = chargingPointsBuilder.build();
+
 		return Json.createObjectBuilder()
-			// .add("things", 0) // add this station data...
+			.add("paymentStatus", this.paymentStatus)
+			.add("bornes", chargingPointsArray)
 			.build();
 	}
 
 
-	public Boolean hasCompatibleChargingPoint(Car car)
+	public boolean hasUsableCompatibleChargingPoint(Car car)
 	{
 		return true; // TODO, using the car and list of charging points.
+	}
+
+
+	// This must _not_ filter charging points on availability:
+	public ArrayList<ChargingPoint> getCompatibleChargingPoints(Car car)
+	{
+		// TODO, using the car and list of charging points.
+		return this.getChargingPoints();
 	}
 
 
@@ -57,20 +175,20 @@ public class Station extends Coord
 	public static ArrayList<Station> mock()
 	{
 		ArrayList<Station> allStations = new ArrayList<Station>();
-		allStations.add(new Station(43.183331, 5.71667, "Station", "Saint Cyr-sur-Mer"));
-		allStations.add(new Station(43.52916, 5.43638, "Station", "Aix-en-Provence"));
-		allStations.add(new Station(43.96512, 4.81899, "Station", "Avignon"));
-		allStations.add(new Station(44.54774, 4.78249, "Station", "Montélimar"));
-		allStations.add(new Station(44.95311, 4.90094, "Station", "Valence"));
-		allStations.add(new Station(45.36394, 4.83675, "Station", "Roussillon"));
-		allStations.add(new Station(46.29772, 4.84272, "Station", "Mâcon"));
-		allStations.add(new Station(47.04845, 4.81543, "Station", "Beaune"));
-		allStations.add(new Station(47.58339, 5.20597, "Station", "Selongey"));
-		allStations.add(new Station(47.86140, 5.34153, "Station", "Langres"));
-		allStations.add(new Station(48.31764, 4.12017, "Station", "Troyes"));
-		allStations.add(new Station(48.19592, 3.28644, "Station", "Sens"));
-		allStations.add(new Station(48.37708, 3.00335, "Station", "Montereau"));
-		allStations.add(new Station(48.53482, 2.66751, "Station", "Melun"));
+		allStations.add(new Station(43.18333, 5.71667, "Station 0", "Saint Cyr-sur-Mer"));
+		allStations.add(new Station(43.52916, 5.43638, "Station 1", "Aix-en-Provence"));
+		allStations.add(new Station(43.96512, 4.81899, "Station 2", "Avignon"));
+		allStations.add(new Station(44.54774, 4.78249, "Station 3", "Montélimar"));
+		allStations.add(new Station(44.95311, 4.90094, "Station 4", "Valence"));
+		allStations.add(new Station(45.36394, 4.83675, "Station 5", "Roussillon"));
+		allStations.add(new Station(46.29772, 4.84272, "Station 6 ", "Mâcon"));
+		allStations.add(new Station(47.04845, 4.81543, "Station 7", "Beaune"));
+		allStations.add(new Station(47.58339, 5.20597, "Station 8", "Selongey"));
+		allStations.add(new Station(47.86140, 5.34153, "Station 9", "Langres"));
+		allStations.add(new Station(48.31764, 4.12017, "Station 10", "Troyes"));
+		allStations.add(new Station(48.19592, 3.28644, "Station 11", "Sens"));
+		allStations.add(new Station(48.37708, 3.00335, "Station 12", "Montereau"));
+		allStations.add(new Station(48.53482, 2.66751, "Station 13", "Melun"));
 		return allStations;
 	}
 
@@ -90,7 +208,7 @@ public class Station extends Coord
 		{
 			double randomLat = latMin + (latMax - latMin) * r.nextDouble();
 			double randomLong = longMin + (longMax - longMin) * r.nextDouble();
-			allStations.add(new Station(randomLat, randomLong, String.valueOf(i), ""));
+			allStations.add(new Station(randomLat, randomLong, "Station " + i, "Somewhere " + i));
 		}
 
 		return allStations;

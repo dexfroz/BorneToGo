@@ -8,6 +8,14 @@ import jakarta.json.*;
 
 public class GetJson
 {
+	public static void safeJsonPrinting(JsonObject jsonObject)
+	{
+		if (jsonObject != null) { // necessary check!
+			System.out.println("\n" + jsonObject.toString() + "\n");
+		}
+	}
+
+
 	public static URL getUrlObject(String url)
 	{
 		try {

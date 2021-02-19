@@ -2,29 +2,29 @@
 
 Developpement brand of the application's frontend part.
 
-# Description 
+## Description 
 
 The project aim to display the optimized path for an electric driver to reach a location. This part is done in ReactNative and manage the views and the navigation between them.
 
-# Deploiement 
+## Deploiement 
 
 The project should work all alone. There is a yarn part that manage all dependecies with npm. Recover the project and in the folder use the command : 
-    npm install
+    ```npm install```
 then to run the project 
-    npm run start
+    ```npm run start```
     
-# Installation 
+## Installation 
 
 If you miss one or some dependencies, or you  need another dependency you can add another one using : 
-    yarn add <dependency_name>
+    ```yarn add <dependency_name>```
 
-# Expo
+## Expo
 
 To test the application, you can use Expo. Expo is an application that is downloadable on Android and on IOS since the react native application has the particularity of running on both Android and IOS.
 
 However, there is the possibility of using Expo on your computer (which may be more convenient for testing purposes). All you need to do is install an emulator (e.g. LDPlayer 4) on your computer and then install Expo.
 
-# Installing an Android emulator on your computer
+### Installing an Android emulator on your computer
 
 1.	Retrieve the LDPlayer installation file from the following link: https://fr.ldplayer.net/
 2.	Once the installation file has been downloaded, run it and click on "Install".
@@ -34,7 +34,7 @@ However, there is the possibility of using Expo on your computer (which may be m
 6.	Click on "Install".
 7.	You can now use Expo on your computer.
 
-# Launching an application with Expo
+### Launching an application with Expo
 
 When you use the npm start command in your console, a QR Code will appear in the console. It also appears in the tab that opens in your default browser. This QR Code allows you to link your application to the Expo application and view it.
 
@@ -49,3 +49,13 @@ If you have already logged in :
 1. Launch Expo by clicking on it.
 2. Click on the name of your application in the "Recently Opened" section.
 3. The application will then launch.
+
+## TODO
+
+- Finalising the entry form for a route
+- Finalise the entry form for a car
+- Creation of POST requests for: sending itinerary for the use cases "refill", "goto", and "trip" and the optimization options "cheapest" and "fastest".
+- Modify the data flow in order to make the application as user friendly and pleasant as possible.
+- Layout of the "PageCar" and "PageRoute" views and associated components
+- Modification of "PageMap" and "PageMapResult" with integration of POST query results
+- Retrieving the user's location (permission management)
