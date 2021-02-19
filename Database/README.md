@@ -21,11 +21,6 @@ Note that MySQL client or server need not to be installed, the container will be
 7. In \xampp\phpMyAdmin\libraries\config.default.php -> $cfg[‘ExecTimeLimit’] = 300; Increase 300.
 
 
-## Database architecture
-
-![Database architecture](/Database/images/Schema_BDD_V8.png)
-
-
 ## Filling the database:
 
 To fill the database, run as sudoer:
@@ -39,3 +34,8 @@ This should take less than a minute. If MySQL client is installed, then one can 
 ```
 mysql -h localhost -P 3306 --protocol=tcp -u root -p
 ```
+
+
+## Database architecture
+
+![Database architecture](/Database/images/Schema_BDD_V8.png)
