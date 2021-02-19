@@ -13,7 +13,7 @@ import CarForm from '../Store/Forms/CarForm'
 import { connect } from 'react-redux';
 import { getRequest } from '../Fonctions/HTTPRequestjson'
 import Toast from 'react-native-simple-toast';
-import DialogInput from 'Dialog'
+import DialogInput from './DialogInput'
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,16 +23,16 @@ class SelectionVoiture extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            modeleSelected: {id : 0, model: 'Voiture', currentAutonomy: ''},
-            modeles: [{id: 0, model: 'Voiture', currentAutonomy: '',},],
+            modeleSelected: { id: 0, model: 'Voiture', currentAutonomy: '' },
+            modeles: [{ id: 0, model: 'Voiture', currentAutonomy: '', },],
             nombreVoiture: 0,
         }
         this.loadAncientModeles();
     }
 
-    
 
-    
+
+
 
     /**
      * On charge ici la vrai liste de toutes les voitures de la bdd
@@ -49,16 +49,16 @@ class SelectionVoiture extends React.Component {
      * Initialisation de la liste des modèles de voitures et du modèle séléctionné
      * pour ne pas que le rendre crash
      */
-    loadAncientModeles(){
+    loadAncientModeles() {
         var modelesVoituresCree = [];
         this.modelesVoitures.map((modeleVoiture) => (
-           modelesVoituresCree.push(<Picker.Item label={modeleVoiture.model} value={modeleVoiture} key={this.state.nombreVoiture++} />)
+            modelesVoituresCree.push(<Picker.Item label={modeleVoiture.model} value={modeleVoiture} key={this.state.nombreVoiture++} />)
         ));
         this.state.modeles = modelesVoituresCree;
         this.state.modeleSelected = modelesVoituresCree[0].props.value;
     }
 
-    
+
     /**
      * Récupération et stockage de tous les modèles de voitures dans la bdd
      */
@@ -67,24 +67,24 @@ class SelectionVoiture extends React.Component {
         //Récupération des voitures
         testVoitures = await this.formatJSON(getRequest("cars"));
         //Stockage des données collectées
-        if (testVoitures != null){
-            this.setState( {modeles : testVoitures, modeleSelected : testVoitures[0].props.value} );
+        if (testVoitures != null) {
+            this.setState({ modeles: testVoitures, modeleSelected: testVoitures[0].props.value });
         }
     }
 
-   
+
     /**
      * On recherche l'indice de la voiture dans la liste des voitures par son modèle (nom)
      * @param {*} modeleChoisi le modèle selectionné dans la liste déroulante
      */
     trouverModeleChoisi(modeleChoisi) {
-        for(var i = 0 ; i < this.state.modeles.length ; i++){
-            if(this.state.modeles[i].props.value.model == modeleChoisi.model){
+        for (var i = 0; i < this.state.modeles.length; i++) {
+            if (this.state.modeles[i].props.value.model == modeleChoisi.model) {
                 return i;
             }
         }
     }
-    
+
     /**
      * Affichage de la voiture séléctionnée dans le menu déroulant
      * @param {*} modeleChoisi le modèle selectionné dans la liste déroulante
@@ -102,13 +102,13 @@ class SelectionVoiture extends React.Component {
         )
     }
 
-     /**
-     * Mise en forme des données collectées du JSON et les stockées dans un menu déroulant
-     * @param {*} allCars fichier json de toutes les voitures retournées
-     */
-    async formatJSON(allCars){
+    /**
+    * Mise en forme des données collectées du JSON et les stockées dans un menu déroulant
+    * @param {*} allCars fichier json de toutes les voitures retournées
+    */
+    async formatJSON(allCars) {
         //Vérification de voitures retournées par la requête sinon toast
-        if (allCars == null){
+        if (allCars == null) {
             Toast.showWithGravity("Aucun modèle de voiture n'a pu être chargé.", Toast.LONG, Toast.BOTTOM);
             return;
         }
@@ -116,11 +116,11 @@ class SelectionVoiture extends React.Component {
         var bigtabCars = [];
         var i = 0;
         //Mappage des voitures
-        bigtabCars = await allCars.then( 
+        bigtabCars = await allCars.then(
             function (cars) {
-                cars.map( 
+                cars.map(
                     function (voiture) {
-                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} /> )
+                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} />)
                         i = i + 1
                         return tabCars
                     }
@@ -137,55 +137,55 @@ class SelectionVoiture extends React.Component {
      * Vérifie que tous les champs soient complets et envoies les données de la voiture au redux
      * @param {*} data les données à envoyer
      */
-    handleFormFullField(data){
+    handleFormFullField(data) {
         var allFieldsCompleted = true;
         //Met à false si il manque une donnée
-        for (var property in data){
-            if(data.hasOwnProperty(property)){
-                if(data[property] == null){
+        for (var property in data) {
+            if (data.hasOwnProperty(property)) {
+                if (data[property] == null) {
                     allFieldsCompleted = false;
                 }
             }
         }
         //On envoie les données si tous les champs sont complétés
-        if(allFieldsCompleted){
+        if (allFieldsCompleted) {
             const action = { type: 'CAR_PICKED_BY_USER', value: data }
             this.props.dispatch(action);
             // Passage à la vue suivante
             propsnavigation.navigation.navigate('BorneToGo');
         }
-        else{
+        else {
             Toast.showWithGravity("Vous n'avez pas renseigné tous les champs du formulaire.", Toast.LONG, Toast.BOTTOM);
         }
     }
 
-    handleCarSelected(data, propsnavigation){
+    handleCarSelected(data, propsnavigation) {
         //TODO gestion autonomie avec boite de dialogue
         //var autonomie = DialogInput();
         //console.log('Autonomie : ', autonomie);
         var dataCarSelected = {};
         //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
-        for(var property in data){
-            if(data.hasOwnProperty(property)){
-                if(property != 'currentAutonomy'){
+        for (var property in data) {
+            if (data.hasOwnProperty(property)) {
+                if (property != 'currentAutonomy') {
                     Object.defineProperty(dataCarSelected, property, {
                         value: data[property],
                         writable: true,
                         enumerable: true
                     });
                 }
-                else{
+                else {
                     Object.defineProperty(dataCarSelected, property, {
                         value: 42,
                         writable: true,
                         enumerable: true
                     });
-                    
+
                 }
             }
         }
         //Enregistrement des données de la voiture 
-        this.setState({modeleSelected: dataCarSelected})
+        this.setState({ modeleSelected: dataCarSelected })
         const action = { type: 'CAR_PICKED_BY_USER', value: data }
         this.props.dispatch(action);
 

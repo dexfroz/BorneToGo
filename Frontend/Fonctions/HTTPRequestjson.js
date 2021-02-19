@@ -44,29 +44,30 @@ export function getRoutesFromAPI(useCase, optimOption, car, userSteps) {
         });
 }
 
-const defaultUrl = 'http://192.168.1.58:4321/bornetogo/backend/'
+// Marie chez elle : 192.168.1.32 ; Pierrick chez lui : 192.168.1.58
+const defaultUrl = 'http://192.168.1.32:4321/bornetogo/backend/'
 
 /**
 * Requête GET, output formater au format JSON
 * Erreur : Error in requesting http get + error
 * @param {*} endUrl la fin d'url sur laquelle faire la requete GET sans '/'
 */
-export async function getRequest(endUrl){
+export async function getRequest(endUrl) {
     var contenu = null;
-    try{
+    try {
         let url = defaultUrl.concat(endUrl);
         console.log("Envoi de la requête :", url);
-        await fetch( url, {
+        await fetch(url, {
             method: "GET"
         })
-        .then( (response) => response.json())
-        .then( (reponseJson) => contenu = reponseJson)
-        .catch( (error) => {console.log("Error in requesting http get :", url, " with error :", error );})
-        ;
+            .then((response) => response.json())
+            .then((reponseJson) => contenu = reponseJson)
+            .catch((error) => { console.log("Error in requesting http get :", url, " with error :", error); })
+            ;
         console.log("Requête GET terminée :", url);
         return contenu.cars;
     }
-    catch(e){
+    catch (e) {
         console.log("Retour de Requete vide");
         return contenu;
     }
