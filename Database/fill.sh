@@ -3,34 +3,35 @@
 # Filling script.
 
 # Start the filling:
-# time sh fill.sh
+# time sudo sh fill.sh
 
-# To access the database from CLI:
-# mysql -h 127.0.0.1 -P 3306 --protocol=tcp -u root -p
+# To access the database from CLI with MySQL client:
+# mysql -h localhost -P 3306 --protocol=tcp -u root -p
 
 # To check on the port:
 # sudo ss -tulpn | grep :3306
 
 
-SECRET="./secret.cnf"
-SCRIPTS_DIR="./sql-scripts/"
+# # This can be used with: mysql --defaults-extra-file=$SECRET ...
+# SECRET="./secret.cnf"
+# if [ ! -e $SECRET ]; then
+# 	printf "Secret file not found.\n"
+# 	exit 1
+# fi
 
-IP=localhost
-# IP="127.0.0.1" # if localhost fails...
-#IP="0.0.0.0"
+USER=root
+PASSWORD=aaa
 
-PORT=3306
-PROTOCOL="--protocol=tcp"
+# Location of .sql scripts *inside* the container:
+SCRIPTS_DIR=/tmp/sql-scripts
 
-if [ ! -e $SECRET ]; then
-	printf "Secret file not found.\n"
-	exit 1
-fi
+CONTAINER_NAME=bornetogo-database
+CONTAINER_ID=$(docker ps -aq --filter name=$CONTAINER_NAME)
 
 importFile()
 {
 	printf "Importing: $1\n"
-	mysql --defaults-extra-file=$SECRET -h $IP -P $PORT $PROTOCOL < ${SCRIPTS_DIR}$1
+	docker exec $CONTAINER_ID /bin/sh -c "mysql -u $USER -p$PASSWORD < $SCRIPTS_DIR/$1"
 }
 
 # Tables need to be loaded in a correct order:
@@ -45,5 +46,3 @@ importFile vcc.sql
 importFile station.sql
 importFile borne.sql
 importFile stationBorne.sql
-
-exit 0
