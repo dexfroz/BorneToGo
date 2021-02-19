@@ -21,10 +21,43 @@ const { width, height } = Dimensions.get('window');
 
 // Calcul et initialisation des coordonnées de la position initiale de la map
 const ASPECT_RATIO = width / height;
-const LATITUDE = 43.12; //43.12
-const LONGITUDE = 5.94; //5.94
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+function getLatitudeLongitude(coordinates) {
+    var array = []; // 0 : LATITUDE // 1 : LONGITUDE 
+    var meanLat = 0;
+    var meanLong = 0;
+    var maxLat = 0;
+    var minLat = 180;
+    var maxLong = 0;
+    var minLong = 180;
+
+    for (var i = 0; i < coordinates.length; i++) {
+        meanLat += coordinates[i].latitude;
+        meanLong += coordinates[i].longitude;
+
+        if (maxLat < coordinates[i].latitude) {
+            maxLat = coordinates[i].latitude;
+        }
+
+        if (minLat > coordinates[i].latitude) {
+            minLat = coordinates[i].latitude;
+        }
+
+        if (maxLat < coordinates[i].latitude) {
+            maxLat = coordinates[i].latitude;
+        }
+
+        if (minLong > coordinates[i].longitude) {
+            minLong = coordinates[i].longitude;
+        }
+    }
+    meanLat = meanLat / coordinates.length;
+    meanLong = meanLong / coordinates.length;
+
+    array.push(meanLat, meanLong, maxLong - minLong, maxLat - minLat);
+
+    return array;
+}
 
 class PageMapResultat extends React.Component {
 
@@ -33,14 +66,27 @@ class PageMapResultat extends React.Component {
         this.mapRef = null;
         const { itineraires } = props.route.params;
 
+        var array = getLatitudeLongitude(itineraires[0].fullPath.geometry.coordinates);
+
+        var latitudeD = 0;
+        var longitudeD = 0;
+        if (array[2] > array[3]) {
+            latitudeD = array[2];
+            longitudeD = array[2] * ASPECT_RATIO;
+        }
+        else {
+            latitudeD = array[3] * ASPECT_RATIO;
+            longitudeD = array[3];
+        }
+
         // Définition du state
         this.state = {
             // Région
             region: {
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
+                latitude: array[0],
+                longitude: array[1],
+                latitudeDelta: latitudeD,
+                longitudeDelta: longitudeD,
             },
             // Itinéraire
             idRouteCourant: 0,
@@ -249,7 +295,9 @@ class PageMapResultat extends React.Component {
                         <View>
                             <TouchableOpacity
                                 key={`Bouton Statistique`}
-                            //onPress={ }
+                                onPress={() => this.props.navigation.navigate('Statistiques', {
+                                    itineraire: this.state.itineraires[this.state.idRouteCourant],
+                                })}
                             >
                                 <View style={styles.bouton_stat}>
                                     <Image
@@ -330,7 +378,7 @@ class PageMapResultat extends React.Component {
                 edgePadding: {
                     bottom: 50, right: 50, top: 50, left: 50,
                 },
-                animated: false,
+                animated: true,
             });
         }
         catch (error) {
@@ -345,7 +393,7 @@ class PageMapResultat extends React.Component {
                 edgePadding: {
                     bottom: 50, right: 50, top: 50, left: 50,
                 },
-                animated: false,
+                animated: true,
             });
         }
         catch (error) {

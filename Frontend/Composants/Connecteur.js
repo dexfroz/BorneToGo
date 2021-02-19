@@ -15,7 +15,7 @@ class Borne extends PureComponent {
 
         return (
             <View>
-                <Text style={styles.borne}>{connecteur.type}</Text>
+                <Text style={styles.borne}>{connecteur}</Text>
             </View>
         );
     }

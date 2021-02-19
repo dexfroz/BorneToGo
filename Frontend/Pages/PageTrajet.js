@@ -7,8 +7,9 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native'
 import RouteForm from '../Store/Forms/RouteForm'
-import { setJsonInputBackend, getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
-import { getItineraires } from '../Fonctions/Itineraire';
+import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
+import { getItineraires } from '../Fonctions/Itineraire'
+import Toast from 'react-native-simple-toast';
 
 class PageTrajet extends React.Component {
 
@@ -16,7 +17,8 @@ class PageTrajet extends React.Component {
         super(props);
         this.state = {
             data: null,
-            isLoading: false
+            isLoading: false,
+            userSteps: [],
         }
     }
 
@@ -30,13 +32,45 @@ class PageTrajet extends React.Component {
         }
     }
 
-    getRoutes(useCase, optimOption, car, userSteps) {
-        getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
-            var routes = getItineraires(data.routes);
-            this.setState({
-                data: routes
-            });
-        })
+    async getRoutes(useCase, optimOption, car, userSteps) {
+        // requête post avec les userSteps ainsi récupérés (si présents)
+        if (userSteps.length > 0) {
+            getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
+                if (data) {
+                    if (data.routes && Object.keys(data).length > 0) {
+                        var routes = getItineraires(data.routes);
+                        this.state.data = routes;
+                        this.afficherResultat();
+                    }
+                    else {
+                        // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                        Toast.showWithGravity("Nous n'avons pas pu trouver d'itinéraire correspondant à votre recherche.", Toast.LONG, Toast.BOTTOM);
+                        console.log("Pas d'itinéraire trouvé");
+                        this.setState({ isLoading: false, data: null });
+                    }
+                }
+                else {
+                    // MESSAGE TOAST : Nous n'avons pas pu calculer d'itinéraire
+                    Toast.showWithGravity("Nous n'avons pas pu trouver d'itinéraire correspondant à votre recherche.", Toast.LONG, Toast.BOTTOM);
+                    console.log("Pas d'itinéraire trouvé");
+                    this.setState({ isLoading: false, data: null });
+                }
+            })
+        }
+    }
+
+    afficherResultat() {
+        // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
+        //Object.keys(this.state.depart.data).length > 0
+        if (this.state.data && Object.keys(this.state.data).length > 0) {
+            var data = this.state.data;
+            this.setState({ isLoading: false, data: null });
+            this.props.navigation.navigate('Resultats',
+                {
+                    itineraires: data // transmission des itinéraires
+                }
+            );
+        }
     }
 
     recupereItineraire(values) {
@@ -53,8 +87,11 @@ class PageTrajet extends React.Component {
         });
 
         // On récupère les userSteps
-        if (valuesTableau.length == 0) {
+        if (valuesTableau.length == 0 && Object.keys(values).length <= 0) {
             // FORMULAIRE VIDE => TOAST
+            Toast.showWithGravity("Vous n'avez pas renseigné d'itinéraire.", Toast.LONG, Toast.BOTTOM);
+            console.log("Pas d'itinéraire renseigné");
+            this.setState({ isLoading: false, data: null });
         }
         else {
             // On regarde dans le tableau et on récupère la balise de chaque étape
@@ -77,6 +114,10 @@ class PageTrajet extends React.Component {
                     return unique.includes(item) ? unique : [...unique, item]
                 }, []);
 
+            var userSteps_depart = [];
+            var userSteps_arrivee = [];
+            var userSteps_etapes = [];
+
             // On récupère les champs address et name pour chaque balise
             for (var i = 0; i < userSteps_balises_reduce.length; i++) {
                 var position_address = - 1;
@@ -93,78 +134,128 @@ class PageTrajet extends React.Component {
                 }
 
                 if (position_address != -1 && position_name != -1) {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": valuesTableau[position_address][1].toString(),
-                            "name": valuesTableau[position_name][1].toString(),
-                        }
-                    )
+                    if (userSteps_balises_reduce[i] == "arrivee") {
+                        userSteps_arrivee.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else if (userSteps_balises_reduce[i] == "depart") {
+                        userSteps_depart.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else {
+                        userSteps_etapes.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
                 }
                 else if (position_address == -1 && position_name != -1) {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": "",
-                            "name": valuesTableau[position_name][1].toString(),
-                        }
-                    )
+                    if (userSteps_balises_reduce[i] == "arrivee") {
+                        userSteps_arrivee.push(
+                            {
+                                "location": [],
+                                "address": "",
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else if (userSteps_balises_reduce[i] == "depart") {
+                        userSteps_depart.push(
+                            {
+                                "location": [],
+                                "address": "",
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
+                    else {
+                        userSteps_etapes.push(
+                            {
+                                "location": [],
+                                "address": "",
+                                "name": valuesTableau[position_name][1].toString(),
+                            }
+                        )
+                    }
                 }
                 else if (position_address != -1 && position_name == -1) {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": valuesTableau[position_address][1].toString(),
-                            "name": "",
-                        }
-                    )
-                }
-                else {
-                    userSteps.push(
-                        {
-                            "location": [],
-                            "address": "",
-                            "name": "",
-                        }
-                    )
-                }
-            }
-
-            // récupération de la voiture dans le redux
-            var car = {
-                "model": "Tesla cybertruck",
-                "subscription": "",
-                "batteryType": "",
-                "maxAutonomy": 200,
-                "currentAutonomy": 50,
-                "maxWattage": 42.1,
-                "connectors": [
-                    "EF-T2",
-                    "EF"
-                ]
-            }
-
-            // requête post avec les userSteps ainsi récupérés (si présents)
-            if (userSteps.length > 0) {
-                this.getRoutes("trip", "fastest", car, userSteps);
-            }
-
-            // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
-            if (this.state.data) {
-                console.log("Waypoints", this.state.data[0].waypoints);
-                var data = this.state.data;
-                this.setState({ isLoading: false, data: null });
-                this.props.navigation.navigate('Resultats',
-                    {
-                        itineraires: data // transmission des itinéraires
+                    if (userSteps_balises_reduce[i] == "arrivee") {
+                        userSteps_arrivee.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": "",
+                            }
+                        )
                     }
-                );
+                    else if (userSteps_balises_reduce[i] == "depart") {
+                        userSteps_depart.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": "",
+                            }
+                        )
+                    }
+                    else {
+                        userSteps_etapes.push(
+                            {
+                                "location": [],
+                                "address": valuesTableau[position_address][1].toString(),
+                                "name": "",
+                            }
+                        )
+                    }
+                }
             }
+
+            // On ordonne les étapes dans l'ordre etape-1, etape-2, etC.
+            userSteps_etapes.sort();
+
+            // On concatène tous les tableaux pour obtenir le trajet complet
+            userSteps = userSteps_depart.concat(userSteps_etapes, userSteps_arrivee);
+
+            this.state.userSteps = userSteps;
 
         }
     }
 
     render() {
+
+        // récupération de la voiture dans le redux
+        var car = {
+            "model": "Renault ZOE R135",
+            "subscription": "",
+            "maxAutonomy": 390,
+            "currentAutonomy": 390,
+            "capacity": 52,
+            "courantConnecteurs": [
+                {
+                    "courant": "AC (Three-Phase)",
+                    "connecteur": "IEC 62196-2 Type 2",
+                    "puissance": 22
+                },
+                {
+                    "courant": "DC",
+                    "connecteur": "IEC 62196-3 Configuration FF",
+                    "puissance": 50
+                }
+            ]
+        };
+
         return (
             <View style={styles.main_container}>
                 <View style={styles.titre}>
@@ -179,11 +270,19 @@ class PageTrajet extends React.Component {
                 </View>
                 <RouteForm
                     onSubmit={(values) => {
-                        this.recupereItineraire(values)
+                        this.recupereItineraire(values);
+                        this.getRoutes("trip", "fastest", car, this.state.userSteps);
                     }} />
                 {this.afficheLoading()}
             </View>
         );
+    }
+
+    componentDidUpdate() {
+
+    }
+
+    componentDidMount() {
     }
 }
 
@@ -198,7 +297,7 @@ const styles = StyleSheet.create({
     },
     titre: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
     },
     info_titre: {
@@ -216,7 +315,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        top: 100,
+        top: 0,
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'

@@ -179,7 +179,7 @@ class ItineraireInfo extends PureComponent {
         )
     }
 
-    renderFooter(duree, distance) {
+    renderFooter(duree, distance, propsnavigation) {
         return (
             <View style={styles.footer}>
                 <View style={styles.duree_distance}>
@@ -189,7 +189,9 @@ class ItineraireInfo extends PureComponent {
                 <View style={styles.vue_bouton_stat}>
                     <TouchableOpacity
                         key={`Bouton Statistique`}
-                    //onPress={ }
+                        onPress={() => propsnavigation.navigation.navigate('Statistiques', {
+                            itineraire: this.state.itineraires[this.state.idRouteCourant],
+                        })}
                     >
                         <View style={styles.bouton_stat}>
                             <Image
@@ -234,17 +236,8 @@ class ItineraireInfo extends PureComponent {
         if (stations_etapes.length == 0) {
             haut = (10 / 12) * height - (2 / 12) * height - 175;
         }
-        else if (stations_etapes.length > 0 && stations_etapes.length <= 2) {
-            haut = (stations_etapes.length + 1) * height / 12 - 250;
-        }
-        else if (stations_etapes.length > 2 && stations_etapes.length <= 5) {
-            haut = (stations_etapes.length + 1) * height / 12 - 300;
-        }
-        else if (stations_etapes.length > 5 && stations_etapes.length <= 7) {
-            haut = (stations_etapes.length + 1) * height / 12 - 350;
-        }
-        else if (stations_etapes.length > 7) {
-            haut = (stations_etapes.length + 1) * height / 12 - 400;
+        else if (stations_etapes.length > 0) {
+            haut = (2 / 12) * height;
         }
         hauteur = haut.toString();
 
@@ -270,7 +263,7 @@ class ItineraireInfo extends PureComponent {
                     {this.renderTrajet(stations_etapes, propsnavigation, hauteur, legs)}
                     {this.renderArrivee(arrivee, propsnavigation, hauteur)}
                 </ScrollView>
-                {this.renderFooter(duree, distance)}
+                {this.renderFooter(duree, distance, propsnavigation)}
             </View>
         );
     }

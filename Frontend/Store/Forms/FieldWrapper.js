@@ -26,10 +26,9 @@ const styles = StyleSheet.create({
 	inputContainer: {
 		marginTop: 5,
 		marginBottom: 5,
-		//flex: 1
+		height: 20,
 	},
 	inputContainerInvalid: {
-		//backgroundColor: "#F8ECEB"
 	},
 	fieldDescription: {
 		fontStyle: "italic",

@@ -1,31 +1,62 @@
 // Composants/Voiture.js
 
 import React, { PureComponent } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 
-class Voiture extends PureComponent{
+const { width, height } = Dimensions.get('window');
 
-    
-    constructor(props){
+class Voiture extends PureComponent {
+
+
+    constructor(props) {
         super(props);
     }
-    
-    render(){
+
+    render() {
         return (
             <View style={styles.container}>
-                <Text>Modele : {this.props.modele}</Text>
-                <Text>Autonomie : {this.props.autonomie} km restants</Text>
-                <Text>Capacite : {this.props.capacite} km</Text>
-                <Text>Type de prise : {this.props.typePrise}</Text>
+                <View style={styles.sousContainer}>
+                    <View>
+                        <Text style={styles.title}>Modele</Text>
+                        <Text style={styles.info}>{this.props.model}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>Puiss Max</Text>
+                        <Text style={styles.info}>{this.props.maxWattage} kWh</Text>
+                    </View>
+                </View>
+                <View style={styles.sousContainer}>
+                    <View>
+                        <Text style={styles.title}>Capacite</Text>
+                        <Text style={styles.info}>{this.props.maxAutonomy} km</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>Type de prise</Text>
+                        <Text style={styles.info}>{this.props.batteryType}</Text>
+                    </View>
+                </View>
             </View>
         )
     }
 
 }
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
+    container: {
+        flexDirection: "row",
+        alignItems: "center",
     },
+    sousContainer: {
+        flex: 1,
+    },
+    title: {
+        fontWeight: "bold",
+        textDecorationLine: "underline",
+        textAlign: 'center',
+    },
+    info: {
+        marginBottom: 10,
+        textAlign: 'center',
+    }
 });
 
 export default Voiture

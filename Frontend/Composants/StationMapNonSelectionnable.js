@@ -3,9 +3,7 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Marker, Callout } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Svg, Image as ImageSvg } from 'react-native-svg'; // On utilise Svg car un bug de react native fait que les images de react-native ne s'affichent pas (sauf dans un <Text></Text> mais cela ajoute des marges et compliquent la mise en forme)
-import { connect } from 'react-redux';
+import { Svg, Image as ImageSvg } from 'react-native-svg';
 
 
 class StationMapNonSelectionable extends PureComponent {
@@ -14,13 +12,17 @@ class StationMapNonSelectionable extends PureComponent {
         super(props);
     }
 
-
     // Méthode pour afficher les bornes disponibles
     renderBornesDisponibles(nbTotal, nbDispo) {
         return (
-            (nbDispo == 0) ?
-                <Text style={styles.pasdispo}>Pas de bornes disponibles</Text> :
-                (nbDispo > 1) ? <Text style={styles.dispo}>{nbDispo}/{nbTotal} disponibles</Text> :
+            (nbDispo == 0)
+                ?
+                <Text style={styles.pasdispo}>Pas de bornes disponibles</Text>
+                :
+                (nbDispo > 1)
+                    ?
+                    <Text style={styles.dispo}>{nbDispo}/{nbTotal} disponibles</Text>
+                    :
                     <Text style={styles.dispo}>{nbDispo}/{nbTotal} disponible</Text>
         )
     }
@@ -81,6 +83,7 @@ class StationMapNonSelectionable extends PureComponent {
         }
 
         var title = marker.name + "\n" + marker.address;
+        marker.data.adresse = marker.address;
 
         return (
             <Marker

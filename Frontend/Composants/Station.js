@@ -42,13 +42,26 @@ class Station extends PureComponent {
 
     render() {
         const { station, propsnavigation } = this.props;
+        // Création de deux tableaux : un pour les bornes disponibles, un autre pour les bornes non disponibles
+        var bornesDispo = [];
+        var bornesNonDispo = [];
+
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(station.bornes).length;
         var nbDispo = 0;
-        for (const obj of station.bornes) {
-            if (obj.status)
-                nbDispo++;
+        if (nbTotal > 0) {
+            for (const obj of station.bornes) {
+                if (obj.status) {
+                    nbDispo++;
+                    bornesDispo.push(obj);
+                }
+                else {
+                    bornesNonDispo.push(obj);
+                }
+            }
         }
+
+        var allBornes = bornesDispo.concat(bornesNonDispo);
 
         return (
             <View>
@@ -60,7 +73,7 @@ class Station extends PureComponent {
                         />
                         <View style={styles.titre_adresse}>
                             <Text style={styles.title}>{station.title}</Text>
-                            <Text style={styles.adresse}>{station.adresse}{"\n"}{station.codepostale} {station.ville}</Text>
+                            <Text style={styles.adresse}>{station.adresse}</Text>
                         </View>
                     </View>
                     <View style={styles.info_generale}>
@@ -74,7 +87,7 @@ class Station extends PureComponent {
                     <FlatList
                         nestedScrollEnabled
                         vertical
-                        data={station.bornes}
+                        data={allBornes}
                         renderItem={(item) => this.renderBorne(item, station, propsnavigation)}
                         keyExtractor={(item) => `Borne-${station.idStation}-${item.idBorne}`}
                     />
@@ -83,7 +96,6 @@ class Station extends PureComponent {
         );
     }
 }
-
 
 const styles = StyleSheet.create({
     header: {
@@ -143,43 +155,3 @@ const styles = StyleSheet.create({
 })
 
 export default Station
-
-/*
-{station.bornes.map(item =>
-                    <Borne
-                        key={`Borne-${station.idStation}-${item.idBorne}`}
-                        borne={item}
-                        station={station}
-                        propsnavigation={propsnavigation}
-                    />
-                )}
-
-
-                <View style={styles.station_container}>
-                <View>
-                    <View>
-                        <Image
-                            style={styles.image}
-                            source={require('../Images/borne.png')}
-                        />
-                        <View>
-                            <Text>{station.title}</Text>
-                            <Text>{station.adresse}</Text>
-                            <Text>{station.codepostale} {station.ville}</Text>
-                        </View>
-                    </View>
-                    <Text>{station.horaire}</Text>
-                    <View>
-                        {this.renderTitleBornes(nbTotal)}
-                        {this.renderBornesDisponibles(nbTotal, nbDispo)}
-                    </View>
-                </View>
-                <FlatList
-                    nestedScrollEnabled
-                    vertical
-                    data={station.bornes}
-                    renderItem={(item) => this.renderBorne(item, station, propsnavigation)}
-                    keyExtractor={(item) => `Borne-${station.idStation}-${item.idBorne}`}
-                />
-            </View>
-*/

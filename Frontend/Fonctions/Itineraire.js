@@ -34,11 +34,27 @@ export function getDistance(route) {
 
 // Récupère le depart d'un itinéraire
 export function getDepart(route) {
+
+    if (route.waypoints[0].address == "" && route.waypoints[0].name != "") {
+        route.waypoints[0].address = route.waypoints[0].name;
+    }
+    else if (route.waypoints[0].address != "" && route.waypoints[0].name == "") {
+        route.waypoints[0].name = route.waypoints[0].address;
+    }
+
     return route.waypoints[0]
 }
 
 // Récupère l'arrivee d'un itinéraire
 export function getArrivee(route) {
+
+    if (route.waypoints[route.waypoints.length - 1].address == "" && route.waypoints[route.waypoints.length - 1].name != "") {
+        route.waypoints[route.waypoints.length - 1].address = route.waypoints[route.waypoints.length - 1].name;
+    }
+    else if (route.waypoints[route.waypoints.length - 1].address != "" && route.waypoints[route.waypoints.length - 1].name == "") {
+        route.waypoints[route.waypoints.length - 1].name = route.waypoints[route.waypoints.length - 1].address;
+    }
+
     return route.waypoints[route.waypoints.length - 1];
 }
 
@@ -46,6 +62,14 @@ export function getArrivee(route) {
 export function getStationsEtapes(route) {
     var stations_etapes = [];
     for (var i = 1; i < route.waypoints.length - 1; i++) {
+
+        if (route.waypoints[i].address == "" && route.waypoints[i].name != "") {
+            route.waypoints[i].address = route.waypoints[i].name;
+        }
+        else if (route.waypoints[i].address != "" && route.waypoints[i].name == "") {
+            route.waypoints[i].name = route.waypoints[i].address;
+        }
+
         stations_etapes.push(route.waypoints[i]);
     }
     return stations_etapes;

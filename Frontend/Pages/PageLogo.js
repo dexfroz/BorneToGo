@@ -20,7 +20,7 @@ class PageLogo extends React.Component {
                 <View style={styles.logoBTG}>
                     <TouchableHighlight
                         underlayColor='transparent'
-                        onPress={() => this.props.navigation.navigate('BorneToGo')}>
+                        onPress={() => this.props.navigation.navigate('Voiture')}>
                         <Image
                             source={require('../Images/logo_borne_to_go.png')}
                         />
@@ -32,7 +32,6 @@ class PageLogo extends React.Component {
                         source={require('../Images/logo_isen.png')}
                     />
                 </View>
-
             </View >
         )
     }
