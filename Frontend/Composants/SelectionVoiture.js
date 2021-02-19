@@ -159,7 +159,6 @@ class SelectionVoiture extends React.Component {
         //Met à false si il manque une donnée
         for (var property in data){
             if(data.hasOwnProperty(property)){
-                console.log("Data : " , property , ' ', data[property])
                 if(data[property] == null){
                     allFieldsCompleted = false;
                 }
@@ -208,34 +207,39 @@ class SelectionVoiture extends React.Component {
     handleValidateButtonDialog(propsnavigation){
         //Ferme la boite de dialogue
         this.showDialog(false);
+        var autonomie = parseFloat(this.state.autonomieSelected)
+        if(isNaN(autonomie)){
+            Toast.showWithGravity("L'autonomie renseignée n'est pas un nombre.", Toast.LONG, Toast.BOTTOM);
+            this.showDialog(true);
+        }
+        else{
+            var dataCarSelected = {};
+            //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
+            for(var property in this.state.modeleSelected){
+                if(this.state.modeleSelected.hasOwnProperty(property)){
+                    if(property != 'currentAutonomy'){
+                        Object.defineProperty(dataCarSelected, property, {
+                            value: this.state.modeleSelected[property],
+                            writable: true,
+                            enumerable: true
+                        });
+                    }
+                    else {
+                        Object.defineProperty(dataCarSelected, property, {
+                            value: this.state.autonomieSelected,
+                            writable: true,
+                            enumerable: true
+                        });
 
-        var dataCarSelected = {};
-        //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
-        for(var property in this.state.modeleSelected){
-            if(this.state.modeleSelected.hasOwnProperty(property)){
-                console.log("property : ", property);
-                if(property != 'currentAutonomy'){
-                    Object.defineProperty(dataCarSelected, property, {
-                        value: this.state.modeleSelected[property],
-                        writable: true,
-                        enumerable: true
-                    });
-                }
-                else {
-                    Object.defineProperty(dataCarSelected, property, {
-                        value: this.state.autonomieSelected,
-                        writable: true,
-                        enumerable: true
-                    });
-
+                    }
                 }
             }
+            //Enregistrement dans le store redux
+            const action = { type: 'CAR_PICKED_BY_USER', value: dataCarSelected }
+            this.props.dispatch(action);
+            // Passage à la vue suivante
+            propsnavigation.navigation.navigate('BorneToGo');
         }
-        //Enregistrement dans le store redux
-        const action = { type: 'CAR_PICKED_BY_USER', value: dataCarSelected }
-        this.props.dispatch(action);
-        // Passage à la vue suivante
-        propsnavigation.navigation.navigate('BorneToGo');
     }
 
     /**
@@ -273,7 +277,7 @@ class SelectionVoiture extends React.Component {
                     <View>
                         <Dialog.Container visible={this.state.isDialogVisible}>
                             <Dialog.Title>Entrer l'autonomie actuelle de votre véhicule</Dialog.Title>
-                            <Dialog.Input onChangeText={(arg) => this.setState({autonomieSelected: arg})}/>
+                            <Dialog.Input type="number" onChangeText={(arg) => this.setState({autonomieSelected: arg})}/>
                             <Dialog.Button label="Annuler" onPress={() => this.handleCancelButtonDialog()}/>
                             <Dialog.Button label="Valider" onPress={() => this.handleValidateButtonDialog(propsnavigation)}/>
                         </Dialog.Container>
@@ -337,7 +341,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => {
-    //console.log("state SelectionVoiture : ", state);
     return {
         car: state.carSelected.car
     }
