@@ -29,13 +29,11 @@ class Station extends PureComponent {
         )
     }
 
-    renderBorne(item, station, propsnavigation) {
+    renderBorne(item, station) {
         return (
             <Borne
                 key={`Borne-${station.idStation}-${item.idBorne}`}
                 borne={item}
-                station={station}
-                propsnavigation={propsnavigation}
             />
         )
     }
@@ -47,10 +45,10 @@ class Station extends PureComponent {
         var bornesNonDispo = [];
 
         // On compte le nombre de bornes disponibles pour la station
-        var nbTotal = Object.keys(station.bornes).length;
+        var nbTotal = Object.keys(station.data.bornes).length;
         var nbDispo = 0;
         if (nbTotal > 0) {
-            for (const obj of station.bornes) {
+            for (const obj of station.data.bornes) {
                 if (obj.status) {
                     nbDispo++;
                     bornesDispo.push(obj);
@@ -60,9 +58,8 @@ class Station extends PureComponent {
                 }
             }
         }
-
         var allBornes = bornesDispo.concat(bornesNonDispo);
-
+        
         return (
             <View>
                 <View style={styles.header}>
@@ -72,8 +69,8 @@ class Station extends PureComponent {
                             source={require('../Images/borne.png')}
                         />
                         <View style={styles.titre_adresse}>
-                            <Text style={styles.title}>{station.title}</Text>
-                            <Text style={styles.adresse}>{station.adresse}</Text>
+                            <Text style={styles.title}>{station.name}</Text>
+                            <Text style={styles.adresse}>{station.address}</Text>
                         </View>
                     </View>
                     <View style={styles.info_generale}>
@@ -88,7 +85,7 @@ class Station extends PureComponent {
                         nestedScrollEnabled
                         vertical
                         data={allBornes}
-                        renderItem={(item) => this.renderBorne(item, station, propsnavigation)}
+                        renderItem={(item) => this.renderBorne(item, station)}
                         keyExtractor={(item) => `Borne-${station.idStation}-${item.idBorne}`}
                     />
                 </View>

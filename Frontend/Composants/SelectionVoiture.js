@@ -148,7 +148,6 @@ class SelectionVoiture extends React.Component {
      */
     handleFormFullField(data, propsnavigation) {
         // Mise en forme de la voiture
-        console.log(data);
         data = {
             "model": data.model,
             "subscription": "",
@@ -164,7 +163,7 @@ class SelectionVoiture extends React.Component {
                 }
             ],
         };
-        console.log(data);
+
         var allFieldsCompleted = false
         // Vérifiez que l'object data existe
         if (data && Object.keys(data).length > 0) {
@@ -187,7 +186,6 @@ class SelectionVoiture extends React.Component {
             allFieldsCompleted = false;
         }
 
-        console.log(allFieldsCompleted);
         //Met à false si il manque une donnée
         for (var property in data) {
             if (data.hasOwnProperty(property)) {
@@ -196,8 +194,6 @@ class SelectionVoiture extends React.Component {
                 }
             }
         }
-
-        console.log(allFieldsCompleted);
 
         //On envoie les données si tous les champs sont complétés
         if (allFieldsCompleted) {
@@ -311,7 +307,7 @@ class SelectionVoiture extends React.Component {
                     </View>
                     <View>
                         <Dialog.Container visible={this.state.isDialogVisible}>
-                            <Dialog.Title>Entrer l'autonomie actuelle de votre véhicule</Dialog.Title>
+                            <Dialog.Title>Entrez l'autonomie actuelle de votre véhicule</Dialog.Title>
                             <Dialog.Input type="number" onChangeText={(arg) => this.setState({ autonomieSelected: arg })} />
                             <Dialog.Button label="Annuler" onPress={() => this.handleCancelButtonDialog()} />
                             <Dialog.Button label="Valider" onPress={() => this.handleValidateButtonDialog(propsnavigation)} />

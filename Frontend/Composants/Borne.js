@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, Text, Image } from 'react-native'
-import Connecteur from './Connecteur';
 
 class Borne extends PureComponent {
 
@@ -16,17 +15,10 @@ class Borne extends PureComponent {
         )
     }
 
-    renderConnecteur(nbConnecteur) {
-        return (
-            (nbConnecteur >= 2) ? <Text style={styles.titre}>CONNECTEURS</Text> : <Text style={styles.titre}>CONNECTEUR</Text>
-        )
-    }
-
-
     render() {
-        const { borne, station, propsnavigation } = this.props;
-
-        var nbConnecteur = Object.keys(borne.item.connecteurs).length;
+        const { borne } = this.props;
+        
+        console.log("BORNE 2", borne);
 
         return (
             <View style={styles.borne_container}>
@@ -45,16 +37,14 @@ class Borne extends PureComponent {
                         </View>
                     </View>
                     <View style={styles.info_section}>
-                        {this.renderConnecteur(nbConnecteur)}
-                        {borne.item.connecteurs.map(item =>
-                            <Connecteur
-                                key={`Connecteur-${station.idStation}-${borne.idBorne}-${item.idConnecteur}`}
-                                connecteur={item}
-                                borne={borne}
-                                station={station}
-                                propsnavigation={propsnavigation}
-                            />
-                        )}
+                        <Text style={styles.titre}>CONNECTEUR</Text>
+                        <View style={styles.connecteur_haut}>
+                            <Text style={styles.connecteur_texte}>{borne.item.connecteur}</Text>
+                        </View>
+                        <Text style={styles.titre}>COURANT</Text>
+                        <View style={styles.connecteur}>
+                            <Text style={styles.connecteur_texte}>{borne.item.courant}</Text>
+                        </View>
                     </View>
                 </View>
                 { this.renderDispo(borne.item.status)}
@@ -137,20 +127,30 @@ const styles = StyleSheet.create({
         width: 40,
         borderRadius: 10
     },
+    // Affichage du connecteur
+    connecteur: {
+        backgroundColor: '#70B445',
+        borderRadius: 10,
+        padding: 10,
+        //height: 40,
+        width: 60
+    },
+    connecteur_haut: {
+        marginBottom: 5,
+        backgroundColor: '#70B445',
+        borderRadius: 10,
+        padding: 10,
+        //height: 40,
+        width: 60
+    },
+    connecteur_texte: {
+        fontSize: 10,
+        marginBottom: 5,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        color: 'white',
+    },
 })
 
 export default Borne
-
-/*
-               <View>
-                    {borne.connecteurs.map(item =>
-                        <Connecteur
-                            key={`Connecteur-${station.idStation}-${borne.idBorne}-${item.idConnecteur}`}
-                            connecteur={item}
-                            borne={borne}
-                            station={station}
-                            propsnavigation={propsnavigation}
-                        />
-                    )}
-                </View>
-*/

@@ -40,7 +40,7 @@ class StationMapNonSelectionable extends PureComponent {
                 <View>
                     <View style={styles.bulle}>
                         <Text style={styles.name}>
-                            {marker.title}
+                            {marker.name}
                         </Text>
                         <Text style={styles.description}>
                             <View style={styles.bornesDispo}>
@@ -68,35 +68,73 @@ class StationMapNonSelectionable extends PureComponent {
     render() {
         const { marker, depart, arrivee, propsnavigation } = this.props;
 
+        marker.data = {
+            "paymentStatus": "",
+            "bornes": [
+                {
+                    "idBorne": 1,
+                    "status": false,
+                    "courant": "AC (Single-Phase)",
+                    "connecteur": "CEE 7/4",
+                    "puissance": 22
+                },
+                {
+                    "idBorne": 2,
+                    "status": true,
+                    "courant": "AC (Three-Phase)",
+                    "connecteur": "IEC 62196-2",
+                    "puissance": 22
+                },
+                {
+                    "idBorne": 3,
+                    "status": true,
+                    "courant": "AC (Single-Phase)",
+                    "connecteur": "CEE 7/4",
+                    "puissance": 22
+                },
+                {
+                    "idBorne": 4,
+                    "status": true,
+                    "courant": "AC (Three-Phase)",
+                    "connecteur": "IEC 62196-2",
+                    "puissance": 22
+                }
+            ]
+        };
+
+        // Création de deux tableaux : un pour les bornes disponibles, un autre pour les bornes non disponibles
+        var bornesDispo = [];
+        var bornesNonDispo = [];
+
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(marker.data.bornes).length;
         var nbDispo = 0;
-        for (const obj of marker.data.bornes) {
-            if (obj.status)
-                nbDispo++;
+        if (nbTotal > 0) {
+            for (const obj of marker.data.bornes) {
+                if (obj.status) {
+                    nbDispo++;
+                    bornesDispo.push(obj);
+                }
+                else {
+                    bornesNonDispo.push(obj);
+                }
+            }
         }
 
-        marker.data = {
-            ...marker.data,
-            "latitude": marker.location.latitude ? marker.location.latitude : 0,
-            "longitude": marker.location.longitude ? marker.location.longitude : 0,
-        }
-
-        var title = marker.name + "\n" + marker.address;
-        marker.data.adresse = marker.address;
+        var title = marker.name;
 
         return (
             <Marker
                 coordinate={{
-                    latitude: marker.data.latitude ? marker.location.latitude : 0,
-                    longitude: marker.data.longitude ? marker.location.longitude : 0,
+                    latitude: marker.location.latitude ? marker.location.latitude : 0,
+                    longitude: marker.location.longitude ? marker.location.longitude : 0,
                 }}
                 ref={(ref) => this.markerRef = ref}
                 title={title}
                 pinColor={depart ? 'green' : arrivee ? 'green' : 'green'}
                 key={`Station-${marker.data.idStation}-${depart ? 'depart' : ''}${arrivee ? 'arrivee' : ''}`}
             >
-                { this.renderCalloutMarker(propsnavigation, marker.data, nbTotal, nbDispo)}
+                { this.renderCalloutMarker(propsnavigation, marker, nbTotal, nbDispo)}
             </Marker >
         );
     }

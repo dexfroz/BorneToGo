@@ -237,7 +237,6 @@ class PageTrajet extends React.Component {
     render() {
         // récupération de la voiture dans le redux
         var car_user = this.props.car;
-        console.log(car_user);
         
         var car = {
             "model": "Renault ZOE R135",
