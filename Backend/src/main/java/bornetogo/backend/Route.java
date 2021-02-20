@@ -143,8 +143,8 @@ public class Route
 			double dist = 1000. * Coord.distance(inputCoord, receivedCoord); // in meters.
 
 			if (dist > GAP_WARNING) {
-				System.out.printf("\nGreat change in position (%.3f m) for waypoint:\n\n%s\n",
-					dist, inputCoord.toString());
+				System.out.printf("\nGreat change in position (%d m) for waypoint:\n\n%s\n",
+					Math.round(dist), inputCoord.toString());
 			}
 
 			inputCoord.move(receivedCoord.getLatitude(), receivedCoord.getLongitude());

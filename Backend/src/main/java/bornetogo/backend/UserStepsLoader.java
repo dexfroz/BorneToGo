@@ -7,7 +7,7 @@ import jakarta.json.*;
 
 public class UserStepsLoader
 {
-	private static final boolean enableUserStepsFiltering = true;
+	private static final boolean ENABLE_USER_STEPS_FILTERING = true;
 
 	private ArrayList<Coord> userSteps;
 	private ArrayList<Integer> indexesCoordsToComplete;
@@ -104,7 +104,7 @@ public class UserStepsLoader
 	// Used to remove consecutive duplicates:
 	private void filterUserSteps()
 	{
-		if (!enableUserStepsFiltering || this.userSteps == null || this.userSteps.size() == 0) {
+		if (!ENABLE_USER_STEPS_FILTERING || this.userSteps == null || this.userSteps.size() == 0) {
 			return;
 		}
 

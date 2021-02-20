@@ -9,7 +9,7 @@ public class Core
 {
 	// Allows for a more precise pathfinding when true (default),
 	// but makes the core function a bit slower:
-	private static final boolean enableFirstQuery = true;
+	private static final boolean ENABLE_FIRST_QUERY = true;
 
 	private JsonObject output = null;
 	private String message = "";
@@ -87,7 +87,7 @@ public class Core
 			ArrayList<Coord> waypoints = userSteps;
 			ArrayList<Double> legsLengths = null;
 
-			if (enableFirstQuery && userSteps.size() > 1) // querying the route API.
+			if (ENABLE_FIRST_QUERY && userSteps.size() > 1) // querying the route API.
 			{
 				JsonObject firstQuery = QueryAPIs.queryRoute("route", userSteps, "&overview=false"); // without geometry.
 				// GetJson.safeJsonPrinting(firstQuery);
