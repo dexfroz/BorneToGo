@@ -27,13 +27,10 @@ class SelectionVoiture extends React.Component {
             modeles: [{ id: 0, model: 'Voiture', currentAutonomy: '', },],
             nombreVoiture: 0,
             isDialogVisible: false,
-            autonomieSelected: '', 
+            autonomieSelected: '',
         }
         this.loadAncientModeles();
     }
-
-
-
 
 
     /**
@@ -44,7 +41,7 @@ class SelectionVoiture extends React.Component {
     }
 
     modelesVoitures = [
-        { id: 0, model: 'Voiture' , currentAutonomy: ''},
+        { id: 0, model: 'Voiture', currentAutonomy: '' },
     ];
 
     /**
@@ -111,27 +108,27 @@ class SelectionVoiture extends React.Component {
     async formatJSON(allCars) {
         //Vérification de voitures retournées par la requête sinon toast
         var isCarsNotNull = true;
-        await allCars.then( 
-            function(cars) {
-                if(cars == null){
+        await allCars.then(
+            function (cars) {
+                if (cars == null) {
                     Toast.showWithGravity("Aucun modèle de voiture n'a pu être chargé.", Toast.LONG, Toast.BOTTOM);
                     isCarsNotNull = false;
                 }
-            } 
+            }
         );
-        if(!isCarsNotNull){
+        if (!isCarsNotNull) {
             return null;
         }
-        else{
+        else {
             var tabCars = [];
             var bigtabCars = [];
             var i = 0;
             //Mappage des voitures
-            bigtabCars = await allCars.then( 
+            bigtabCars = await allCars.then(
                 function (cars) {
-                    cars.map( 
+                    cars.map(
                         function (voiture) {
-                            tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} /> )
+                            tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} />)
                             i = i + 1
                             return tabCars
                         }
@@ -149,21 +146,59 @@ class SelectionVoiture extends React.Component {
      * Vérifie que tous les champs soient complets et envoies les données de la voiture au redux
      * @param {*} data les données à envoyer
      */
-    handleFormFullField(data, propsnavigation){
-        if(data[0] == null){
-            var allFieldsCompleted = false;
+    handleFormFullField(data, propsnavigation) {
+        // Mise en forme de la voiture
+        console.log(data);
+        data = {
+            "model": data.model,
+            "subscription": "",
+            "maxAutonomy": data.maxAutonomy,
+            "currentAutonomy": data.currentAutonomy,
+            "batteryType": data.batteryType,
+            "capacity": data.maxWattage,
+            "courantConnecteurs": [
+                {
+                    "puissance": data.puissance,
+                    "courant": data.courant,
+                    "connecteur": data.connecteur,
+                }
+            ],
+        };
+        console.log(data);
+        var allFieldsCompleted = false
+        // Vérifiez que l'object data existe
+        if (data && Object.keys(data).length > 0) {
+            // Vérifie que tous les champs sont remplis
+            if (data.batteryType && Object.keys(data.batteryType).length > 0
+                && data.currentAutonomy && Object.keys(data.currentAutonomy).length > 0
+                && data.maxAutonomy && Object.keys(data.maxAutonomy).length > 0
+                && data.capacity && Object.keys(data.capacity).length > 0
+                && data.model && Object.keys(data.model).length > 0
+                && data.courantConnecteurs[0].courant && Object.keys(data.courantConnecteurs[0].courant).length > 0
+                && data.courantConnecteurs[0].puissance && Object.keys(data.courantConnecteurs[0].puissance).length > 0
+                && data.courantConnecteurs[0].connecteur && Object.keys(data.courantConnecteurs[0].connecteur).length > 0) {
+                allFieldsCompleted = true;
+            }
+            else {
+                allFieldsCompleted = false;
+            }
         }
-        else{
-            var allFieldsCompleted = true;
+        else {
+            allFieldsCompleted = false;
         }
+
+        console.log(allFieldsCompleted);
         //Met à false si il manque une donnée
-        for (var property in data){
-            if(data.hasOwnProperty(property)){
-                if(data[property] == null){
+        for (var property in data) {
+            if (data.hasOwnProperty(property)) {
+                if (data[property] == null) {
                     allFieldsCompleted = false;
                 }
             }
         }
+
+        console.log(allFieldsCompleted);
+
         //On envoie les données si tous les champs sont complétés
         if (allFieldsCompleted) {
             const action = { type: 'CAR_PICKED_BY_USER', value: data }
@@ -180,16 +215,16 @@ class SelectionVoiture extends React.Component {
      * Gestion du click du bouton Sélectionner.
      * @param {*} data les données de la voiture à sauvegarder dans le state.modeleSelected
      */
-    handleCarSelected(data){
+    handleCarSelected(data) {
         this.showDialog(true);
         //Enregistrement des données de la voiture 
-        this.setState({modeleSelected: data});
+        this.setState({ modeleSelected: data });
     }
 
     /**
      * Gestion du click sur le bouton Annuler de la boite de dialogue
      */
-    handleCancelButtonDialog(){
+    handleCancelButtonDialog() {
         this.showDialog(false);
     }
 
@@ -197,27 +232,27 @@ class SelectionVoiture extends React.Component {
      * Gestion de l'affichage de la boite de dialogue
      * @param {*} isShow true : affiche la boite, false : cache la boite
      */
-    showDialog(isShow){
-        this.setState({isDialogVisible: isShow});
-      }
+    showDialog(isShow) {
+        this.setState({ isDialogVisible: isShow });
+    }
 
     /**
     * Gestion du click sur le bouton Valider de la boite de dialogue
     */
-    handleValidateButtonDialog(propsnavigation){
+    handleValidateButtonDialog(propsnavigation) {
         //Ferme la boite de dialogue
         this.showDialog(false);
         var autonomie = parseFloat(this.state.autonomieSelected)
-        if(isNaN(autonomie)){
+        if (isNaN(autonomie)) {
             Toast.showWithGravity("L'autonomie renseignée n'est pas un nombre.", Toast.LONG, Toast.BOTTOM);
             this.showDialog(true);
         }
-        else{
+        else {
             var dataCarSelected = {};
             //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
-            for(var property in this.state.modeleSelected){
-                if(this.state.modeleSelected.hasOwnProperty(property)){
-                    if(property != 'currentAutonomy'){
+            for (var property in this.state.modeleSelected) {
+                if (this.state.modeleSelected.hasOwnProperty(property)) {
+                    if (property != 'currentAutonomy') {
                         Object.defineProperty(dataCarSelected, property, {
                             value: this.state.modeleSelected[property],
                             writable: true,
@@ -277,9 +312,9 @@ class SelectionVoiture extends React.Component {
                     <View>
                         <Dialog.Container visible={this.state.isDialogVisible}>
                             <Dialog.Title>Entrer l'autonomie actuelle de votre véhicule</Dialog.Title>
-                            <Dialog.Input type="number" onChangeText={(arg) => this.setState({autonomieSelected: arg})}/>
-                            <Dialog.Button label="Annuler" onPress={() => this.handleCancelButtonDialog()}/>
-                            <Dialog.Button label="Valider" onPress={() => this.handleValidateButtonDialog(propsnavigation)}/>
+                            <Dialog.Input type="number" onChangeText={(arg) => this.setState({ autonomieSelected: arg })} />
+                            <Dialog.Button label="Annuler" onPress={() => this.handleCancelButtonDialog()} />
+                            <Dialog.Button label="Valider" onPress={() => this.handleValidateButtonDialog(propsnavigation)} />
                         </Dialog.Container>
                     </View>
                 </View>

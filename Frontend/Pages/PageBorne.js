@@ -12,6 +12,7 @@ import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson';
 import { getItineraires } from '../Fonctions/Itineraire';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
+import { connect } from 'react-redux';
 
 class PageBorne extends React.Component {
 
@@ -159,6 +160,9 @@ class PageBorne extends React.Component {
 
     render() {
         // récupération de la voiture dans le redux
+        var car_user = this.props.car;
+        console.log(car_user);
+        
         var car = {
             "model": "Renault ZOE R135",
             "subscription": "",
@@ -282,4 +286,16 @@ const styles = StyleSheet.create({
     },
 })
 
-export default PageBorne
+const mapStateToProps = (state) => {
+    return {
+        car: state.carSelected.car
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PageBorne)
