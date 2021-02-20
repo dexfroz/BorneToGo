@@ -35,8 +35,8 @@ public class PowerConnector extends Entry
 			}
 
 			for (PowerConnector pc : powerConnectors) {
-				if (pc != null && pc.getWattage() == wattage && pc.getPower().getName().equals(powerName) &&
-					pc.getConnector().getName().equals(connectorName)) {
+				if (pc != null && pc.getWattage() == wattage && pc.getPower().getName().equalsIgnoreCase(powerName) &&
+					pc.getConnector().getName().equalsIgnoreCase(connectorName)) {
 						return pc;
 				}
 			}

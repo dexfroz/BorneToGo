@@ -6,8 +6,6 @@ import jakarta.json.*;
 import java.sql.*;
 
 
-// TODO: make Car.getFromJson this able to work just with the model + currentAutonomy + 1 PowerConnector!
-
 public class Car extends Entry
 {
 	private String model = "";
@@ -145,6 +143,13 @@ public class Car extends Entry
 	}
 
 
+	// TODO: remove this, it is for testing only!
+	public void setMaxAutonomy(double maxAutonomy)
+	{
+		this.maxAutonomy = maxAutonomy;
+	}
+
+
 	public void setCurrentAutonomy(double autonomy)
 	{
 		this.currentAutonomy = Math.max(0., Math.min(autonomy, this.maxAutonomy));
@@ -165,6 +170,25 @@ public class Car extends Entry
 	}
 
 
+	// Find a car by its model, and set some fields. Returns null on failure:
+	public static Car find(String model, double currentAutonomy, ArrayList<PowerConnector> presentPowerConnectors)
+	{
+		ArrayList<Car> allCars = DatabaseConnector.getCars();
+
+		for (Car car : allCars) {
+			if (car.getModel().equalsIgnoreCase(model)) {
+				Car foundCar = car.copy(); // preventing side effects!
+				foundCar.setCurrentAutonomy(currentAutonomy);
+				foundCar.powerConnectors = presentPowerConnectors;
+				return foundCar;
+			}
+		}
+
+		System.err.println("\nError: no car matching the partially given one.\n");
+		return null;
+	}
+
+
 	// 'idCar' and 'idBattery' are not searched. Returns null on failure.
 	public static Car getFromJson(JsonObject json)
 	{
@@ -172,12 +196,8 @@ public class Car extends Entry
 		{
 			JsonObject carJson = json.getJsonObject("car");
 			String model = carJson.getString("model");
-			String subscription = carJson.getString("subscription");
-			double maxAutonomy = carJson.getJsonNumber​("maxAutonomy").doubleValue(); // in km
 			double currentAutonomy = carJson.getJsonNumber​("currentAutonomy").doubleValue(); // in km
-			double capacity = carJson.getJsonNumber​("capacity").doubleValue(); // in kWh
 			JsonArray powerConnectorArray = carJson.getJsonArray("courantConnecteurs");
-
 			ArrayList<PowerConnector> powerConnectors = new ArrayList<PowerConnector>();
 
 			if (powerConnectorArray.size() > 1) {
@@ -190,7 +210,6 @@ public class Car extends Entry
 				String powerName = powerConnectorJson.getString("courant");
 				String connectorName = powerConnectorJson.getString("connecteur");
 				double wattage = powerConnectorJson.getJsonNumber​("puissance").doubleValue(); // in kW
-
 				PowerConnector powerConnector = PowerConnector.find(powerName, connectorName, wattage);
 
 				if (powerConnector != null) {
@@ -199,7 +218,17 @@ public class Car extends Entry
 				}
 			}
 
-			return new Car(model, maxAutonomy, currentAutonomy, subscription, capacity, powerConnectors);
+			// Optional fields, if absent, some can be fetched from the database:
+			try {
+				String subscription = carJson.getString("subscription");
+				double maxAutonomy = carJson.getJsonNumber​("maxAutonomy").doubleValue(); // in km
+				double capacity = carJson.getJsonNumber​("capacity").doubleValue(); // in kWh
+				return new Car(model, maxAutonomy, currentAutonomy, subscription, capacity, powerConnectors);
+			}
+			catch (Exception e) {
+				System.out.println("\nWarning: incomplete car, trying to find a match...");
+				return find(model, currentAutonomy, powerConnectors); // powerConnectors has 1 element.
+			}
 		}
 		catch (Exception e) {
 			System.err.println("\nError: could not extract a car from the following json:");

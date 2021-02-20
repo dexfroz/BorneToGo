@@ -89,65 +89,6 @@ public class Station extends Coord
 	}
 
 
-	// Loads on demand the charging points for this station.
-	// This is not to be kept in memory for all stations at all times.
-	public ArrayList<ChargingPoint> getChargingPoints()
-	{
-		ArrayList<ChargingPoint> allChargingPoints = DatabaseConnector.getChargingPoints();
-		ArrayList<ChargingPoint> stationChargingPoints = new ArrayList<ChargingPoint>();
-
-		if (this.chargingPointsID == null) {
-			System.err.println("\nCould not get the charging points of a station: null 'chargingPointsID'.\n");
-			return stationChargingPoints;
-		}
-
-		if (allChargingPoints == null) {
-			System.err.println("\nCould not get the charging points of a station: database loading failed.\n");
-			return stationChargingPoints;
-		}
-
-		for (int id : this.chargingPointsID)
-		{
-			// This does not assume any good property on IDs:
-			for (ChargingPoint c : allChargingPoints)
-			{
-				if (c.getId() == id) {
-					stationChargingPoints.add(c);
-					break;
-				}
-			}
-		}
-
-		if (stationChargingPoints.size() != this.chargingPointsID.size()) {
-			System.err.println("\nSome charging points IDs where invalid.\n");
-		}
-
-		return stationChargingPoints;
-	}
-
-
-	public JsonObject getJsonData(Car car)
-	{
-		// The backend needs to output all compatible charging points - available or not!
-		ArrayList<ChargingPoint> compatibleChargingPoints = getCompatibleChargingPoints(car);
-
-		JsonArrayBuilder chargingPointsBuilder = Json.createArrayBuilder();
-
-		for (ChargingPoint chargingPoint : compatibleChargingPoints) {
-			chargingPointsBuilder.add(chargingPoint.toJson());
-		}
-
-		JsonArray chargingPointsArray = chargingPointsBuilder.build();
-
-		String paymentName = this.payment == null ? "" : this.payment.getName();
-
-		return Json.createObjectBuilder()
-			.add("paymentStatus", paymentName)
-			.add("bornes", chargingPointsArray)
-			.build();
-	}
-
-
 	public static ArrayList<Station> getFreeAccessPublicStations()
 	{
 		ArrayList<Station> thelist = new ArrayList<Station>();
@@ -170,9 +111,39 @@ public class Station extends Coord
 	}
 
 
-	public boolean hasUsableCompatibleChargingPoint(Car car)
+	// Loads on demand the charging points for this station.
+	// This is not to be kept in memory for all stations at all times.
+	public ArrayList<ChargingPoint> getChargingPoints()
 	{
-		return true; // TODO, using the car and list of charging points.
+		ArrayList<ChargingPoint> allChargingPoints = DatabaseConnector.getChargingPoints();
+		ArrayList<ChargingPoint> stationChargingPoints = new ArrayList<ChargingPoint>();
+
+		if (this.chargingPointsID == null) {
+			System.err.println("\nCould not get the charging points of a station: null 'chargingPointsID'.\n");
+			return stationChargingPoints;
+		}
+
+		if (allChargingPoints == null) {
+			System.err.println("\nCould not get the charging points of a station: database loading failed.\n");
+			return stationChargingPoints;
+		}
+
+		for (int id : this.chargingPointsID)
+		{
+			// This does not assume any good property on IDs:
+			for (ChargingPoint c : allChargingPoints) {
+				if (c.getId() == id) {
+					stationChargingPoints.add(c);
+					break;
+				}
+			}
+		}
+
+		if (stationChargingPoints.size() != this.chargingPointsID.size()) {
+			System.err.println("\nSome charging points IDs where invalid.\n");
+		}
+
+		return stationChargingPoints;
 	}
 
 
@@ -181,6 +152,12 @@ public class Station extends Coord
 	{
 		// TODO, using the car and list of charging points.
 		return this.getChargingPoints();
+	}
+
+
+	public boolean hasUsableCompatibleChargingPoint(Car car)
+	{
+		return true; // TODO, using the car and list of charging points.
 	}
 
 
@@ -195,6 +172,28 @@ public class Station extends Coord
 	public double getChargingCost(Car car)
 	{
 		return 0.; // TODO
+	}
+
+
+	public JsonObject getJsonData(Car car)
+	{
+		// The backend needs to output all compatible charging points - available or not!
+		ArrayList<ChargingPoint> compatibleChargingPoints = getCompatibleChargingPoints(car);
+
+		JsonArrayBuilder chargingPointsBuilder = Json.createArrayBuilder();
+
+		for (ChargingPoint chargingPoint : compatibleChargingPoints) {
+			chargingPointsBuilder.add(chargingPoint.toJson());
+		}
+
+		JsonArray chargingPointsArray = chargingPointsBuilder.build();
+
+		String paymentName = this.payment == null ? "" : this.payment.getName();
+
+		return Json.createObjectBuilder()
+			.add("paymentStatus", paymentName)
+			.add("bornes", chargingPointsArray)
+			.build();
 	}
 
 

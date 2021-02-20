@@ -203,7 +203,7 @@ public class Route
 
 			String status = json.getString("code");
 
-			if (! status.equals("Ok")) {
+			if (! status.equalsIgnoreCase("Ok")) {
 				System.err.println("\nWrong status found in routes json.\n");
 				return null;
 			}
