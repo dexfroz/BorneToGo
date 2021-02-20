@@ -244,16 +244,16 @@ def createSQLFilefromlist(data,filename):
 def correctionString(texte):
     return texte.replace("'","\\'")
 
-createSQLFilefromlist(INSERT_INTO_SQLCreator_VCC(loadJSONfromFile("dataVoitureBatterie.json")),"vcc.sql")
-createSQLFilefromlist(INSERT_INTO_SQLCreator_batterie(loadJSONfromFile("dataVoitureBatterie.json")),"batterie.sql")
-createSQLFilefromlist(INSERT_INTO_SQLCreator_voiture(loadJSONfromFile("dataVoitureBatterie.json")),"voiture.sql")
+print("yap yap!")
 
-'''
-createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile("dataStationBorne.json")),"borne.sql")
-createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile("dataStationBorne.json")),"station.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_VCC(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataVoitureBatterie.json")),r"BDD\vcc.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_batterie(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataVoitureBatterie.json")),r"BDD\batterie.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_voiture(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataVoitureBatterie.json")),r"BDD\voiture.sql")
 
-createSQLFilefromlist(INSERT_INTO_SQLCreator_connecteur(loadJSONfromFile("dataReference.json")),"connecteur.sql")
-createSQLFilefromlist(INSERT_INTO_SQLCreator_courant(loadJSONfromFile("dataReference.json")),"courant.sql")
-createSQLFilefromlist(INSERT_INTO_SQLCreator_status(loadJSONfromFile("dataReference.json")),"status.sql")
-createSQLFilefromlist(INSERT_INTO_SQLCreator_paiement(loadJSONfromFile("dataReference.json")),"paiement.sql")
-'''
+createSQLFilefromlist(INSERT_INTO_SQLCreator_borne(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataStationBorne.json")),r"BDD\borne.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_station(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataStationBorne.json")),r"BDD\station.sql")
+
+createSQLFilefromlist(INSERT_INTO_SQLCreator_connecteur(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataReference.json")),r"BDD\connecteur.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_courant(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataReference.json")),r"BDD\courant.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_status(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataReference.json")),r"BDD\status.sql")
+createSQLFilefromlist(INSERT_INTO_SQLCreator_paiement(loadJSONfromFile(r"D:\2-Documents\BorneToGo\BDD\dataReference.json")),r"BDD\paiement.sql")
