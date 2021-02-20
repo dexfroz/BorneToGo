@@ -160,27 +160,28 @@ class PageBorne extends React.Component {
 
     render() {
         // récupération de la voiture dans le redux
-        var car_user = this.props.car;
-        
-        var car = {
-            "model": "Renault ZOE R135",
-            "subscription": "",
-            "maxAutonomy": 390,
-            "currentAutonomy": 390,
-            "capacity": 52,
-            "courantConnecteurs": [
-                {
-                    "courant": "AC (Three-Phase)",
-                    "connecteur": "IEC 62196-2 Type 2",
-                    "puissance": 22
-                },
-                {
-                    "courant": "DC",
-                    "connecteur": "IEC 62196-3 Configuration FF",
-                    "puissance": 50
-                }
-            ]
-        };
+        var car = this.props.car;
+        console.log(car);
+
+        // var car = {
+        //     "model": "Renault ZOE R135",
+        //     "subscription": "",
+        //     "maxAutonomy": 390,
+        //     "currentAutonomy": 390,
+        //     "capacity": 52,
+        //     "courantConnecteurs": [
+        //         {
+        //             "courant": "AC (Three-Phase)",
+        //             "connecteur": "IEC 62196-2 Type 2",
+        //             "puissance": 22
+        //         },
+        //         {
+        //             "courant": "DC",
+        //             "connecteur": "IEC 62196-3 Configuration FF",
+        //             "puissance": 50
+        //         }
+        //     ]
+        // };
 
         // On récupère le useCase
         var useCase = "fastest";

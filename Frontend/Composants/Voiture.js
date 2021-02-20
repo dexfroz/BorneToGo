@@ -13,6 +13,7 @@ class Voiture extends PureComponent {
     }
 
     render() {
+        console.log(this.props)
         return (
             <View style={styles.container}>
                 <View style={styles.sousContainer}>
@@ -21,13 +22,13 @@ class Voiture extends PureComponent {
                         <Text style={styles.info}>{this.props.model}</Text>
                     </View>
                     <View>
-                        <Text style={styles.title}>Puiss Max</Text>
-                        <Text style={styles.info}>{this.props.maxWattage} kWh</Text>
+                        <Text style={styles.title}>Capacité</Text>
+                        <Text style={styles.info}>{this.props.capacity} kWh</Text>
                     </View>
                 </View>
                 <View style={styles.sousContainer}>
                     <View>
-                        <Text style={styles.title}>Capacite</Text>
+                        <Text style={styles.title}>Autonomie maximale</Text>
                         <Text style={styles.info}>{this.props.maxAutonomy} km</Text>
                     </View>
                     <View>
