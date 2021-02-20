@@ -9,7 +9,7 @@ public class Core
 {
 	// Allows for a more precise pathfinding when true (default),
 	// but makes the core function a bit slower:
-	public static final boolean enableFirstQuery = true;
+	private static final boolean enableFirstQuery = true;
 
 	private JsonObject output = null;
 	private String message = "";
@@ -85,7 +85,7 @@ public class Core
 			// First route query, replacing mockLegsLengths():
 
 			ArrayList<Coord> waypoints = userSteps;
-			ArrayList<Double> legsLengths = new ArrayList<Double>(); // need to be != null.
+			ArrayList<Double> legsLengths = null;
 
 			if (enableFirstQuery && userSteps.size() > 1) // querying the route API.
 			{
@@ -134,7 +134,11 @@ public class Core
 			Route foundRoute = Route.getFromJson(secondQuery, car, path, Route.AddingData.ON);
 
 			if (foundRoute == null) {
-				return new Core(null, "Incorrect found route.");
+				return new Core(null, "Failure to output the final route.");
+			}
+
+			if (! foundRoute.getValidity()) {
+				return new Core(null, "Invalid final route.");
 			}
 
 			ArrayList<Route> routes = new ArrayList<Route>();

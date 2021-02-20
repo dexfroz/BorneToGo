@@ -166,14 +166,14 @@ public class Pathfinding
 	{
 		System.out.println("\n=> Starting the pathfinding computation.\n");
 
-		if (! Core.enableFirstQuery) { // using an estimation of the legs lengths.
+		if (legsLengths == null) { // using an estimation of the legs lengths.
 			legsLengths = mockLegsLengths(waypoints);
 		}
 
 		Car car = userCar.copy();
 
 		if (legsLengths.size() != waypoints.size() - 1) {
-			System.err.println("\nIncoherent list sizes, could not start the pathfinding.");
+			System.err.println("\nIncoherent legs length, could not start the pathfinding.");
 			return null;
 		}
 

@@ -13,7 +13,9 @@ public class Route
 	}
 
 	private static final double GAP_WARNING = 50.; // Minimal position change issuing a warning, in meters.
+	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.05;
 
+	private boolean routeValidity = true; // don't change this!
 	private double length; // in km
 	private double duration; // in sec
 	private double cost; // in euros
@@ -24,6 +26,12 @@ public class Route
 	private ArrayList<Double> legsDurations; // size n-1
 	private JsonObject geometry; // JsonObject containing the list of coordinates of the full path.
 	// N.B: faster than doing the previous JsonObject -> ArrayList<Coord> -> JsonObject conversion.
+
+
+	public boolean getValidity()
+	{
+		return this.routeValidity;
+	}
 
 
 	public double getLength()
@@ -162,11 +170,15 @@ public class Route
 	// are only estimates. Real autonomy left is computed here:
 	private void computeAutonomyLeft(Car car)
 	{
+		double autonomySucessThreshold = MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS * car.getMaxAutonomy();
 		this.autonomyLeft = car.getCurrentAutonomy();
 
 		for (int i = 0; i < this.legsLengths.size(); ++i)
 		{
 			this.autonomyLeft -= this.legsLengths.get(i);
+			this.routeValidity = this.routeValidity && this.autonomyLeft > autonomySucessThreshold;
+			// checking this before refilling!
+
 			Coord currentStep = this.waypoints.get(i + 1);
 
 			if (currentStep.isStation()) { // refilling!
@@ -224,6 +236,11 @@ public class Route
 
 				JsonObject routeJson = routesArray.getJsonObject(i);
 				JsonArray legsArray = routeJson.getJsonArray("legs");
+
+				if (legsArray.size() != path.size() - 1) {
+					System.err.println("\nIncoherent legs length in route creation!");
+					return null;
+				}
 
 				for (int j = 0; j < legsArray.size(); ++j) {
 					JsonObject leg = legsArray.getJsonObject(j);

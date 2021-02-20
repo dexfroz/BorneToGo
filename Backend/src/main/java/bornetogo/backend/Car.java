@@ -32,9 +32,9 @@ public class Car extends Entry
 		this.model = model;
 		this.subscription = subscription;
 		this.maxAutonomy = maxAutonomy;
-		this.currentAutonomy = currentAutonomy;
 		this.capacity = capacity;
 		this.powerConnectors = powerConnectors;
+		this.setCurrentAutonomy(currentAutonomy); // safer.
 	}
 
 
