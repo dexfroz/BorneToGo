@@ -164,7 +164,7 @@ public class Pathfinding
 	public static ArrayList<Coord> find(ArrayList<Station> allStations, Car userCar,
 		ArrayList<Coord> waypoints, ArrayList<Double> legsLengths)
 	{
-		System.out.println("Starting the pathfinding computation.\n");
+		System.out.println("\n=> Starting the pathfinding computation.\n");
 
 		if (! Core.enableFirstQuery) { // using an estimation of the legs lengths.
 			legsLengths = mockLegsLengths(waypoints);

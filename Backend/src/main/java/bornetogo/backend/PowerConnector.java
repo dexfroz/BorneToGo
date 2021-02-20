@@ -1,23 +1,52 @@
 package main.java.bornetogo.backend;
 
+import java.io.*;
+import java.util.*;
 import jakarta.json.*;
 import java.sql.*;
 
 
 public class PowerConnector extends Entry
 {
-	private Connector connector;
 	private Power power;
+	private Connector connector;
 	private double wattage; // in kW
 
 	// In reguards to the database:
 	private int idPowerConnector;
 	private int idCar;
-	private int idConnector;
 	private int idPower;
+	private int idConnector;
 
 
 	public PowerConnector() {}
+
+
+	// Used with user given names. Returns null on failure.
+	public static PowerConnector find(String powerName, String connectorName, double wattage)
+	{
+		try
+		{
+			ArrayList<PowerConnector> powerConnectors = DatabaseConnector.getPowerConnectors();
+
+			if (powerConnectors == null) {
+				System.err.println("null 'powerConnectors' in PowerConnector()\n");
+				return null;
+			}
+
+			for (PowerConnector pc : powerConnectors) {
+				if (pc != null && pc.getWattage() == wattage && pc.getPower().getName().equals(powerName) &&
+					pc.getConnector().getName().equals(connectorName)) {
+						return pc;
+				}
+			}
+		}
+		catch (Exception e) {
+			System.err.println("\nError while building a PowerConnector from user given names.\n");
+		}
+
+		return null;
+	}
 
 
 	public PowerConnector query(ResultSet answer)
@@ -108,5 +137,24 @@ public class PowerConnector extends Entry
 			.add("connecteur", connectorName)
 			.add("puissance", this.wattage)
 			.build();
+	}
+
+
+	// For testing only:
+	public static ArrayList<PowerConnector> mock()
+	{
+		ArrayList<PowerConnector> powerConnectors = new ArrayList<PowerConnector>();
+		PowerConnector powerConnector = new PowerConnector();
+
+		powerConnector.power = Power.mock();
+		powerConnector.connector = Connector.mock();
+		powerConnector.wattage = 22.;
+		powerConnector.idPowerConnector = 0;
+		powerConnector.idCar = 0;
+		powerConnector.idPower = 0;
+		powerConnector.idConnector = 0;
+
+		powerConnectors.add(powerConnector);
+		return powerConnectors;
 	}
 }

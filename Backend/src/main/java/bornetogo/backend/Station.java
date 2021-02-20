@@ -150,13 +150,18 @@ public class Station extends Coord
 
 	public static ArrayList<Station> getFreeAccessPublicStations()
 	{
-		ArrayList<Station> stations = DatabaseConnector.getStations();
 		ArrayList<Station> thelist = new ArrayList<Station>();
+		ArrayList<Station> stations = DatabaseConnector.getStations();
+
+		if (stations == null) {
+			System.err.println("null 'stations' in FreeAccessPublicStations()\n");
+			return thelist;
+		}
 
 		for (Station s : stations) {
 			Payment p = s.getPayment();
-			if (p.isPayAtLocation() && ! p.isMembershipRequired() && ! p.isAccessKeyRequired() &&
-				p.getName().indexOf("Public") != -1) {
+			if (p != null && p.isPayAtLocation() && ! p.isMembershipRequired() &&
+				! p.isAccessKeyRequired() && p.getName().indexOf("Public") != -1) {
 					thelist.add(s);
 			}
 		}

@@ -88,7 +88,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<PowerConnector> getPowerConnectors()
+	public static ArrayList<PowerConnector> getPowerConnectors()
 	{
 		if (! arePowerConnectorsLoaded) {
 			Entry entry = new PowerConnector();
@@ -104,7 +104,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<StationChargingPoint> getStationChargingPoints()
+	public static ArrayList<StationChargingPoint> getStationChargingPoints()
 	{
 		if (! areStationChargingPointsLoaded) {
 			Entry entry = new StationChargingPoint();
@@ -116,7 +116,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Battery> getBatteries()
+	public static ArrayList<Battery> getBatteries()
 	{
 		if (! areBatteriesLoaded) {
 			Entry entry = new Battery();
@@ -128,7 +128,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Status> getStatuses()
+	public static ArrayList<Status> getStatuses()
 	{
 		if (! areStatusesLoaded) {
 			Entry entry = new Status();
@@ -140,7 +140,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Power> getPowers()
+	public static ArrayList<Power> getPowers()
 	{
 		if (! arePowersLoaded) {
 			Entry entry = new Power();
@@ -152,7 +152,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Connector> getConnectors()
+	public static ArrayList<Connector> getConnectors()
 	{
 		if (! areConnectorsLoaded) {
 			Entry entry = new Connector();
@@ -164,7 +164,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Payment> getPayments()
+	public static ArrayList<Payment> getPayments()
 	{
 		if (! arePaymentsLoaded) {
 			Entry entry = new Payment();

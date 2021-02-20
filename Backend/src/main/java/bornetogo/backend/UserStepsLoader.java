@@ -58,7 +58,8 @@ public class UserStepsLoader
 			}
 		}
 		catch (Exception e) {
-			System.err.println("\nError while parsing a json: could not extract user steps.\n");
+			System.err.println("\nError: could not extract user steps from the following json:");
+			GetJson.safeJsonPrinting(input);
 			this.userSteps = null;
 		}
 	}
@@ -74,6 +75,7 @@ public class UserStepsLoader
 		try
 		{
 			// Sending BATCH requests to the geocoding API, to retrieve the location coordinates from the name and address:
+			System.out.println("=> Completing user steps.\n");
 			JsonObject answerJson = QueryAPIs.queryFromLocation("mapquestapi", this.searchedLocations);
 			JsonArray resultsArray = answerJson.getJsonArray("results");
 

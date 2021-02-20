@@ -111,7 +111,7 @@ public class QueryAPIs
 			String url = "http://www.mapquestapi.com/geocoding/v1/batch?key=" + apiKey +
 						 "&outFormat=json" + requestbatch + options;
 
-			System.out.println("\nGeocoding query:\n\n-> " + url + "\n");
+			System.out.println("\n=> Geocoding query:\n\n-> " + url + "\n");
 			return GetJson.jsonFromUrl(url);
 		}
 
@@ -184,7 +184,7 @@ public class QueryAPIs
 		String url = "http://router.project-osrm.org/" + routeMode + "/v1/car/" +
 					 formatCoordinateList(coordinates) + ".json?" + fullOptions;
 
-		System.out.println("\nRoute query:\n\n-> " + url + "\n");
+		System.out.println("\n=> Route query:\n\n-> " + url + "\n");
 		return GetJson.jsonFromUrl(url);
 	}
 
