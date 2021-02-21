@@ -149,6 +149,12 @@ public class Car extends Entry
 	}
 
 
+	public void refill()
+	{
+		this.setCurrentAutonomy(this.getMaxAutonomy());
+	}
+
+
 	public String toString()
 	{
 		return "Car: " + this.model + "\nSubscription: " + this.subscription + "\nMax autonomy: " +

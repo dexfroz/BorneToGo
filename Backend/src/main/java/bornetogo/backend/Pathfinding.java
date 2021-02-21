@@ -7,7 +7,7 @@ import java.util.*;
 public class Pathfinding
 {
 	private static final double DIST_BOUND_COEFF = 1.5; // unitless.
-	private static final double ELLIPSE_RATIO = 1.5; // unitless, must be > 1.
+	private static final double INV_ECCENTRICITY = 1.5; // unitless, must be > 1.
 	private static final double RANGE_MARGIN = 20.; // in km
 	private static final int MIN_SAFETY_STATIONS_NUMBER = 1; // Must be > 0.
 	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.10; // greater than the one used in Route.
@@ -35,10 +35,10 @@ public class Pathfinding
 
 
 	// Checks if the given point is inside the ellipse of focus 'ref_1' and 'ref_2',
-	// and with major axis of length: distance(ref_1, ref_2) * ELLIPSE_RATIO
+	// and with major axis of length: distance(ref_1, ref_2) * INV_ECCENTRICITY
 	private static boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
-		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * ELLIPSE_RATIO;
+		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * INV_ECCENTRICITY;
 	}
 
 
@@ -126,7 +126,7 @@ public class Pathfinding
 
 		if (nextStep.isStation()) {
 			// System.out.println("\nLucky one!");
-			car.setCurrentAutonomy(car.getMaxAutonomy());
+			car.refill();
 		}
 	}
 
@@ -155,7 +155,7 @@ public class Pathfinding
 		}
 
 		path.add(chosenStation);
-		car.setCurrentAutonomy(car.getMaxAutonomy());
+		car.refill();
 		return chosenStation;
 	}
 

@@ -102,7 +102,7 @@ public class Station extends Coord
 		for (Station s : stations) {
 			Payment p = s.getPayment();
 			if (p != null && p.isPayAtLocation() && ! p.isMembershipRequired() &&
-				! p.isAccessKeyRequired() && p.getName().indexOf("Public") != -1) {
+				! p.isAccessKeyRequired() && p.getName().toLowerCase().indexOf("public") != -1) {
 					thelist.add(s);
 			}
 		}
@@ -113,7 +113,7 @@ public class Station extends Coord
 
 	// Loads on demand the charging points for this station.
 	// This is not to be kept in memory for all stations at all times.
-	public ArrayList<ChargingPoint> getChargingPoints()
+	public ArrayList<ChargingPoint> fetchChargingPoints()
 	{
 		ArrayList<ChargingPoint> allChargingPoints = DatabaseConnector.getChargingPoints();
 		ArrayList<ChargingPoint> stationChargingPoints = new ArrayList<ChargingPoint>();
@@ -128,14 +128,13 @@ public class Station extends Coord
 			return stationChargingPoints;
 		}
 
-		for (int id : this.chargingPointsID)
-		{
-			// This does not assume any good property on IDs:
-			for (ChargingPoint c : allChargingPoints) {
-				if (c.getId() == id) {
-					stationChargingPoints.add(c);
-					break;
-				}
+		Entry entry = new ChargingPoint();
+		boolean chargingPointsCheck = entry.checkEntriesIDrange(allChargingPoints); // used for speed!
+
+		for (int id : this.chargingPointsID) {
+			ChargingPoint cp = entry.findEntryID(allChargingPoints, id, chargingPointsCheck);
+			if (cp != null) {
+				stationChargingPoints.add(cp);
 			}
 		}
 
@@ -150,21 +149,59 @@ public class Station extends Coord
 	// This must _not_ filter charging points on availability:
 	public ArrayList<ChargingPoint> getCompatibleChargingPoints(Car car)
 	{
-		// TODO, using the car and list of charging points.
-		return this.getChargingPoints();
+		ArrayList<ChargingPoint> stationChargingPoints = this.fetchChargingPoints();
+		ArrayList<ChargingPoint> compatibles = new ArrayList<ChargingPoint>();
+
+		for (ChargingPoint c : stationChargingPoints) {
+			for (PowerConnector p : car.getPowerConnectors()) {
+				if (c.getConnector().getId() == p.getConnector().getId()) {
+					compatibles.add(c);
+					break;
+				}
+			}
+		}
+
+		return compatibles;
+	}
+
+
+	public ArrayList<ChargingPoint> getUsableCompatibleChargingPoints(Car car)
+	{
+		ArrayList<ChargingPoint> compatibles = this.getCompatibleChargingPoints(car);
+		ArrayList<ChargingPoint> usableCompatibles = new ArrayList<ChargingPoint>();
+
+		for (ChargingPoint cp : compatibles) {
+			if (cp.isUsable()) {
+				usableCompatibles.add(cp);
+			}
+		}
+
+		return usableCompatibles;
 	}
 
 
 	public boolean hasUsableCompatibleChargingPoint(Car car)
 	{
-		return true; // TODO, using the car and list of charging points.
+		return this.getUsableCompatibleChargingPoints(car).size() > 0;
 	}
 
 
 	// In seconds.
 	public double getChargingDuration(Car car)
 	{
-		return 0.; // TODO
+		ArrayList<ChargingPoint> usableCompatibles = this.getUsableCompatibleChargingPoints(car);
+		double maxWattage = 0.;
+
+		for (ChargingPoint cp : usableCompatibles) {
+			maxWattage = Math.max(maxWattage, cp.getWattage());
+		}
+
+		if (maxWattage == 0.) {
+			return 0.; // clean failure.
+		}
+
+		double fillingRatio = 1. - car.getCurrentAutonomy() / car.getMaxAutonomy();
+		return Math.round(3600. * fillingRatio * car.getCapacity() / maxWattage); // in seconds.
 	}
 
 
@@ -177,7 +214,7 @@ public class Station extends Coord
 
 	public JsonObject getJsonData(Car car)
 	{
-		// The backend needs to output all compatible charging points - available or not!
+		// The backend needs to output all compatible charging points - usable or not!
 		ArrayList<ChargingPoint> compatibleChargingPoints = getCompatibleChargingPoints(car);
 
 		JsonArrayBuilder chargingPointsBuilder = Json.createArrayBuilder();
@@ -192,6 +229,7 @@ public class Station extends Coord
 
 		return Json.createObjectBuilder()
 			.add("paymentStatus", paymentName)
+			.add("duration", this.getDuration())
 			.add("bornes", chargingPointsArray)
 			.build();
 	}

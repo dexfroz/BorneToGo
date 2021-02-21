@@ -45,7 +45,7 @@ public class Output
 				for (int i = 0; i < route.getLegsLengths().size(); ++i)
 				{
 					JsonObject legJson = Json.createObjectBuilder()
-						.add("length", route.getLegsLengths().get(i))
+						.add("length", Math.round(route.getLegsLengths().get(i) * 1000.) / 1000.)
 						.add("duration", route.getLegsDurations().get(i))
 						.build();
 
@@ -57,7 +57,7 @@ public class Output
 				// fullPathJson:
 
 				JsonObject fullPathJson = Json.createObjectBuilder()
-					.add("length", route.getLength())
+					.add("length", Math.round(route.getLength() * 1000.) / 1000.)
 					.add("duration", route.getDuration())
 					.add("cost", route.getCost())
 					.add("autonomyLeft", route.getAutonomyLeft())

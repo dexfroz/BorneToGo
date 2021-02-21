@@ -5,12 +5,12 @@ import java.util.*;
 import jakarta.json.*;
 
 
-// Mocking the Core program, for benchmarking the pathfinding results:
+// Mocking the Core program, for benchmarking the pathfinding results, using real data:
 public class Trial
 {
 	private static final boolean ENABLE_FIRST_QUERY = true;
 	private static final double MIN_STEP_DIST = 500.; // in km
-	private static final long COOLDOWN = 5000; // in ms
+	private static final long COOLDOWN = 2500; // in ms
 
 
 	private static ArrayList<Coord> generateUserSteps(int maxStepsNumber)
@@ -45,10 +45,12 @@ public class Trial
 		{
 			System.out.println("\nStarting the trial.\n");
 
-			Car car = new Car("Tesla cybertruck", 200, 100, "None");
+			// Note: database content _must_ be used for this to be relevant.
 
-			// ArrayList<Station> allStations = Station.bigMock();
-			ArrayList<Station> allStations = DatabaseConnector.getStations(); // real deal.
+			ArrayList<Station> allStations = DatabaseConnector.getStations();
+
+			Car car = DatabaseConnector.getCars().get(0).copy();
+			car.setCurrentAutonomy(car.getMaxAutonomy() / 2.);
 
 			int pathSucessCount = 0;
 			int pathValidityCount = 0;

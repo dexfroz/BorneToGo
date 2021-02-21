@@ -153,40 +153,30 @@ public class Route
 	}
 
 
-	// Computes the cost of the given route (in euros), and increases
-	// the duration of the route by the refilling time (in sec):
-	private void computeCostAndDuration(Car car)
+	// Computes the cost of the given route (in euros), the refilling duration for
+	// each station (in seconds), the overall route duration, and the final autonomy.
+	private void computeCostDurationAutonomyLeft(Car userCar)
 	{
-		for (int i = 0; i < this.waypoints.size(); ++i)
-		{
-			Coord waypoint = this.waypoints.get(i);
-			this.cost += waypoint.getChargingCost(car);
-			this.duration += waypoint.getChargingDuration(car);
-		}
-	}
-
-
-	// 'car' object was not modified by the pathfinding, since found lengths
-	// are only estimates. Real autonomy left is computed here:
-	private void computeAutonomyLeft(Car car)
-	{
+		Car car = userCar.copy();
 		double autonomySucessThreshold = MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS * car.getMaxAutonomy();
-		this.autonomyLeft = car.getCurrentAutonomy();
 
 		for (int i = 0; i < this.legsLengths.size(); ++i)
 		{
-			this.autonomyLeft -= this.legsLengths.get(i);
-			this.routeValidity = this.routeValidity && this.autonomyLeft > autonomySucessThreshold;
+			car.setCurrentAutonomy(car.getCurrentAutonomy() - this.legsLengths.get(i));
+			this.routeValidity = this.routeValidity && car.getCurrentAutonomy() >= autonomySucessThreshold;
 			// checking this before refilling!
 
-			Coord currentStep = this.waypoints.get(i + 1);
+			Coord waypoint = this.waypoints.get(i + 1);
+			this.cost += waypoint.getChargingCost(car);
 
-			if (currentStep.isStation()) { // refilling!
-				this.autonomyLeft = car.getMaxAutonomy();
+			if (waypoint.isStation()) {
+				waypoint.setDuration(waypoint.getChargingDuration(car)); // before refilling!
+				this.duration += waypoint.getDuration();
+				car.refill();
 			}
 		}
 
-		this.autonomyLeft = Math.max(0., this.autonomyLeft); // to be sure.
+		this.autonomyLeft = car.getCurrentAutonomy();
 	}
 
 
@@ -270,8 +260,7 @@ public class Route
 			route.updateWaypoints(path); // to be done before the following:
 
 			if (mode == AddingData.ON) {
-				route.computeCostAndDuration(car);
-				route.computeAutonomyLeft(car);
+				route.computeCostDurationAutonomyLeft(car);
 			}
 
 			return route;
