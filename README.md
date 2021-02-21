@@ -53,4 +53,4 @@ To shut down the docker containers, run:
 docker-compose up -d
 ```
 
-For details are provided in the respective READMEs of the frontend, backend and the database.
+More details are provided in the respective READMEs of the frontend, backend and the database.
