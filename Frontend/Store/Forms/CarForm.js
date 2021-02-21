@@ -21,16 +21,8 @@ class CarForm extends React.Component {
 					component={TextInputClass}
 				/>
 				<Field
-					name="batteryType"
-					label="Type de Prise"
-					textContentType="none"
-					autoCorrect={false}
-					autoCapitalize="none"
-					component={TextInputClass}
-				/>
-				<Field
-					name="maxWattage"
-					label="Puissance maximale autorisée"
+					name="capacity"
+					label="Capacité"
 					textContentType="none"
 					autoCorrect={false}
 					autoCapitalize="none"
@@ -38,7 +30,7 @@ class CarForm extends React.Component {
 				/>
 				<Field
 					name="maxAutonomy"
-					label="Capacité"
+					label="Autonomie maximale"
 					textContentType="none"
 					autoCorrect={false}
 					autoCapitalize="none"

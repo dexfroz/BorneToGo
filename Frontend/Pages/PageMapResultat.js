@@ -376,7 +376,7 @@ class PageMapResultat extends React.Component {
         try {
             this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
                 edgePadding: {
-                    bottom: 50, right: 50, top: 50, left: 50,
+                    bottom: 600, right: 50, top: 150, left: 50,
                 },
                 animated: true,
             });
@@ -391,7 +391,7 @@ class PageMapResultat extends React.Component {
         try {
             this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
                 edgePadding: {
-                    bottom: 50, right: 50, top: 50, left: 50,
+                    bottom: 600, right: 50, top: 150, left: 50,
                 },
                 animated: true,
             });

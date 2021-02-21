@@ -153,8 +153,7 @@ class SelectionVoiture extends React.Component {
             "subscription": "",
             "maxAutonomy": data.maxAutonomy,
             "currentAutonomy": data.currentAutonomy,
-            "batteryType": data.batteryType,
-            "capacity": data.maxWattage,
+            "capacity": data.capacity,
             "courantConnecteurs": [
                 {
                     "puissance": data.puissance,
@@ -168,8 +167,7 @@ class SelectionVoiture extends React.Component {
         // Vérifiez que l'object data existe
         if (data && Object.keys(data).length > 0) {
             // Vérifie que tous les champs sont remplis
-            if (data.batteryType && Object.keys(data.batteryType).length > 0
-                && data.currentAutonomy && Object.keys(data.currentAutonomy).length > 0
+            if (data.currentAutonomy && Object.keys(data.currentAutonomy).length > 0
                 && data.maxAutonomy && Object.keys(data.maxAutonomy).length > 0
                 && data.capacity && Object.keys(data.capacity).length > 0
                 && data.model && Object.keys(data.model).length > 0
@@ -194,6 +192,14 @@ class SelectionVoiture extends React.Component {
                 }
             }
         }
+
+        data.courantConnecteurs[0].puissance = parseFloat(data.courantConnecteurs[0].puissance)
+
+        data.capacity = parseFloat(data.capacity);
+
+        data.maxAutonomy = parseFloat(data.maxAutonomy);
+
+        data.currentAutonomy = parseFloat(data.currentAutonomy);
 
         //On envoie les données si tous les champs sont complétés
         if (allFieldsCompleted) {
@@ -257,7 +263,7 @@ class SelectionVoiture extends React.Component {
                     }
                     else {
                         Object.defineProperty(dataCarSelected, property, {
-                            value: this.state.autonomieSelected,
+                            value: parseFloat(this.state.autonomieSelected),
                             writable: true,
                             enumerable: true
                         });
