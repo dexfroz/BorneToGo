@@ -88,7 +88,7 @@ public abstract class Entry
 			}
 		}
 
-		System.err.printf("No entry of class '%s' found for id %d.\n",
+		System.err.printf("No entry of class '%s' found for id: %d.\n",
 			this.getClass().getSimpleName(), id);
 		return null;
 	}

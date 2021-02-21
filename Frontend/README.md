@@ -6,6 +6,13 @@ Developpement brand of the application's frontend part.
 
 The project aim to display the optimized path for an electric driver to reach a location. This part is done in ReactNative and manage the views and the navigation between them.
 
+## Installation of needed tools
+
+To develop with React Native, you will need Node.js that can be download at this link: https://nodejs.org/en/download/ (LTS version).
+
+To install the command line interface (CLI) of Expo:
+    ```npm install expo-cli --global```
+
 ## Deploiement 
 
 The project should work all alone. There is a yarn part that manage all dependecies with npm. Recover the project and in the folder use the command : 
@@ -13,7 +20,7 @@ The project should work all alone. There is a yarn part that manage all dependec
 then to run the project 
     ```npm run start```
     
-## Installation 
+## Installation of dependencies
 
 If you miss one or some dependencies, or you  need another dependency you can add another one using : 
     ```yarn add <dependency_name>```
@@ -53,12 +60,15 @@ If you have already logged in :
 ## Resolution of common bugs
 
 ### Not considered modifications
+
 Changes in a javascript-coded program are normally detected immediately and you don't need to rebuild the bundle of your application. However, sometimes, after an error, expo can update your bundle by itself. If you can, just click on the "Reload" button. If "Reload" is not accessible, in this case, turn off expo and turn it back on by rescanning your QR-code.
 
 ### New dependency not detected
+
 Sometimes, if you are working with another person adding a new dependency, it may not be detected despite its presence in your project's dependencies. In this case, you just have to do : ```npm install``` in the terminal and then it will work again.
 
 ### Added a connection to the Redux store
+
 Sometimes, when you connect a new component to the Redux store that is used to manage the global status of the application, you get this error:
 ```object is not a constructor (evaluating 'new ctor(props context)')```
 Don't panic, it just means that the expo cache is full, and the application can't retrieve the global state anymore. All you have to do is to solve it:

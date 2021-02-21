@@ -13,7 +13,9 @@ public class Route
 	}
 
 	private static final double GAP_WARNING = 50.; // Minimal position change issuing a warning, in meters.
+	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.05;
 
+	private boolean routeValidity = true; // don't change this!
 	private double length; // in km
 	private double duration; // in sec
 	private double cost; // in euros
@@ -24,6 +26,12 @@ public class Route
 	private ArrayList<Double> legsDurations; // size n-1
 	private JsonObject geometry; // JsonObject containing the list of coordinates of the full path.
 	// N.B: faster than doing the previous JsonObject -> ArrayList<Coord> -> JsonObject conversion.
+
+
+	public boolean getValidity()
+	{
+		return this.routeValidity;
+	}
 
 
 	public double getLength()
@@ -135,8 +143,8 @@ public class Route
 			double dist = 1000. * Coord.distance(inputCoord, receivedCoord); // in meters.
 
 			if (dist > GAP_WARNING) {
-				System.out.printf("\nGreat change in position (%.3f m) for waypoint:\n\n%s\n",
-					dist, inputCoord.toString());
+				System.out.printf("\nGreat change in position (%d m) for waypoint:\n\n%s\n",
+					Math.round(dist), inputCoord.toString());
 			}
 
 			inputCoord.move(receivedCoord.getLatitude(), receivedCoord.getLongitude());
@@ -145,36 +153,30 @@ public class Route
 	}
 
 
-	// Computes the cost of the given route (in euros), and increases
-	// the duration of the route by the refilling time (in sec):
-	private void computeCostAndDuration(Car car)
+	// Computes the cost of the given route (in euros), the refilling duration for
+	// each station (in seconds), the overall route duration, and the final autonomy.
+	private void computeCostDurationAutonomyLeft(Car userCar)
 	{
-		for (int i = 0; i < this.waypoints.size(); ++i)
-		{
-			Coord waypoint = this.waypoints.get(i);
-			this.cost += waypoint.getChargingCost(car);
-			this.duration += waypoint.getChargingDuration(car);
-		}
-	}
-
-
-	// 'car' object was not modified by the pathfinding, since found lengths
-	// are only estimates. Real autonomy left is computed here:
-	private void computeAutonomyLeft(Car car)
-	{
-		this.autonomyLeft = car.getCurrentAutonomy();
+		Car car = userCar.copy();
+		double autonomySucessThreshold = MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS * car.getMaxAutonomy();
 
 		for (int i = 0; i < this.legsLengths.size(); ++i)
 		{
-			this.autonomyLeft -= this.legsLengths.get(i);
-			Coord currentStep = this.waypoints.get(i + 1);
+			car.setCurrentAutonomy(car.getCurrentAutonomy() - this.legsLengths.get(i));
+			this.routeValidity = this.routeValidity && car.getCurrentAutonomy() >= autonomySucessThreshold;
+			// checking this before refilling!
 
-			if (currentStep.isStation()) { // refilling!
-				this.autonomyLeft = car.getMaxAutonomy();
+			Coord waypoint = this.waypoints.get(i + 1);
+			this.cost += waypoint.getChargingCost(car);
+
+			if (waypoint.isStation()) {
+				waypoint.setDuration(waypoint.getChargingDuration(car)); // before refilling!
+				this.duration += waypoint.getDuration();
+				car.refill();
 			}
 		}
 
-		this.autonomyLeft = Math.max(0., this.autonomyLeft); // to be sure.
+		this.autonomyLeft = car.getCurrentAutonomy();
 	}
 
 
@@ -191,7 +193,7 @@ public class Route
 
 			String status = json.getString("code");
 
-			if (! status.equals("Ok")) {
+			if (! status.equalsIgnoreCase("Ok")) {
 				System.err.println("\nWrong status found in routes json.\n");
 				return null;
 			}
@@ -225,6 +227,11 @@ public class Route
 				JsonObject routeJson = routesArray.getJsonObject(i);
 				JsonArray legsArray = routeJson.getJsonArray("legs");
 
+				if (legsArray.size() != path.size() - 1) {
+					System.err.println("\nIncoherent legs length in route creation!");
+					return null;
+				}
+
 				for (int j = 0; j < legsArray.size(); ++j) {
 					JsonObject leg = legsArray.getJsonObject(j);
 					double length = leg.getJsonNumber​("distance").doubleValue() / 1000.; // in km
@@ -253,8 +260,7 @@ public class Route
 			route.updateWaypoints(path); // to be done before the following:
 
 			if (mode == AddingData.ON) {
-				route.computeCostAndDuration(car);
-				route.computeAutonomyLeft(car);
+				route.computeCostDurationAutonomyLeft(car);
 			}
 
 			return route;

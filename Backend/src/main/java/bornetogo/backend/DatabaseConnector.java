@@ -88,7 +88,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<PowerConnector> getPowerConnectors()
+	public static ArrayList<PowerConnector> getPowerConnectors()
 	{
 		if (! arePowerConnectorsLoaded) {
 			Entry entry = new PowerConnector();
@@ -104,7 +104,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<StationChargingPoint> getStationChargingPoints()
+	public static ArrayList<StationChargingPoint> getStationChargingPoints()
 	{
 		if (! areStationChargingPointsLoaded) {
 			Entry entry = new StationChargingPoint();
@@ -116,7 +116,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Battery> getBatteries()
+	public static ArrayList<Battery> getBatteries()
 	{
 		if (! areBatteriesLoaded) {
 			Entry entry = new Battery();
@@ -128,7 +128,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Status> getStatuses()
+	public static ArrayList<Status> getStatuses()
 	{
 		if (! areStatusesLoaded) {
 			Entry entry = new Status();
@@ -140,7 +140,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Power> getPowers()
+	public static ArrayList<Power> getPowers()
 	{
 		if (! arePowersLoaded) {
 			Entry entry = new Power();
@@ -152,7 +152,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Connector> getConnectors()
+	public static ArrayList<Connector> getConnectors()
 	{
 		if (! areConnectorsLoaded) {
 			Entry entry = new Connector();
@@ -164,7 +164,7 @@ public class DatabaseConnector
 	}
 
 
-	private static ArrayList<Payment> getPayments()
+	public static ArrayList<Payment> getPayments()
 	{
 		if (! arePaymentsLoaded) {
 			Entry entry = new Payment();
@@ -207,7 +207,7 @@ public class DatabaseConnector
 			}
 		}
 
-		System.out.println("-> Added data to all cars.\n");
+		System.out.println("-> Added batteries and powerConnectors to all cars.\n");
 	}
 
 
@@ -217,7 +217,21 @@ public class DatabaseConnector
 			return;
 		}
 
-		Entry entry = new Station();
+		// Payments:
+
+		Entry entry = new Payment();
+		ArrayList<Payment> payments = getPayments();
+
+		for (Station station : allStations) {
+			Payment payment = entry.findEntryID(payments, station.getIdPayment(), false);
+			if (payment != null) {
+				station.setPayment(payment);
+			}
+		}
+
+		// ChargingPoints IDs:
+
+		entry = new Station();
 		boolean stationsCheck = entry.checkEntriesIDrange(allStations); // used for speed!
 		ArrayList<StationChargingPoint> stationChargingPoints = getStationChargingPoints();
 
@@ -228,7 +242,7 @@ public class DatabaseConnector
 			}
 		}
 
-		System.out.println("-> Added charging points IDs to all stations.\n");
+		System.out.println("-> Added payments and charging points IDs to all stations.\n");
 	}
 
 
@@ -274,7 +288,7 @@ public class DatabaseConnector
 			}
 		}
 
-		System.out.println("-> Added data to all charging points.\n");
+		System.out.println("-> Added statuses, connectors, and powers to all charging points.\n");
 	}
 
 
@@ -308,7 +322,7 @@ public class DatabaseConnector
 			}
 		}
 
-		System.out.println("-> Added data to all PowerConnectors.\n");
+		System.out.println("-> Added connectors and powers to all PowerConnectors.\n");
 	}
 
 
