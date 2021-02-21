@@ -65,6 +65,7 @@ Once the project is done, and needs to be deployed e.g on a web server, java and
 
 ## TODO:
 
+- Fix the UTF-8 encoding issue in the Backend output.
 - Add the feature of returning several routes in the answer.
 - Compute costs (waiting Database data).
 - Generate statistics about the found path.
