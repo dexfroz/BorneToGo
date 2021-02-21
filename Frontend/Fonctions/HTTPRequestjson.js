@@ -36,6 +36,7 @@ export function getRoutesFromAPI(useCase, optimOption, car, userSteps) {
         },
         body: JSON.stringify(setJsonInputBackend(useCase, optimOption, car, userSteps))
     };
+    console.log("JSON", setJsonInputBackend(useCase, optimOption, car, userSteps))
     return fetch(defaultUrl.concat('path'), requestOptions)
         .then((response) => response.json())
         .catch((error) => {

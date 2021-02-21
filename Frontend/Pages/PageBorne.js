@@ -43,6 +43,7 @@ class PageBorne extends React.Component {
             getRoutesFromAPI(useCase, optimOption, car, userSteps).then(data => {
                 if (data) {
                     if (data.routes && Object.keys(data).length > 0) {
+                        console.log("REPONSE", data);
                         var routes = getItineraires(data.routes);
                         this.state.data = routes;
                         this.afficherResultat();
