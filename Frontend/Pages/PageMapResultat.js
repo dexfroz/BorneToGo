@@ -129,6 +129,7 @@ class PageMapResultat extends React.Component {
                         marker={this.state.depart}
                         depart={true}
                         arrivee={false}
+                        station={true}
                         propsnavigation={this.props}
                     />
                 :
@@ -137,6 +138,7 @@ class PageMapResultat extends React.Component {
                     marker={this.state.depart}
                     depart={true}
                     arrivee={false}
+                    station={false}
                     propsnavigation={this.props}
                 />
         )
@@ -164,6 +166,7 @@ class PageMapResultat extends React.Component {
                         marker={this.state.arrivee}
                         depart={false}
                         arrivee={true}
+                        station={true}
                         propsnavigation={this.props}
                     />
                 :
@@ -172,6 +175,7 @@ class PageMapResultat extends React.Component {
                     marker={this.state.arrivee}
                     depart={false}
                     arrivee={true}
+                    station={false}
                     propsnavigation={this.props}
                 />
         )
@@ -182,7 +186,7 @@ class PageMapResultat extends React.Component {
         return (
             this.state.stations_etapes.map(item =>
                 item.isStation ?
-                    Object.keys(this.state.arrivee.data).length > 0 ?
+                    Object.keys(item.data).length > 0 ?
                         <StationMapNonSelectionnable
                             key={`Station-${this.state.idRouteCourant}-${item.idStation}-${item.location.latitude}-${item.location.longitude}`}
                             marker={item}
@@ -192,18 +196,20 @@ class PageMapResultat extends React.Component {
                         />
                         :
                         <MarkerItineraire
-                            key={`Station-${this.state.idRouteCourant}-${item.location.latitude}-${item.location.longitude}`}
+                            key={`Etape-${this.state.idRouteCourant}-${item.location.latitude}-${item.location.longitude}`}
                             marker={item}
                             depart={false}
                             arrivee={false}
+                            station={true}
                             propsnavigation={this.props}
                         />
                     :
                     <MarkerItineraire
-                        key={`Station-${this.state.idRouteCourant}-${item.location.latitude}-${item.location.longitude}`}
+                        key={`Etape-${this.state.idRouteCourant}-${item.location.latitude}-${item.location.longitude}`}
                         marker={item}
                         depart={false}
                         arrivee={false}
+                        station={false}
                         propsnavigation={this.props}
                     />
             )
@@ -376,7 +382,7 @@ class PageMapResultat extends React.Component {
         try {
             this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
                 edgePadding: {
-                    bottom: 50, right: 50, top: 50, left: 50,
+                    bottom: 600, right: 50, top: 150, left: 50,
                 },
                 animated: true,
             });
@@ -391,7 +397,7 @@ class PageMapResultat extends React.Component {
         try {
             this.mapRef.fitToCoordinates(this.state.itineraires[this.state.idRouteCourant].fullPath.geometry.coordinates, {
                 edgePadding: {
-                    bottom: 50, right: 50, top: 50, left: 50,
+                    bottom: 600, right: 50, top: 150, left: 50,
                 },
                 animated: true,
             });

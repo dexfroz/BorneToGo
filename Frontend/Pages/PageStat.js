@@ -27,6 +27,9 @@ class PageStat extends React.Component {
             if (stats.lightBulbsNumber < 2) {
                 message = " ampoule "
             }
+            else if (stats.lightBulbsNumber == 0) {
+                affichage = false;
+            }
             else {
                 message = " ampoules "
             }
@@ -59,6 +62,9 @@ class PageStat extends React.Component {
         if (stats.moneySavings) {
             affichage = true;
         }
+        if (stats.moneySavings == 0) {
+            affichage = false;
+        }
 
         return (
             affichage ?
@@ -82,6 +88,9 @@ class PageStat extends React.Component {
         var affichage = false;
         if (stats.carbonEmissionSavings) {
             affichage = true;
+        }
+        if (stats.carbonEmissionSavings == 0) {
+            affichage = false;
         }
         return (
             affichage ?

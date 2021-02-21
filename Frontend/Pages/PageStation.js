@@ -27,18 +27,6 @@ class PageStation extends React.Component {
     }
 }
 
-/*
-
-                <View style={styles.vue_bouton}>
-                    <TouchableOpacity
-                        style={styles.bouton}
-                    >
-                        <View>
-                            <Text style={styles.selection}>Sélectionner</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-*/
 
 const styles = StyleSheet.create({
     main_container: {

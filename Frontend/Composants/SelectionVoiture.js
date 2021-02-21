@@ -13,7 +13,7 @@ import CarForm from '../Store/Forms/CarForm'
 import { connect } from 'react-redux';
 import { getRequest } from '../Fonctions/HTTPRequestjson'
 import Toast from 'react-native-simple-toast';
-import DialogInput from './DialogInput'
+import Dialog from "react-native-dialog"
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,12 +26,11 @@ class SelectionVoiture extends React.Component {
             modeleSelected: { id: 0, model: 'Voiture', currentAutonomy: '' },
             modeles: [{ id: 0, model: 'Voiture', currentAutonomy: '', },],
             nombreVoiture: 0,
+            isDialogVisible: false,
+            autonomieSelected: '',
         }
         this.loadAncientModeles();
     }
-
-
-
 
 
     /**
@@ -42,7 +41,7 @@ class SelectionVoiture extends React.Component {
     }
 
     modelesVoitures = [
-        { id: 0, model: 'Voiture' },
+        { id: 0, model: 'Voiture', currentAutonomy: '' },
     ];
 
     /**
@@ -108,37 +107,83 @@ class SelectionVoiture extends React.Component {
     */
     async formatJSON(allCars) {
         //Vérification de voitures retournées par la requête sinon toast
-        if (allCars == null) {
-            Toast.showWithGravity("Aucun modèle de voiture n'a pu être chargé.", Toast.LONG, Toast.BOTTOM);
-            return;
-        }
-        var tabCars = [];
-        var bigtabCars = [];
-        var i = 0;
-        //Mappage des voitures
-        bigtabCars = await allCars.then(
+        var isCarsNotNull = true;
+        await allCars.then(
             function (cars) {
-                cars.map(
-                    function (voiture) {
-                        tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} />)
-                        i = i + 1
-                        return tabCars
-                    }
-                )
-                return tabCars
+                if (cars == null) {
+                    Toast.showWithGravity("Aucun modèle de voiture n'a pu être chargé.", Toast.LONG, Toast.BOTTOM);
+                    isCarsNotNull = false;
+                }
             }
         );
-        //Enregistrement et retour du tableau de picker item
-        this.state.nombreVoiture = bigtabCars.length;
-        return bigtabCars;
+        if (!isCarsNotNull) {
+            return null;
+        }
+        else {
+            var tabCars = [];
+            var bigtabCars = [];
+            var i = 0;
+            //Mappage des voitures
+            bigtabCars = await allCars.then(
+                function (cars) {
+                    cars.map(
+                        function (voiture) {
+                            tabCars.push(<Picker.Item label={voiture.model} value={voiture} key={i} />)
+                            i = i + 1
+                            return tabCars
+                        }
+                    )
+                    return tabCars
+                }
+            );
+            //Enregistrement et retour du tableau de picker item
+            this.state.nombreVoiture = bigtabCars.length;
+            return bigtabCars;
+        }
     }
 
     /**
      * Vérifie que tous les champs soient complets et envoies les données de la voiture au redux
      * @param {*} data les données à envoyer
      */
-    handleFormFullField(data) {
-        var allFieldsCompleted = true;
+    handleFormFullField(data, propsnavigation) {
+        // Mise en forme de la voiture
+        data = {
+            "model": data.model,
+            "subscription": "",
+            "maxAutonomy": data.maxAutonomy,
+            "currentAutonomy": data.currentAutonomy,
+            "capacity": data.capacity,
+            "courantConnecteurs": [
+                {
+                    "puissance": data.puissance,
+                    "courant": data.courant,
+                    "connecteur": data.connecteur,
+                }
+            ],
+        };
+
+        var allFieldsCompleted = false
+        // Vérifiez que l'object data existe
+        if (data && Object.keys(data).length > 0) {
+            // Vérifie que tous les champs sont remplis
+            if (data.currentAutonomy && Object.keys(data.currentAutonomy).length > 0
+                && data.maxAutonomy && Object.keys(data.maxAutonomy).length > 0
+                && data.capacity && Object.keys(data.capacity).length > 0
+                && data.model && Object.keys(data.model).length > 0
+                && data.courantConnecteurs[0].courant && Object.keys(data.courantConnecteurs[0].courant).length > 0
+                && data.courantConnecteurs[0].puissance && Object.keys(data.courantConnecteurs[0].puissance).length > 0
+                && data.courantConnecteurs[0].connecteur && Object.keys(data.courantConnecteurs[0].connecteur).length > 0) {
+                allFieldsCompleted = true;
+            }
+            else {
+                allFieldsCompleted = false;
+            }
+        }
+        else {
+            allFieldsCompleted = false;
+        }
+
         //Met à false si il manque une donnée
         for (var property in data) {
             if (data.hasOwnProperty(property)) {
@@ -147,6 +192,15 @@ class SelectionVoiture extends React.Component {
                 }
             }
         }
+
+        data.courantConnecteurs[0].puissance = parseFloat(data.courantConnecteurs[0].puissance)
+
+        data.capacity = parseFloat(data.capacity);
+
+        data.maxAutonomy = parseFloat(data.maxAutonomy);
+
+        data.currentAutonomy = parseFloat(data.currentAutonomy);
+
         //On envoie les données si tous les champs sont complétés
         if (allFieldsCompleted) {
             const action = { type: 'CAR_PICKED_BY_USER', value: data }
@@ -159,40 +213,75 @@ class SelectionVoiture extends React.Component {
         }
     }
 
-    handleCarSelected(data, propsnavigation) {
-        //TODO gestion autonomie avec boite de dialogue
-        //var autonomie = DialogInput();
-        //console.log('Autonomie : ', autonomie);
-        var dataCarSelected = {};
-        //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
-        for (var property in data) {
-            if (data.hasOwnProperty(property)) {
-                if (property != 'currentAutonomy') {
-                    Object.defineProperty(dataCarSelected, property, {
-                        value: data[property],
-                        writable: true,
-                        enumerable: true
-                    });
-                }
-                else {
-                    Object.defineProperty(dataCarSelected, property, {
-                        value: 42,
-                        writable: true,
-                        enumerable: true
-                    });
-
-                }
-            }
-        }
+    /**
+     * Gestion du click du bouton Sélectionner.
+     * @param {*} data les données de la voiture à sauvegarder dans le state.modeleSelected
+     */
+    handleCarSelected(data) {
+        this.showDialog(true);
         //Enregistrement des données de la voiture 
-        this.setState({ modeleSelected: dataCarSelected })
-        const action = { type: 'CAR_PICKED_BY_USER', value: data }
-        this.props.dispatch(action);
-
-        // Passage à la vue suivante
-        propsnavigation.navigation.navigate('BorneToGo');
+        this.setState({ modeleSelected: data });
     }
 
+    /**
+     * Gestion du click sur le bouton Annuler de la boite de dialogue
+     */
+    handleCancelButtonDialog() {
+        this.showDialog(false);
+    }
+
+    /**
+     * Gestion de l'affichage de la boite de dialogue
+     * @param {*} isShow true : affiche la boite, false : cache la boite
+     */
+    showDialog(isShow) {
+        this.setState({ isDialogVisible: isShow });
+    }
+
+    /**
+    * Gestion du click sur le bouton Valider de la boite de dialogue
+    */
+    handleValidateButtonDialog(propsnavigation) {
+        //Ferme la boite de dialogue
+        this.showDialog(false);
+        var autonomie = parseFloat(this.state.autonomieSelected)
+        if (isNaN(autonomie)) {
+            Toast.showWithGravity("L'autonomie renseignée n'est pas un nombre.", Toast.LONG, Toast.BOTTOM);
+            this.showDialog(true);
+        }
+        else {
+            var dataCarSelected = {};
+            //Remplissage d'un objet similiaire pour pouvoir ajouter l'autonomie du véhicule
+            for (var property in this.state.modeleSelected) {
+                if (this.state.modeleSelected.hasOwnProperty(property)) {
+                    if (property != 'currentAutonomy') {
+                        Object.defineProperty(dataCarSelected, property, {
+                            value: this.state.modeleSelected[property],
+                            writable: true,
+                            enumerable: true
+                        });
+                    }
+                    else {
+                        Object.defineProperty(dataCarSelected, property, {
+                            value: parseFloat(this.state.autonomieSelected),
+                            writable: true,
+                            enumerable: true
+                        });
+
+                    }
+                }
+            }
+            //Enregistrement dans le store redux
+            const action = { type: 'CAR_PICKED_BY_USER', value: dataCarSelected }
+            this.props.dispatch(action);
+            // Passage à la vue suivante
+            propsnavigation.navigation.navigate('BorneToGo');
+        }
+    }
+
+    /**
+     * Affichage de la page
+     */
     render() {
         const { propsnavigation } = this.props;
 
@@ -220,14 +309,22 @@ class SelectionVoiture extends React.Component {
                             color='#70B445'
                             title="Sélectionner"
                             width={width}
-                            onPress={() => this.handleCarSelected(this.state.modeleSelected, propsnavigation)} />
+                            onPress={() => this.handleCarSelected(this.state.modeleSelected)} />
+                    </View>
+                    <View>
+                        <Dialog.Container visible={this.state.isDialogVisible}>
+                            <Dialog.Title>Entrez l'autonomie actuelle de votre véhicule</Dialog.Title>
+                            <Dialog.Input type="number" onChangeText={(arg) => this.setState({ autonomieSelected: arg })} />
+                            <Dialog.Button label="Annuler" onPress={() => this.handleCancelButtonDialog()} />
+                            <Dialog.Button label="Valider" onPress={() => this.handleValidateButtonDialog(propsnavigation)} />
+                        </Dialog.Container>
                     </View>
                 </View>
                 <View style={styles.describeCarContainer}>
                     <Text style={styles.titleStyle}>Ou décrivez votre modèle de voiture :</Text>
                     <View style={styles.form}>
                         <CarForm onSubmit={(values) => {
-                            this.handleFormFullField(values);
+                            this.handleFormFullField(values, propsnavigation);
                             // passage à la partie suivante
                         }
                         } />
@@ -281,7 +378,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => {
-    //console.log("state SelectionVoiture : ", state);
     return {
         car: state.carSelected.car
     }

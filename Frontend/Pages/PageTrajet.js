@@ -10,6 +10,7 @@ import RouteForm from '../Store/Forms/RouteForm'
 import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson'
 import { getItineraires } from '../Fonctions/Itineraire'
 import Toast from 'react-native-simple-toast';
+import { connect } from 'react-redux';
 
 class PageTrajet extends React.Component {
 
@@ -61,7 +62,6 @@ class PageTrajet extends React.Component {
 
     afficherResultat() {
         // PASSER A LA VUE SUIVANTE => PAGEMAPRESULTATS
-        //Object.keys(this.state.depart.data).length > 0
         if (this.state.data && Object.keys(this.state.data).length > 0) {
             var data = this.state.data;
             this.setState({ isLoading: false, data: null });
@@ -234,27 +234,8 @@ class PageTrajet extends React.Component {
     }
 
     render() {
-
         // récupération de la voiture dans le redux
-        var car = {
-            "model": "Renault ZOE R135",
-            "subscription": "",
-            "maxAutonomy": 390,
-            "currentAutonomy": 390,
-            "capacity": 52,
-            "courantConnecteurs": [
-                {
-                    "courant": "AC (Three-Phase)",
-                    "connecteur": "IEC 62196-2 Type 2",
-                    "puissance": 22
-                },
-                {
-                    "courant": "DC",
-                    "connecteur": "IEC 62196-3 Configuration FF",
-                    "puissance": 50
-                }
-            ]
-        };
+        var car = this.props.car;
 
         return (
             <View style={styles.main_container}>
@@ -322,4 +303,16 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PageTrajet
+const mapStateToProps = (state) => {
+    return {
+        car: state.carSelected.car
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PageTrajet)

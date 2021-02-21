@@ -12,6 +12,7 @@ import { getRoutesFromAPI } from '../Fonctions/HTTPRequestjson';
 import { getItineraires } from '../Fonctions/Itineraire';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
+import { connect } from 'react-redux';
 
 class PageBorne extends React.Component {
 
@@ -159,25 +160,7 @@ class PageBorne extends React.Component {
 
     render() {
         // récupération de la voiture dans le redux
-        var car = {
-            "model": "Renault ZOE R135",
-            "subscription": "",
-            "maxAutonomy": 390,
-            "currentAutonomy": 390,
-            "capacity": 52,
-            "courantConnecteurs": [
-                {
-                    "courant": "AC (Three-Phase)",
-                    "connecteur": "IEC 62196-2 Type 2",
-                    "puissance": 22
-                },
-                {
-                    "courant": "DC",
-                    "connecteur": "IEC 62196-3 Configuration FF",
-                    "puissance": 50
-                }
-            ]
-        };
+        var car = this.props.car;
 
         // On récupère le useCase
         var useCase = "fastest";
@@ -185,7 +168,7 @@ class PageBorne extends React.Component {
             useCase = "fastest";
         }
         else {
-            //useCase = "cheapest"; - PAS ENCORE DISPONIBLE
+            //useCase = "cheapest"; // PAS ENCORE DISPONIBLE
         }
 
         return (
@@ -282,4 +265,16 @@ const styles = StyleSheet.create({
     },
 })
 
-export default PageBorne
+const mapStateToProps = (state) => {
+    return {
+        car: state.carSelected.car
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PageBorne)
