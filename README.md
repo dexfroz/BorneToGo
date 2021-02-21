@@ -1,6 +1,6 @@
 # BorneToGo
 
-*logo here*
+![BorneToGo-logo](/resources/logo_borne_to_go.png)
 
 BorneToGo is an ISEN school project. It is an app whose purpose is to help finding where to charge electric cars.
 
