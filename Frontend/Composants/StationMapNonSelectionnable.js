@@ -68,40 +68,6 @@ class StationMapNonSelectionable extends PureComponent {
     render() {
         const { marker, depart, arrivee, propsnavigation } = this.props;
 
-        // marker.data = {
-        //     "paymentStatus": "",
-        //     "bornes": [
-        //         {
-        //             "idBorne": 1,
-        //             "status": false,
-        //             "courant": "AC (Single-Phase)",
-        //             "connecteur": "CEE 7/4",
-        //             "puissance": 22
-        //         },
-        //         {
-        //             "idBorne": 2,
-        //             "status": true,
-        //             "courant": "AC (Three-Phase)",
-        //             "connecteur": "IEC 62196-2",
-        //             "puissance": 22
-        //         },
-        //         {
-        //             "idBorne": 3,
-        //             "status": true,
-        //             "courant": "AC (Single-Phase)",
-        //             "connecteur": "CEE 7/4",
-        //             "puissance": 22
-        //         },
-        //         {
-        //             "idBorne": 4,
-        //             "status": true,
-        //             "courant": "AC (Three-Phase)",
-        //             "connecteur": "IEC 62196-2",
-        //             "puissance": 22
-        //         }
-        //     ]
-        // };
-
         // Création de deux tableaux : un pour les bornes disponibles, un autre pour les bornes non disponibles
         var bornesDispo = [];
         var bornesNonDispo = [];
@@ -121,7 +87,7 @@ class StationMapNonSelectionable extends PureComponent {
             }
         }
 
-        var title = marker.name;
+        var title = marker.name ? marker.name : marker.address;
 
         return (
             <Marker

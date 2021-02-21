@@ -17,8 +17,6 @@ class Borne extends PureComponent {
 
     render() {
         const { borne } = this.props;
-        
-        console.log("BORNE 2", borne);
 
         return (
             <View style={styles.borne_container}>

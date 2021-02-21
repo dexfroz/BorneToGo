@@ -29,7 +29,7 @@ class ItineraireInfo extends PureComponent {
                         <TouchableOpacity
                             key={`Bouton-Borne-${item.idStation}`}
                             onPress={() => propsnavigation.navigation.navigate('Station', {
-                                station: item.data,
+                                station: item,
                             })}
                         >
                             <View >

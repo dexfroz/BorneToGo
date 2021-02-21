@@ -161,7 +161,6 @@ class PageBorne extends React.Component {
     render() {
         // récupération de la voiture dans le redux
         var car = this.props.car;
-        console.log(car);
 
         // On récupère le useCase
         var useCase = "fastest";

@@ -43,7 +43,7 @@ class Station extends PureComponent {
         // Création de deux tableaux : un pour les bornes disponibles, un autre pour les bornes non disponibles
         var bornesDispo = [];
         var bornesNonDispo = [];
-
+        
         // On compte le nombre de bornes disponibles pour la station
         var nbTotal = Object.keys(station.data.bornes).length;
         var nbDispo = 0;
