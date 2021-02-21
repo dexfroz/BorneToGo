@@ -13,7 +13,7 @@ public class Route
 	}
 
 	private static final double GAP_WARNING = 50.; // Minimal position change issuing a warning, in meters.
-	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.05;
+	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.025;
 
 	private boolean routeValidity = true; // don't change this!
 	private double length; // in km
@@ -162,8 +162,9 @@ public class Route
 
 		for (int i = 0; i < this.legsLengths.size(); ++i)
 		{
-			car.setCurrentAutonomy(car.getCurrentAutonomy() - this.legsLengths.get(i));
-			this.routeValidity = this.routeValidity && car.getCurrentAutonomy() >= autonomySucessThreshold;
+			double delta = car.getCurrentAutonomy() - this.legsLengths.get(i);
+			car.setCurrentAutonomy(delta); // will be forced to be >= 0, doing the check on 'delta' instead:
+			this.routeValidity = this.routeValidity && delta >= autonomySucessThreshold;
 			// checking this before refilling!
 
 			Coord waypoint = this.waypoints.get(i + 1);
