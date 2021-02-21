@@ -13,7 +13,7 @@ public class Route
 	}
 
 	private static final double GAP_WARNING = 50.; // Minimal position change issuing a warning, in meters.
-	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.025;
+	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.02;
 
 	private boolean routeValidity = true; // don't change this!
 	private double length; // in km

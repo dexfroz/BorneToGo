@@ -6,11 +6,10 @@ import java.util.*;
 
 public class Pathfinding
 {
-	private static final double DIST_BOUND_COEFF = 1.4; // unitless.
+	private static final double DIST_BOUND_COEFF = 1.5; // unitless.
 	private static final double INV_ECCENTRICITY = 1.5; // unitless, must be > 1.
-	private static final double RANGE_MARGIN_RATIO = 0.02; // unit less.
+	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.035;
 	private static final int MIN_SAFETY_STATIONS_NUMBER = 1; // Must be > 0.
-	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.07; // greater than the one used in Route.
 
 
 	// Gives a reasonable upper bound for the length of a route between two points:
@@ -45,7 +44,7 @@ public class Pathfinding
 	// Checks whether a destination is in the car's range, given the estimated length of the route:
 	private static boolean lengthReachable(Car car, double estimatedLength)
 	{
-		double autonomyLeft = car.getCurrentAutonomy() - estimatedLength - RANGE_MARGIN_RATIO * car.getMaxAutonomy();
+		double autonomyLeft = car.getCurrentAutonomy() - estimatedLength;
 		return autonomyLeft >= MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS * car.getMaxAutonomy();
 	}
 
@@ -187,9 +186,9 @@ public class Pathfinding
 
 		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'area' filtering here!
 
-		// if (! singleWaypoint) {
-		// 	relevantStations = areaFiltering(relevantStations, waypoints);
-		// }
+		if (! singleWaypoint) {
+			relevantStations = areaFiltering(relevantStations, waypoints);
+		}
 
 		if (relevantStations.isEmpty()) {
 			System.err.printf("\nNo relevant station for the given car:\n\n%s\n", car.toString());
