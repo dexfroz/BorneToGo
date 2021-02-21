@@ -53,4 +53,20 @@ To shut down the docker containers, run:
 docker-compose up -d
 ```
 
+## Frontend's installation
+
+### Installation of needed tools for using React Native
+
+To develop with React Native, you will need Node.js that can be download at this link: https://nodejs.org/en/download/ (LTS version).
+
+To install the command line interface (CLI) of Expo:
+    ```npm install expo-cli --global```
+
+### Deploiement 
+
+The project should work all alone. There is a yarn part that manage all dependecies with npm. Recover the project and in the folder use the command : 
+    ```npm install```
+then to run the project 
+    ```npm run start```
+
 More details are provided in the respective READMEs of the frontend, backend and the database.
