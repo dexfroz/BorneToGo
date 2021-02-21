@@ -50,12 +50,17 @@ If you have already logged in :
 2. Click on the name of your application in the "Recently Opened" section.
 3. The application will then launch.
 
-## TODO
+## Resolution of common bugs
 
-- Finalising the entry form for a route
-- Finalise the entry form for a car
-- Creation of POST requests for: sending itinerary for the use cases "refill", "goto", and "trip" and the optimization options "cheapest" and "fastest".
-- Modify the data flow in order to make the application as user friendly and pleasant as possible.
-- Layout of the "PageCar" and "PageRoute" views and associated components
-- Modification of "PageMap" and "PageMapResult" with integration of POST query results
-- Retrieving the user's location (permission management)
+### Not considered modifications
+Changes in a javascript-coded program are normally detected immediately and you don't need to rebuild the bundle of your application. However, sometimes, after an error, expo can update your bundle by itself. If you can, just click on the "Reload" button. If "Reload" is not accessible, in this case, turn off expo and turn it back on by rescanning your QR-code.
+
+### New dependency not detected
+Sometimes, if you are working with another person adding a new dependency, it may not be detected despite its presence in your project's dependencies. In this case, you just have to do : ```npm install``` in the terminal and then it will work again.
+
+### Added a connection to the Redux store
+Sometimes, when you connect a new component to the Redux store that is used to manage the global status of the application, you get this error:
+```object is not a constructor (evaluating 'new ctor(props context)')```
+Don't panic, it just means that the expo cache is full, and the application can't retrieve the global state anymore. All you have to do is to solve it:
+•	Or to restart the application. That can be enough sometimes.
+•	Or to clean the cache using: ```yarn cache clean```
