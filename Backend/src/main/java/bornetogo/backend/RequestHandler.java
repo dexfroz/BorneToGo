@@ -70,7 +70,7 @@ public class RequestHandler
 
 			if (allCars == null) {
 				JsonObject obj = Json.createObjectBuilder()
-					.add("Error", "Cars could not be loaded by the backend.").build();
+					.add("Status", "Cars could not be loaded by the backend.").build();
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
@@ -90,7 +90,7 @@ public class RequestHandler
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
-				.add("Error", "Could not output the cars list.").build();
+				.add("Status", "Could not output the cars list.").build();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 		}
 	}
@@ -111,7 +111,7 @@ public class RequestHandler
 
 			if (answer.getOuput() == null) {
 				JsonObject obj = Json.createObjectBuilder()
-					.add("Error", answer.getMessage()).build();
+					.add("Status", answer.getMessage()).build();
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
@@ -119,7 +119,7 @@ public class RequestHandler
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
-				.add("Error", "Could not output the mock path.").build();
+				.add("Status", "Could not output the mock path.").build();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 		}
 	}
@@ -141,7 +141,7 @@ public class RequestHandler
 
 			if (answer.getOuput() == null) {
 				JsonObject obj = Json.createObjectBuilder()
-					.add("Error", answer.getMessage()).build();
+					.add("Status", answer.getMessage()).build();
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
@@ -149,7 +149,7 @@ public class RequestHandler
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
-				.add("Error", "Wrong request for a path.").build();
+				.add("Status", "Wrong request for a path.").build();
 			return Response.status(Response.Status.BAD_REQUEST).entity(obj).build();
 		}
 	}

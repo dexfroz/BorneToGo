@@ -23,25 +23,42 @@ Note that MySQL client or server need not to be installed, the container will be
 
 ## Filling the database:
 
-To fill the database, start by running the MariaDB container with:
+To fill the database, make sure the MariaDB container is running, bu using:
 
 ```
 docker-compose up -d
 ```
 
-Then run as sudoer:
+Then run (on Linux):
 
 ```
-sh fill.sh
+sudo sh fill.sh linux
 ```
 
-This should take less than a minute, and have to be done only once. If MySQL client is installed, then one can access the database from CLI by using:
+Alternatively on Windows:
 
 ```
-mysql -h localhost -P 3456 --protocol=tcp -u root -p
+.\fill.sh windows
 ```
+
+This should take less than a minute, and have to be done only once. One can then interact with the database from CLI by running the following two commands:
+
+```
+docker exec -it $(docker ps -aq --filter name=database) bash
+mysql -u root -paaa
+```
+
+Or alternatively, if MySQL client is installed, by using:
+
+```
+mysql -h localhost -P 3456 --protocol=tcp -u root -paaa
+```
+
+Note that the password used here is ``` aaa ```.
 
 
 ## Database architecture
+
+Old diagram (types are wrong in this):
 
 ![Database architecture](/Database/images/Schema_BDD_V8.png)

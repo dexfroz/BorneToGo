@@ -24,6 +24,7 @@ public class Coord extends Entry
 	protected double longitude;
 
 	protected boolean isStation = false; // Do _not_ add a setter for this!
+	protected double duration; // used for stations.
 
 
 	public Coord(double latitude, double longitude, String name, String address)
@@ -74,6 +75,20 @@ public class Coord extends Entry
 	public boolean isStation()
 	{
 		return this.isStation;
+	}
+
+
+	public double getDuration()
+	{
+		return this.duration;
+	}
+
+
+	public void setDuration(double duration) // for stations.
+	{
+		if (this.isStation) {
+			this.duration = duration;
+		}
 	}
 
 

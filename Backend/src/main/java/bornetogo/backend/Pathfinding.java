@@ -6,16 +6,17 @@ import java.util.*;
 
 public class Pathfinding
 {
-	private static final double distBoundCoeff = 2.0; // unitless.
-	private static final double ellipseRatio = 1.2; // unitless, must be > 1.
-	private static final double rangeMargin = 20.; // in km
-	private static final int minimalSafetyStationsNumber = 1; // Must be > 0.
+	private static final double DIST_BOUND_COEFF = 1.5; // unitless.
+	private static final double INV_ECCENTRICITY = 1.5; // unitless, must be > 1.
+	private static final double RANGE_MARGIN = 20.; // in km
+	private static final int MIN_SAFETY_STATIONS_NUMBER = 1; // Must be > 0.
+	private static final double MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS = 0.10; // greater than the one used in Route.
 
 
 	// Gives a reasonable upper bound for the length of a route between two points:
 	private static double lengthUpperBound(Coord coord_1, Coord coord_2)
 	{
-		return distBoundCoeff * Coord.distance(coord_1, coord_2);
+		return DIST_BOUND_COEFF * Coord.distance(coord_1, coord_2);
 	}
 
 
@@ -34,17 +35,18 @@ public class Pathfinding
 
 
 	// Checks if the given point is inside the ellipse of focus 'ref_1' and 'ref_2',
-	// and with major axis of length: distance(ref_1, ref_2) * ellipseRatio
+	// and with major axis of length: distance(ref_1, ref_2) * INV_ECCENTRICITY
 	private static boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
-		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * ellipseRatio;
+		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * INV_ECCENTRICITY;
 	}
 
 
 	// Checks whether a destination is in the car's range, given the estimated length of the route:
 	private static boolean lengthReachable(Car car, double estimatedLength)
 	{
-		return estimatedLength + rangeMargin <= car.getCurrentAutonomy();
+		double autonomyLeft = car.getCurrentAutonomy() - estimatedLength - RANGE_MARGIN;
+		return autonomyLeft >= MIN_PERCENTAGE_MAX_AUTONOMY_SUCCESS * car.getMaxAutonomy();
 	}
 
 
@@ -98,7 +100,7 @@ public class Pathfinding
 			return null;
 		}
 
-		int safetyRank = Math.min(stations.size(), minimalSafetyStationsNumber) - 1;
+		int safetyRank = Math.min(stations.size(), MIN_SAFETY_STATIONS_NUMBER) - 1;
 		return stations.get(safetyRank);
 	}
 
@@ -111,7 +113,7 @@ public class Pathfinding
 			return null;
 		}
 
-		return stations.get(0); // nearest. TODO: improve on this!
+		return stations.get(0); // nearest. TODO: expand on this: use cost & refill time...
 	}
 
 
@@ -124,7 +126,7 @@ public class Pathfinding
 
 		if (nextStep.isStation()) {
 			// System.out.println("\nLucky one!");
-			car.setCurrentAutonomy(car.getMaxAutonomy());
+			car.refill();
 		}
 	}
 
@@ -153,7 +155,7 @@ public class Pathfinding
 		}
 
 		path.add(chosenStation);
-		car.setCurrentAutonomy(car.getMaxAutonomy());
+		car.refill();
 		return chosenStation;
 	}
 
@@ -164,27 +166,26 @@ public class Pathfinding
 	public static ArrayList<Coord> find(ArrayList<Station> allStations, Car userCar,
 		ArrayList<Coord> waypoints, ArrayList<Double> legsLengths)
 	{
-		System.out.println("Starting the pathfinding computation.\n");
+		System.out.println("\n=> Starting the pathfinding computation.\n");
 
-		if (! Core.enableFirstQuery) { // using an estimation of the legs lengths.
-			legsLengths = mockLegsLengths(waypoints);
-		}
-
-		Car car = userCar.copy();
-
-		if (legsLengths.size() != waypoints.size() - 1) {
-			System.err.println("\nIncoherent list sizes, could not start the pathfinding.");
-			return null;
-		}
-
-		if (waypoints.isEmpty()) {
+		if (waypoints == null || waypoints.isEmpty()) {
 			System.err.println("\nAt least 1 waypoint is needed for the pathfinding.\n");
 			return null;
 		}
 
+		if (legsLengths == null) { // using an estimation of the legs lengths.
+			legsLengths = mockLegsLengths(waypoints);
+		}
+
+		if (legsLengths.size() != waypoints.size() - 1) {
+			System.err.println("\nIncoherent legs length, could not start the pathfinding.");
+			return null;
+		}
+
+		Car car = userCar.copy(); // preventing side effects.
 		boolean singleWaypoint = waypoints.size() == 1;
 
-		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'area' filtering!
+		ArrayList<Station> relevantStations = getRelevantStations(allStations, car); // no 'area' filtering here!
 
 		if (! singleWaypoint) {
 			relevantStations = areaFiltering(relevantStations, waypoints);

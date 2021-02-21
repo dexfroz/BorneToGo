@@ -50,4 +50,15 @@ public class Connector extends Entry
 	{
 		return this.name;
 	}
+
+
+	// For testing only:
+	public static Connector mock()
+	{
+		Connector connector = new Connector();
+		connector.idConnector = 0;
+		connector.title = "";
+		connector.name = "IEC 62196-2 Type 2";
+		return connector;
+	}
 }

@@ -50,4 +50,15 @@ public class Power extends Entry
 	{
 		return this.description;
 	}
+
+
+	// For testing only:
+	public static Power mock()
+	{
+		Power power = new Power();
+		power.idPower = 0;
+		power.name = "AC (Three-Phase)";
+		power.description = "";
+		return power;
+	}
 }
