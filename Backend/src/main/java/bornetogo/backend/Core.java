@@ -52,6 +52,14 @@ public class Core
 		{
 			long time_0 = System.nanoTime();
 
+			// Checking APIs key and validity of the input:
+
+			String geocodingService = "mapquestapi";
+
+			if (! QueryAPIs.checkAPIkeyPresence(geocodingService)) {
+				return new Core(null, "Absent API key for service: " + geocodingService);
+			}
+
 			if (input == null) {
 				return new Core(null, "Could not process a null input.");
 			}
@@ -74,7 +82,7 @@ public class Core
 
 			// Collecting the user steps:
 
-			ArrayList<Coord> userSteps = UserStepsLoader.load(input);
+			ArrayList<Coord> userSteps = UserStepsLoader.load(input, geocodingService);
 
 			if (userSteps == null) {
 				return new Core(null, "Could not obtain the user steps.");

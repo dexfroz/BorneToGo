@@ -82,6 +82,10 @@ public class DatabaseConnector
 			if (areChargingPointsLoaded) {
 				completeChargingPoints(); // only done once!
 			}
+			else {
+				System.err.println("\nCould not get real charging points, using mock data...\n");
+				allChargingPoints = ChargingPoint.mock();
+			}
 		}
 
 		return allChargingPoints;

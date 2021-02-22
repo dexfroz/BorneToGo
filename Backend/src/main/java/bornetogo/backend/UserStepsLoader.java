@@ -66,7 +66,7 @@ public class UserStepsLoader
 
 
 	// Sets this.userSteps to null on failure.
-	private void completeUserSteps()
+	private void completeUserSteps(String geocodingService)
 	{
 		if (this.userSteps == null || this.searchedLocations.size() == 0) {
 			return; // getFromJson() failed or coords already complete.
@@ -76,7 +76,7 @@ public class UserStepsLoader
 		{
 			// Sending BATCH requests to the geocoding API, to retrieve the location coordinates from the name and address:
 			System.out.println("=> Completing user steps.\n");
-			JsonObject answerJson = QueryAPIs.queryFromLocation("mapquestapi", this.searchedLocations);
+			JsonObject answerJson = QueryAPIs.queryFromLocation(geocodingService, this.searchedLocations);
 			JsonArray resultsArray = answerJson.getJsonArray("results");
 
 			for (int i = 0; i < this.searchedLocations.size(); ++i)
@@ -104,7 +104,7 @@ public class UserStepsLoader
 	// Used to remove consecutive duplicates:
 	private void filterUserSteps()
 	{
-		if (!ENABLE_USER_STEPS_FILTERING || this.userSteps == null || this.userSteps.size() == 0) {
+		if (! ENABLE_USER_STEPS_FILTERING || this.userSteps == null || this.userSteps.size() == 0) {
 			return;
 		}
 
@@ -125,11 +125,11 @@ public class UserStepsLoader
 
 
 	// Returns null on failure:
-	public static ArrayList<Coord> load(JsonObject input)
+	public static ArrayList<Coord> load(JsonObject input, String geocodingService)
 	{
 		UserStepsLoader loader = new UserStepsLoader();
 		loader.getFromJson(input);
-		loader.completeUserSteps();
+		loader.completeUserSteps(geocodingService);
 		loader.filterUserSteps();
 
 		if (loader.userSteps == null || loader.userSteps.size() == 0) {
@@ -146,8 +146,9 @@ public class UserStepsLoader
 		String inputString = FileContent.read("input_example.json");
 		// String inputString = FileContent.read("input_example_singleStep.json");
 
+		String geocodingService = "mapquestapi";
 		JsonObject input = GetJson.jsonFromString(inputString);
-		ArrayList<Coord> userSteps = load(input);
+		ArrayList<Coord> userSteps = load(input, geocodingService);
 
 		for (Coord coord : userSteps) {
 			System.out.println(coord.toString() + "\n");

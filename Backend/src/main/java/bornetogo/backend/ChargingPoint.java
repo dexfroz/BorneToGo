@@ -1,6 +1,7 @@
 package main.java.bornetogo.backend;
 
 import java.io.*;
+import java.util.*;
 import jakarta.json.*;
 import java.sql.*;
 
@@ -123,5 +124,25 @@ public class ChargingPoint extends Entry
 			.add("connecteur", connectorName)
 			.add("puissance", this.wattage)
 			.build();
+	}
+
+
+	// For testing only:
+	public static ArrayList<ChargingPoint> mock()
+	{
+		ArrayList<ChargingPoint> chargingPoints = new ArrayList<ChargingPoint>();
+		ChargingPoint cp = new ChargingPoint();
+
+		cp.isUsable = true;
+		cp.wattage = 22.;
+		cp.connector = Connector.mock();
+		cp.power = Power.mock();
+		cp.idChargingPoint = 0;
+		cp.idConnector = 0;
+		cp.idPower = 0;
+		cp.idStatus = 0;
+
+		chargingPoints.add(cp);
+		return chargingPoints;
 	}
 }

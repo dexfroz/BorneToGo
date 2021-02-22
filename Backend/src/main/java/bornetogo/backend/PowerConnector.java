@@ -144,17 +144,17 @@ public class PowerConnector extends Entry
 	public static ArrayList<PowerConnector> mock()
 	{
 		ArrayList<PowerConnector> powerConnectors = new ArrayList<PowerConnector>();
-		PowerConnector powerConnector = new PowerConnector();
+		PowerConnector pc = new PowerConnector();
 
-		powerConnector.power = Power.mock();
-		powerConnector.connector = Connector.mock();
-		powerConnector.wattage = 22.;
-		powerConnector.idPowerConnector = 0;
-		powerConnector.idCar = 0;
-		powerConnector.idPower = 0;
-		powerConnector.idConnector = 0;
+		pc.power = Power.mock();
+		pc.connector = Connector.mock();
+		pc.wattage = 22.;
+		pc.idPowerConnector = 0;
+		pc.idCar = 0;
+		pc.idPower = 0;
+		pc.idConnector = 0;
 
-		powerConnectors.add(powerConnector);
+		powerConnectors.add(pc);
 		return powerConnectors;
 	}
 }

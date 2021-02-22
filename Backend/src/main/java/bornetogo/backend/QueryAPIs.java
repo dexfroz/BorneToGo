@@ -9,7 +9,7 @@ import jakarta.json.*;
 
 public class QueryAPIs
 {
-	// Each API key is to be stored in the src/main/resources/secret directory,
+	// Each API key is to be stored in the src/main/resources/secret/ directory,
 	// in a file with the service as name. This directory should be added to .gitignore.
 	private static String loadAPIkey(String service)
 	{
@@ -26,10 +26,17 @@ public class QueryAPIs
 			return content;
 		}
 		catch (Exception e) {
-			System.err.println("\nNo API key found for the service: " + service + "\n");
-			e.printStackTrace();
+			System.err.println("\nNo API key found for service '" + service +
+				"' in directory 'src/main/resources/secret/'\n");
+			// e.printStackTrace();
 			return "";
 		}
+	}
+
+
+	public static boolean checkAPIkeyPresence(String service)
+	{
+		return ! loadAPIkey(service).equals("");
 	}
 
 
