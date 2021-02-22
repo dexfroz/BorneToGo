@@ -130,7 +130,7 @@ class PageBorne extends React.Component {
             <View style={styles.slider}>
                 <Slider
                     value={this.state.value}
-                    onValueChange={(value) => this.setValue(value)}
+                    onValueChange={(value) => this.setState({ value: value })}
                     maximumValue={1}
                     minimumValue={0}
                     step={1}
@@ -165,6 +165,13 @@ class PageBorne extends React.Component {
 
         // On récupère le useCase
         var useCase = "fastest";
+        if (this.state.value == 0) {
+            this.state.text_value = "La plus proche";
+        }
+        else {
+            this.state.text_value = "La moins chère";
+        }
+
         if (this.state.text_value == "La plus proche") {
             useCase = "fastest";
         }
