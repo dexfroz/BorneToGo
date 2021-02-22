@@ -97,11 +97,18 @@ public abstract class Entry
 	// Returns an empty string for default values:
 	public static String sanitize(String field)
 	{
-		if (field.equals("0") || field.equals("-1")) {
+		if (field == null || field.equals("0") || field.equals("-1")) {
 			return "";
 		}
 
-		return field;
+		try {
+			return new String(field.getBytes("ISO-8859-1")); // converting to UTF-8
+		}
+		catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("Could not convert to UTF-8 the entry: '" + field + "'");
+			return field;
+		}
 	}
 
 

@@ -19,8 +19,8 @@ public class Power extends Entry
 
 		try {
 			p.idPower = answer.getInt("idCourant");
-			p.name = answer.getString("Titre");
-			p.description = answer.getString("Description");
+			p.name = Entry.sanitize(answer.getString("Titre"));
+			p.description = Entry.sanitize(answer.getString("Description"));
 
 			// String row = "-> " + p.idPower + ", " + p.name + ", " + p.description;
 			// System.out.println(row);

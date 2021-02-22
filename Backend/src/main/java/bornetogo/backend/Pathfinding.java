@@ -37,7 +37,8 @@ public class Pathfinding
 	// and with major axis of length: distance(ref_1, ref_2) * INV_ECCENTRICITY
 	private static boolean isInEllipse(Coord ref_1, Coord ref_2, Coord point)
 	{
-		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2) <= Coord.distance(ref_1, ref_2) * INV_ECCENTRICITY;
+		return Coord.distance(ref_1, point) + Coord.distance(point, ref_2)
+			<= Coord.distance(ref_1, ref_2) * INV_ECCENTRICITY;
 	}
 
 
@@ -130,8 +131,10 @@ public class Pathfinding
 	}
 
 
-	// Refilling the car. On success, returns the chosen station, which must be the new current step. Else, returns null.
-	private static Station goRefill(Car car, ArrayList<Station> relevantStations, ArrayList<Coord> path, Coord currentStep)
+	// Refilling the car. On success, returns the chosen station,
+	// which must be the new current step. Else, returns null.
+	private static Station goRefill(Car car, ArrayList<Station> relevantStations,
+		ArrayList<Coord> path, Coord currentStep)
 	{
 		ArrayList<Station> reachableStations = new ArrayList<Station>();
 

@@ -31,6 +31,45 @@ public class DatabaseConnector
 	private static ArrayList<Payment> allPayments = null;
 
 
+	// The result of this function should be closed at its end life.
+	public static Connection getConnection()
+	{
+		String database = "BorneToGo";
+		String user = "root";
+		String pwd = "aaa"; // this could be dehardcoded.
+
+		String protocol = "jdbc:mysql://";
+		String options = "?useSSL=false"; // necessary for requesting from the container.
+
+		ArrayList<String> ipCandidates = new ArrayList<String>();
+		ipCandidates.add("database:3306"); // service name = container IP. Always checked first.
+		ipCandidates.add("localhost:3456"); // host IP and port.
+
+		Connection connection = null;
+		String warningStatus = "Warning";
+
+		for (String ip : ipCandidates)
+		{
+			String url = protocol + ip + "/" + database + options;
+
+			try
+			{
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection(url, user, pwd); // Will raise an exception on failure!
+				System.out.println("\n-> Successful connection to the database with URL: " + url + "\n");
+				break;
+			}
+			catch (Exception e) {
+				// e.printStackTrace();
+				System.err.println("\n" + warningStatus + ": failed connection to the database with URL: " + url);
+				warningStatus = "Error";
+			}
+		}
+
+		return connection;
+	}
+
+
 	public static ArrayList<Car> getCars()
 	{
 		if (! areCarsLoaded) {
@@ -330,45 +369,6 @@ public class DatabaseConnector
 	}
 
 
-	// The result of this function should be closed at its end life.
-	public static Connection getConnection()
-	{
-		String database = "BorneToGo";
-		String user = "root";
-		String pwd = "aaa"; // this could be dehardcoded.
-
-		String protocol = "jdbc:mysql://";
-		String options = "?useSSL=false"; // necessary for requesting from the container.
-
-		ArrayList<String> ipCandidates = new ArrayList<String>();
-		ipCandidates.add("database:3306"); // service name = container IP. Always checked first.
-		ipCandidates.add("localhost:3456"); // host IP and port.
-
-		Connection connection = null;
-		String warningStatus = "Warning";
-
-		for (String ip : ipCandidates)
-		{
-			String url = protocol + ip + "/" + database + options;
-
-			try
-			{
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				connection = DriverManager.getConnection(url, user, pwd); // Will raise an exception on failure!
-				System.out.println("\n-> Successful connection to the database with URL: " + url + "\n");
-				break;
-			}
-			catch (Exception e) {
-				// e.printStackTrace();
-				System.err.println("\n" + warningStatus + ": failed connection to the database with URL: " + url);
-				warningStatus = "Error";
-			}
-		}
-
-		return connection;
-	}
-
-
 	// Returns a string containing the list of tables:
 	public static String getTables()
 	{
@@ -377,7 +377,7 @@ public class DatabaseConnector
 
 		try
 		{
-			Connection connection = DatabaseConnector.getConnection();
+			Connection connection = getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet answer = statement.executeQuery(query);
 
@@ -405,7 +405,7 @@ public class DatabaseConnector
 
 		try
 		{
-			Connection connection = DatabaseConnector.getConnection();
+			Connection connection = getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet answer = statement.executeQuery(query);
 

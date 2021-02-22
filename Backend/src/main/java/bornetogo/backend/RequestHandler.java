@@ -86,7 +86,7 @@ public class RequestHandler
 				.add("cars", carsArray)
 				.build();
 
-			return Response.ok(carsJson).build();
+			return Response.ok(carsJson).encoding("UTF-8").build();
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
@@ -115,7 +115,7 @@ public class RequestHandler
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
-			return Response.ok(answer.getOuput()).build();
+			return Response.ok(answer.getOuput()).encoding("UTF-8").build();
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
@@ -145,7 +145,7 @@ public class RequestHandler
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(obj).build();
 			}
 
-			return Response.ok(answer.getOuput()).build();
+			return Response.ok(answer.getOuput()).encoding("UTF-8").build();
 		}
 		catch (Exception e) {
 			JsonObject obj = Json.createObjectBuilder()
